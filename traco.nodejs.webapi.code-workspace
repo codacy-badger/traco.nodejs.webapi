@@ -16,6 +16,7 @@
         "files.autoSave": "afterDelay",
         "files.autoSaveDelay": 30000,
         "git.ignoreLimitWarning": true,
+        "git.enableSmartCommit": true,
         "typescript.autoImportSuggestions.enabled": false,
         "files.trimTrailingWhitespace": true,
         "[markdown]": {
