@@ -1,0 +1,62 @@
+{
+    "root": true,
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "impliedStrict": true
+        }
+    },
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "indent": ["off", 4, {
+            "SwitchCase": 1,
+            "MemberExpression": 1
+        }],
+        "linebreak-style": ["error", "windows"],
+        "eqeqeq": ["error", "always"],
+        "quotes": ["warn", "double"],
+        "camelcase": "error",
+        "semi": ["error", "always"],
+        "no-undef": "off",
+        "no-console": "warn",
+        "no-unreachable": "error",
+        "no-unused-vars": "warn",
+        "no-inline-comments": "off",
+        "no-trailing-spaces": "warn",
+        "one-var-declaration-per-line": "error",
+        "newline-per-chained-call": "error",
+        "no-extra-semi": "error",
+        "eol-last": "warn",
+        "default-case": "error",
+        "new-cap": "error",
+        "no-duplicate-imports": "error",
+        "no-duplicate-case": "error",
+        "no-empty": "error",
+        "no-empty-function": "error",
+        "no-extra-boolean-cast": "error",
+        "no-invalid-regexp": "error",
+        "no-loop-func": "error",
+        "no-invalid-this": "error",
+        "no-mixed-spaces-and-tabs": "error",
+        "no-multiple-empty-lines": "warn",
+        "no-multi-spaces": "warn",
+        "no-plusplus": "warn",
+        "no-redeclare": "error",
+        "no-shadow": "error",
+        "no-sync": "error",
+        "no-unexpected-multiline": "warn",
+        "no-unused-expressions": "warn",
+        "no-use-before-define": "error",
+        "object-property-newline": "warn",
+        "no-tabs": "error",
+        "no-useless-escape": "error",
+        "complexity": ["warn", 15],
+        "curly": "warn"
+    },
+    "settings": {}
+}

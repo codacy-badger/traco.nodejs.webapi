@@ -1,0 +1,37 @@
+{
+    "update": [
+
+    ],
+    "server": {
+        "main": {
+            "cluster": false,
+            "concurrency": 0,
+            "port": 80
+        },
+        "file": {
+            "port": 8001
+        }
+    },
+    "debug": {
+        "mode": "build",
+        "enabled": false,
+        "logSQL": false
+    },
+    "mysql": {
+        "enabled": true,
+        "main": {
+            "connectionLimit": 25,
+            "host": "127.0.0.1",
+            "user": "traco",
+            "password": "traco",
+            "database": "traco",
+            "charset": "utf8mb4_bin"
+        }
+    },
+    "cookie": {
+        "session": "login"
+    },
+    "redis": {
+        "enabled": true
+    }
+}

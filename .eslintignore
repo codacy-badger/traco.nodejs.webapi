@@ -1,0 +1,10 @@
+# Zum Linten ignorierte Datein
+
+/node_modules/*
+/jsdoc/*
+/doc/*
+/apidoc/*
+
+
+__template*
+/test/*

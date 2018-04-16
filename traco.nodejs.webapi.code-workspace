@@ -1,0 +1,47 @@
+{
+    "folders": [
+        {
+            "name": "TraCo - NodeJS WebAPI",
+            "path": "."
+		}
+	],
+    "settings": {
+        "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
+        "files.associations": {
+            "*.njk": "html"
+        },
+        "extensions.ignoreRecommendations": true,
+        "git.confirmSync": false,
+        "git.autofetch": true,
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 30000,
+        "git.ignoreLimitWarning": true,
+        "typescript.autoImportSuggestions.enabled": false,
+        "files.trimTrailingWhitespace": true,
+        "[markdown]": {
+            "files.trimTrailingWhitespace": false
+        },
+        "workbench.iconTheme": "material-icon-theme",
+        "material-icon-theme.activeIconPack": "angular",
+        "material-icon-theme.folders.color": "#90a4ae",
+        "material-icon-theme.folders.theme": "classic",
+        "material-icon-theme.hidesExplorerArrows": false,
+
+        "editor.showFoldingControls": "always",
+        "workbench.tips.enabled": false,
+        "javascript.suggestionActions.enabled": false,
+        "typescript.suggestionActions.enabled": false
+    },
+    "extensions": {
+        "recommendations": [
+            "dbaeumer.vscode-eslint",
+			"EditorConfig.editorconfig",
+			"HookyQR.beautify",
+			"lkytal.quicktask",
+			"cssho.vscode-svgviewer",
+			"howardzuo.vscode-gitk",
+            "PKief.material-icon-theme",
+            "myax.appidocsnippets"
+		]
+    }
+}

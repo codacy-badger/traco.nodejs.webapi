@@ -1,0 +1,67 @@
+{
+    "name": "traco.nodejs.webapi",
+    "version": "0.0.0",
+    "description": "Die WebAPI für das TraCo TicketSystem in NodeJS",
+    "keywords": [
+        "traco",
+        "nodejs",
+        "webapi"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DerHerrGammler/traco.nodejs.webapi"
+    },
+    "license": "MIT",
+    "author": {
+        "name": "Felix Herold",
+        "email": "herold_felix@web.de",
+        "url": "https://github.com/DerHerrGammler"
+    },
+    "maintainers": [
+        {
+            "name": "Felix Herold",
+            "email": "herold_felix@web.de",
+            "url": "https://github.com/DerHerrGammler"
+        }
+    ],
+    "main": "server.js",
+    "scripts": {
+        "preversion": "",
+        "version": "",
+        "postversion": "git push",
+        "pretest": "",
+        "test": "echo \"Error: no Test specified\" && exit 1",
+        "posttest": "",
+        "prestart": "",
+        "start": "node server.js",
+        "poststart": "",
+        "explorer": "node ./static/onlineExplorer",
+        "jsdoc": "./node_modules/.bin/jsdoc -c ./static/jsdoc.conf.json -d ./jsdoc -r --verbose",
+        "apidoc": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -c ./static/apidoc.conf.json -v",
+        "docbuild": "npm run jsdoc && npm run apidoc"
+    },
+    "config": {},
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "bluebird": "^3.5.1",
+        "body-parser": "^1.18.2",
+        "colors": "^1.2.1",
+        "compression": "^1.7.2",
+        "cookies": "^0.7.1",
+        "express": "^4.16.3",
+        "ioredis": "^3.2.2",
+        "morgan": "^1.9.0",
+        "mysql": "^2.15.0",
+        "path": "^0.12.7",
+        "serve-index": "^1.9.1",
+        "server-static": "^2.0.5"
+    },
+    "devDependencies": {
+        "apidoc": "^0.17.6",
+        "eslint": "^4.19.1",
+        "jsdoc": "^3.5.5"
+    },
+    "peerDependencies": {},
+    "optionalDependencies": {},
+    "bundledDependencies": []
+}

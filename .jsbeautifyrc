@@ -1,0 +1,7 @@
+{
+    "space_around_combinator": true,
+    "keep_array_indentation": true,
+    "space_after_anon_function": true,
+    "space_before_conditional": true,
+    "end_with_newline": true
+}

@@ -1,0 +1,178 @@
+/** @module */
+"use strict";
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Dependencies
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+require("../prototype/loadPrototype");
+var fs = require("fs");
+var path = require("path");
+var colors = require("colors");
+var helper = require("../helper");
+
+var oConfig = {};
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Function
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function setOptions(oOptions) {
+    var sDirPath = oOptions.sPath || ".tmp";
+    oConfig = {
+        "bConsole": true,
+        "bFile": true,
+        "bLogDate": true,
+        "sFilename": oOptions.sFilename || "default",
+        "sExtansion": oOptions.sExtansion || "log",
+        "sPath": path.join(__dirname, "/../", sDirPath),
+        "sSeparator": oOptions.sSeparator || "]-----[",
+        "bDatelog": true,
+        "sColor": oOptions.sColor || "default",
+        "iSaveDays": oOptions.iSaveDays || 7
+    };
+    if (!oOptions.bConsole && oOptions.bConsole !== undefined) {
+        oConfig.bConsole = false;
+    }
+    if (!oOptions.bFile && oOptions.bFile !== undefined) {
+        oConfig.bFile = false;
+    }
+    if (!oOptions.bLogDate && oOptions.bLogDate !== undefined) {
+        oConfig.bLogDate = false;
+    }
+    if (!oOptions.bDatelog && oOptions.bDatelog !== undefined) {
+        oConfig.bDatelog = false;
+    }
+    // console.log(oConfig)
+}
+
+function logging(sType, oMessage) {
+    if (oConfig.bConsole) {
+        if (oConfig.sColor === "default") {
+            switch (sType) {
+                case ("info"):
+                    if (oMessage.type !== "") {
+                        console.log(colors.green("----- " + oMessage.type + " -----")); // eslint-disable-line
+                    }
+                    break;
+                case ("warn"):
+                    if (oMessage.type !== "") {
+                        console.log(colors.yellow("----- " + oMessage.type + " -----")); // eslint-disable-line
+                    }
+                    break;
+                case ("error"):
+                    if (oMessage.type !== "") {
+                        console.log(colors.red("----- " + oMessage.type + " -----")); // eslint-disable-line
+                    }
+                    break;
+                default:
+                    if (oMessage.type !== "") {
+                        console.log("----- " + oMessage.type + " -----"); // eslint-disable-line
+                    }
+            }
+        } else {
+            console.log(("----- " + oMessage.type + " -----")[oConfig.sColor]); // eslint-disable-line
+        }
+        if (oMessage.date !== "") {
+            console.log(oMessage.date.grey); // eslint-disable-line
+        }
+        console.log(oMessage.oMessage); // eslint-disable-line
+    }
+    if (oConfig.bFile) {
+        if (oConfig.sFilename === "default") {
+            switch (sType) {
+                case ("info"):
+                    oConfig.sFilename = "logInfo";
+                    break;
+                case ("warn"):
+                    oConfig.sFilename = "logWarn";
+                    break;
+                case ("error"):
+                    oConfig.sFilename = "logError";
+                    break;
+                default:
+                    oConfig.sFilename = "log";
+            }
+        }
+        // Ältere Datein löschen.
+        // oldFiles();
+        var sMessage = "";
+        if (oMessage.date !== "") {
+            sMessage += oMessage.date + " " + oConfig.sSeparator + " ";
+        }
+        if (oMessage.type !== "") {
+            sMessage += oMessage.type + " " + oConfig.sSeparator + " ";
+        }
+        if (oMessage.message !== "") {
+            sMessage += oMessage.message;
+        }
+        sMessage = sMessage.replace(/\r/g, "	"); // eslint-disable-line
+        sMessage = sMessage.replace(/\n/g, "	"); // eslint-disable-line
+        var sDate = "";
+        if (oConfig.bDatelog) {
+            sDate += "_";
+            sDate += new Date().logfileDate();
+        }
+        fs.appendFile(path.join(oConfig.sPath, oConfig.sFilename + sDate + "." + oConfig.sExtansion), sMessage + "\n", function (err) {
+            if (err) {
+                console.log("simple-file-logger ERROR in write file: " + err); // eslint-disable-line
+            } else {
+                // console.log("The " + sFile + ".log file was saved!");
+            }
+        });
+    }
+}
+
+/**
+ *
+ * @param {string} sType Der Typ, welcher zu loggen ist
+ * @param {string|Object} osMessage Die zu speichernde Nachricht
+ * @param {Object} [oOptions] zusätzliche Optionen zum loggen
+ * @param {Boolean} [oOptions.bConsole] Log in Console
+ * @param {Boolean} [oOptions.bFile] Log in Datei
+ * @param {Boolean} [oOptions.bLogDate] Log mit Datum
+ * @param {string} [oOptions.sFilename] Dateiname
+ * @param {string} [oOptions.sExtansion] Extensioname
+ * @param {string} [oOptions.sPath] Pfadname !! WICHTIG Pfad muss vorher angelegt werden
+ * @param {string} [oOptions.sSeparator] Zeichen zwischen verscheidenen Teilen in der Datei
+ * @param {Boolean} [oOptions.bDatelog] Dateiname mit Datum
+ * @param {string} [oOptions.sColor] ???
+ * @param {number} [oOptions.iSaveDays] !! NOT IN USE !! Automatische Löschung der Datein mit Datum im Namen
+ */
+exports.log = function (sType, osMessage, oOptions) {
+    var oMessage = {
+        "date": "",
+        "type": "",
+        "message": helper.convertJSONToString(osMessage),
+        "oMessage": osMessage
+    };
+
+    if (sType === undefined || sType === "") {
+        sType = "default";
+    }
+
+    if (oOptions === undefined) {
+        oOptions = {};
+    }
+    setOptions(oOptions);
+
+    switch (sType) {
+        case ("info"):
+            oMessage.type = "info";
+            break;
+        case ("warn"):
+            oMessage.type = "warn";
+            break;
+        case ("error"):
+            oMessage.type = "error";
+            break;
+        default:
+            if (sType === "default") {
+                oMessage.type = "other";
+            } else {
+                oMessage.type = sType;
+            }
+
+    }
+    if (oConfig.bLogDate) {
+        oMessage.date = new Date().logDate();
+    }
+    logging(sType, oMessage);
+};

@@ -1,0 +1,21 @@
+﻿# Hier alle Datein reinschreiben, welche nur lokal gepeichert sein sollen, aber nicht mit übertragen werden sollen.
+
+# compiled output
+/jsdoc
+/apidoc
+
+
+# dependencies
+/node_modules
+
+
+# misc
+npm-debug.log
+/.tmp/
+/static/config.json
+
+
+# System Files
+.DS_Store
+Thumbs.db
+

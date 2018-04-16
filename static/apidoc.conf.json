@@ -1,0 +1,6 @@
+{
+    "name": "traco.nodejs.webapi",
+    "version": "1.0.0",
+    "description": "Die WebAPI für das TraCo TicketSystem in NodeJS",
+    "title": "TraCo -- NodeJS WebAPI-Doc"
+}
