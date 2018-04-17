@@ -22,7 +22,7 @@
         "quotes": ["warn", "double"],
         "camelcase": "error",
         "semi": ["error", "always"],
-        "no-undef": "off",
+        "no-undef": "error",
         "no-console": "warn",
         "no-unreachable": "error",
         "no-unused-vars": "warn",

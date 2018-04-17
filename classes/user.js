@@ -17,7 +17,7 @@ exports.class = function (fields) {
         "sUsername": "",
         "sPassword": "",
         "cPermission": "00000",
-        "dtSince": helper.getCurrentTimestamp(),
+        "dtSince": helper.currentTimestamp(),
         "dtLastAccess": undefined,
         "sFirstname": "",
         "sLastname": "",

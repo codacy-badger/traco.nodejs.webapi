@@ -58,6 +58,18 @@ exports.loadSessionDataFail = function (errSet) {
 };
 
 exports.httpErrorHandler = function (oResponse, oError) {
+    const HttpStatusCodes = {
+        BadRequest: 400,
+        Unauthorized: 401,
+        Forbidden: 403,
+        NotFound: 404,
+        MethodNotAllowed: 405,
+        Conflict: 409,
+        Gone: 410,
+        Locked: 423,
+        InternalServerError: 500,
+        ServiceUnavailable: 503
+    };
     if (!helper.isset(oError.SERR)) {
         oError = {
             "type": "unknown",
@@ -66,25 +78,25 @@ exports.httpErrorHandler = function (oResponse, oError) {
     }
     switch (oError.type) {
         case (errorcode.ERR_invalidCommand):
-            oResponse.statusCode = 404; // Not Found
+            oResponse.statusCode = HttpStatusCodes.NotFound;
             oResponse.json({
                 "SERR": oError.SERR
             });
             break;
         case (errorcode.ERR_individualError):
-            oResponse.statusCode = 400; // Bad Request
+            oResponse.statusCode = HttpStatusCodes.BadRequest;
             oResponse.json({
                 "SERR": oError.SERR
             });
             break;
         case (errorcode.ERR_invalidUserPermission):
-            oResponse.statusCode = 401; // Unauthorized
+            oResponse.statusCode = HttpStatusCodes.Unauthorized;
             oResponse.json({
                 "SERR": oError.SERR
             });
             break;
         case (errorcode.ERR_checkRequiredValues):
-            oResponse.statusCode = 400; // Bad Request
+            oResponse.statusCode = HttpStatusCodes.BadRequest;
             oResponse.json({
                 "SERR": oError.SERR,
                 "values": oError.arguments.aMissingValues

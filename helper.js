@@ -14,7 +14,6 @@ var fs = require("fs");
 var path = require("path");
 var prohelper = require("./prohelper");
 
-
 var redis;
 if (config.redis.enabled) {
     if (config.redis.socket === undefined || config.redis.socket === ".") {
@@ -83,7 +82,7 @@ exports.sqlsafe = function (req, res, next) {
     } catch (oErr) {
         console.log(oErr); // eslint-disable-line
         prohelper.httpErrorHandler(res, {
-            "type": helper.getErrorcode("ERR_individualError"),
+            "type": exports.getErrorcode("ERR_individualError"),
             "SERR": "FailedRequestValidation"
         });
     }
@@ -278,59 +277,6 @@ exports.isTrue = function (oValue, bAsInteger) {
     }
 };
 
-exports.convertStringToJSON = function (sJSON, oDefault) {
-    try {
-        if (sJSON.length) {
-            sJSON = sJSON.replace(/(?:\r\n|\r|\n)/g, "");
-            oDefault = JSON.parse(sJSON);
-        }
-    } catch (e) {
-        /*eslint-disable*/
-        console.log("-----"); // eslint-disable-line
-        console.log(e);
-        console.log("-----");
-        console.log("convertStringToJSON");
-        console.log("-----");
-        console.log(sJSON);
-        console.log("-----");
-        console.log(oDefault);
-        console.log("-----");
-        /*eslint-enable*/
-    }
-    return oDefault;
-};
-
-exports.convertJSONToString = function (oObject) {
-    var sJSON = "";
-    try {
-        if (typeof oObject === "object") {
-            sJSON = JSON.stringify(oObject);
-            var map = {
-                "'": "&#039;"
-            };
-            sJSON = sJSON.replace(/[']/g, function (m) {
-                return map[m];
-            });
-        }
-        if (typeof oObject === "string") {
-            sJSON = oObject;
-        }
-    } catch (e) {
-        /*eslint-disable*/
-        console.log("-----");
-        console.log(e);
-        console.log("-----");
-        console.log("convertJSONToStrings");
-        console.log("-----");
-        console.log(sJSON);
-        console.log("-----");
-        console.log(oObject);
-        console.log("-----");
-        /*eslint-enable*/
-    }
-    return sJSON;
-};
-
 exports.xor = function (conditionA, conditionB) {
     return (conditionA || conditionB) && !(conditionA && conditionB);
 };
@@ -372,12 +318,6 @@ exports.promiseWhile = bluebird.method(function (condition, action) {
     return action().then(exports.promiseWhile.bind(null, condition, action));
 });
 
-exports.throwPromise = function (errData) {
-    return new Promise(function (fFulfill, fReject) {
-        fReject(errData);
-    });
-};
-
 exports.validateEmail = function (sEmail) {
     var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(sEmail);
@@ -408,7 +348,7 @@ exports.isBool = function (test) {
 };
 
 exports.htmlspecialchars = function (sString) {
-    if (typeof sString !== "string") {
+    if (!exports.isString(sString)) {
         sString = String(sString);
     }
     var map = {
@@ -433,7 +373,7 @@ exports.filewalker = function (dir, done) {
 
     fs.readdir(dir, function (error, list) {
         if (error) {
-            return done(err);
+            return done(error);
         }
 
         var pending = list.length;

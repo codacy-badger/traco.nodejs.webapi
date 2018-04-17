@@ -7,7 +7,6 @@ require("../prototype/loadPrototype");
 var fs = require("fs");
 var path = require("path");
 var colors = require("colors");
-var helper = require("../helper");
 
 var oConfig = {};
 
@@ -43,6 +42,51 @@ function setOptions(oOptions) {
     // console.log(oConfig)
 }
 
+function _setFile(sType, oMessage) {
+    if (oConfig.sFilename === "default") {
+        switch (sType) {
+            case ("info"):
+                oConfig.sFilename = "logInfo";
+                break;
+            case ("warn"):
+                oConfig.sFilename = "logWarn";
+                break;
+            case ("error"):
+                oConfig.sFilename = "logError";
+                break;
+            default:
+                oConfig.sFilename = "log";
+        }
+    }
+
+    // Ältere Datein löschen.
+    // oldFiles();
+    var sMessage = "";
+    if (oMessage.date !== "") {
+        sMessage += oMessage.date + " " + oConfig.sSeparator + " ";
+    }
+    if (oMessage.type !== "") {
+        sMessage += oMessage.type + " " + oConfig.sSeparator + " ";
+    }
+    if (oMessage.message !== "") {
+        sMessage += oMessage.message;
+    }
+    sMessage = sMessage.replace(/\r/g, "	"); // eslint-disable-line
+    sMessage = sMessage.replace(/\n/g, "	"); // eslint-disable-line
+    var sDate = "";
+    if (oConfig.bDatelog) {
+        sDate += "_";
+        sDate += new Date().logfileDate();
+    }
+    fs.appendFile(path.join(oConfig.sPath, oConfig.sFilename + sDate + "." + oConfig.sExtansion), sMessage + "\n", function (err) {
+        if (err) {
+            console.log("simple-file-logger ERROR in write file: " + err); // eslint-disable-line
+        } else {
+            // console.log("The " + sFile + ".log file was saved!");
+        }
+    });
+}
+
 function logging(sType, oMessage) {
     if (oConfig.bConsole) {
         if (oConfig.sColor === "default") {
@@ -76,71 +120,46 @@ function logging(sType, oMessage) {
         console.log(oMessage.oMessage); // eslint-disable-line
     }
     if (oConfig.bFile) {
-        if (oConfig.sFilename === "default") {
-            switch (sType) {
-                case ("info"):
-                    oConfig.sFilename = "logInfo";
-                    break;
-                case ("warn"):
-                    oConfig.sFilename = "logWarn";
-                    break;
-                case ("error"):
-                    oConfig.sFilename = "logError";
-                    break;
-                default:
-                    oConfig.sFilename = "log";
-            }
-        }
-        // Ältere Datein löschen.
-        // oldFiles();
-        var sMessage = "";
-        if (oMessage.date !== "") {
-            sMessage += oMessage.date + " " + oConfig.sSeparator + " ";
-        }
-        if (oMessage.type !== "") {
-            sMessage += oMessage.type + " " + oConfig.sSeparator + " ";
-        }
-        if (oMessage.message !== "") {
-            sMessage += oMessage.message;
-        }
-        sMessage = sMessage.replace(/\r/g, "	"); // eslint-disable-line
-        sMessage = sMessage.replace(/\n/g, "	"); // eslint-disable-line
-        var sDate = "";
-        if (oConfig.bDatelog) {
-            sDate += "_";
-            sDate += new Date().logfileDate();
-        }
-        fs.appendFile(path.join(oConfig.sPath, oConfig.sFilename + sDate + "." + oConfig.sExtansion), sMessage + "\n", function (err) {
-            if (err) {
-                console.log("simple-file-logger ERROR in write file: " + err); // eslint-disable-line
-            } else {
-                // console.log("The " + sFile + ".log file was saved!");
-            }
-        });
+        _setFile(sType, oMessage);
     }
 }
 
-/**
- *
- * @param {string} sType Der Typ, welcher zu loggen ist
- * @param {string|Object} osMessage Die zu speichernde Nachricht
- * @param {Object} [oOptions] zusätzliche Optionen zum loggen
- * @param {Boolean} [oOptions.bConsole] Log in Console
- * @param {Boolean} [oOptions.bFile] Log in Datei
- * @param {Boolean} [oOptions.bLogDate] Log mit Datum
- * @param {string} [oOptions.sFilename] Dateiname
- * @param {string} [oOptions.sExtansion] Extensioname
- * @param {string} [oOptions.sPath] Pfadname !! WICHTIG Pfad muss vorher angelegt werden
- * @param {string} [oOptions.sSeparator] Zeichen zwischen verscheidenen Teilen in der Datei
- * @param {Boolean} [oOptions.bDatelog] Dateiname mit Datum
- * @param {string} [oOptions.sColor] ???
- * @param {number} [oOptions.iSaveDays] !! NOT IN USE !! Automatische Löschung der Datein mit Datum im Namen
- */
+function convertJSONToString(oObject) {
+    var sJSON = "";
+    try {
+        if (typeof oObject === "object") {
+            sJSON = JSON.stringify(oObject);
+            var map = {
+                "'": "&#039;"
+            };
+            sJSON = sJSON.replace(/[']/g, function (m) {
+                return map[m];
+            });
+        }
+        if (typeof oObject === "string") {
+            sJSON = oObject;
+        }
+    } catch (e) {
+        /*eslint-disable*/
+        console.log("-----");
+        console.log(e);
+        console.log("-----");
+        console.log("convertJSONToString");
+        console.log("-----");
+        console.log(sJSON);
+        console.log("-----");
+        console.log(oObject);
+        console.log("-----");
+        /*eslint-enable*/
+    }
+    return sJSON;
+}
+
 exports.log = function (sType, osMessage, oOptions) {
     var oMessage = {
         "date": "",
         "type": "",
-        "message": helper.convertJSONToString(osMessage),
+        "message": convertJSONToString(osMessage),
         "oMessage": osMessage
     };
 

@@ -7,9 +7,6 @@
 	],
     "settings": {
         "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
-        "files.associations": {
-            "*.njk": "html"
-        },
         "extensions.ignoreRecommendations": true,
         "git.confirmSync": false,
         "git.autofetch": true,
@@ -31,7 +28,12 @@
         "editor.showFoldingControls": "always",
         "workbench.tips.enabled": false,
         "javascript.suggestionActions.enabled": false,
-        "typescript.suggestionActions.enabled": false
+        "typescript.suggestionActions.enabled": false,
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": true,
+            "strings": false
+        }
     },
     "extensions": {
         "recommendations": [

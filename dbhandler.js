@@ -46,6 +46,7 @@ function _errorHandler(err, sType) {
     if (!err) {
         err = {};
     }
+    console.log(err); // eslint-disable-line
     var oErr = {};
     switch (err.code) {
         case ("ER_DUP_ENTRY"):
@@ -62,7 +63,19 @@ function _errorHandler(err, sType) {
     return oErr;
 }
 
+function _escape(sData) {
+    if (helper.isString(sData)) {
+        return connection.escape(sData.replace(new RegExp("@", "g"), "\x40"));
+    }
+    return sData;
+}
+
+function _unescapeAt(sSQLString) {
+    return sSQLString.replace(new RegExp("\x40", "g"), "@");
+}
+
 function _doQuery(sSQL, sType) {
+    sSQL = _unescapeAt(sSQL);
     fileLog(sType, sSQL);
     return new Promise(function (fFulfill, fReject) {
         if (config.mysql.enabled) {
@@ -104,10 +117,11 @@ function _generateKey(oDBClass, oOptions) {
         "prefix": oOptions.prefix,
         "suffix": oOptions.suffix
     });
+    var sSQL = "SELECT * FROM `" + oDBClass.classname + "` WHERE '" + sKey + "' = @0 LIMIT 1;";
     return helper.promiseWhile(function () {
         return oDBClass.fields[sKey].trim().length === 0;
     }, function () {
-        return exports.fetch("SELECT * FROM `@0` WHERE `@1` = '@2' LIMIT 1;", [oDBClass.classname, sKey, sRandomID])
+        return exports.fetch(sSQL, [sRandomID])
             .then(function (data) {
                 if (data.length === 0) {
                     oDBClass.fields[sKey] = sRandomID;
@@ -125,7 +139,7 @@ function _generateKey(oDBClass, oOptions) {
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Module
+// DB-Functions
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 exports.fetch = function (sCurser, aData) {
     var sSQL = sCurser;
@@ -143,13 +157,13 @@ exports.fetch = function (sCurser, aData) {
             let sData = "";
             let i = 0;
             while (i < aData[n].length) {
-                sData += aData[n][i] + ", ";
+                sData += _escape(aData[n][i]) + ", ";
                 i += 1;
             }
             aData[n] = sData.substring(0, sData.length - 2);
         }
         // Globales ersetzen der Parameter (Fals ein Parameter mehrfach vorkommt)
-        sSQL = sSQL.replace(new RegExp("@" + n, "g"), aData[n]);
+        sSQL = sSQL.replace(new RegExp("@" + n, "g"), _escape(aData[n]));
         n += 1;
     }
     return _doQuery(sSQL, "fetch");
@@ -174,7 +188,7 @@ exports.insert = function (oDBClass, oOptions) {
         n = 0;
         while (n < aDBFields.length) {
             if (helper.isset(aDBValues[n])) {
-                sSQL += "'" + aDBValues[n] + "', ";
+                sSQL += "" + _escape(aDBValues[n]) + ", ";
             } else {
                 sSQL += "NULL, ";
             }
@@ -198,7 +212,7 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
 
     function _generateInsert() {
         var aDBFields = Object.keys(oDBClass.fields);
-        var sSQL = "INSERT INTO`" + oDBClass.classname + "` (";
+        var sSQL = "INSERT INTO `" + oDBClass.classname + "` (";
         var n = 0;
         while (n < aDBFields.length) {
             sSQL += "`" + aDBFields[n] + "`, ";
@@ -210,7 +224,7 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
         n = 0;
         while (n < aDBFields.length) {
             if (helper.isset(aDBValues[n])) {
-                sSQL += "'" + aDBValues[n] + "', ";
+                sSQL += "" + _escape(aDBValues[n]) + ", ";
             } else {
                 sSQL += "NULL, ";
             }
@@ -221,7 +235,7 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
         n = 0;
         while (n < aDBFields.length) {
             if (helper.isset(aDBValues[n])) {
-                sSQL += "`" + aDBFields[n] + "` = '" + aDBValues[n] + "', ";
+                sSQL += "`" + aDBFields[n] + "` = " + _escape(aDBValues[n]) + ", ";
             } else {
                 sSQL += "`" + aDBFields[n] + "` = NULL, ";
             }
@@ -243,7 +257,7 @@ exports.delete = function (oDBClass) {
     }
 
     var sSQL = "DELETE FROM `" + oDBClass.classname + "` WHERE ";
-    sSQL += "`" + Object.keys(oDBClass.fields)[0] + "` = '" + Object.values(oDBClass.fields)[0] + "';";
+    sSQL += "`" + Object.keys(oDBClass.fields)[0] + "` = " + _escape(Object.values(oDBClass.fields)[0]) + ";";
     return _doQuery(sSQL, "delete");
 };
 
