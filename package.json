@@ -1,46 +1,18 @@
 {
     "name": "traco.nodejs.webapi",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "Die WebAPI für das TraCo TicketSystem in NodeJS",
-    "keywords": [
-        "traco",
-        "nodejs",
-        "webapi"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DerHerrGammler/traco.nodejs.webapi"
-    },
+    "author": "Felix Herold",
+    "main": "app.js",
     "license": "MIT",
-    "author": {
-        "name": "Felix Herold",
-        "email": "herold_felix@web.de",
-        "url": "https://github.com/DerHerrGammler"
-    },
-    "maintainers": [
-        {
-            "name": "Felix Herold",
-            "email": "herold_felix@web.de",
-            "url": "https://github.com/DerHerrGammler"
-        }
-    ],
-    "main": "server.js",
     "scripts": {
-        "preversion": "",
-        "version": "",
         "postversion": "git push",
-        "pretest": "",
-        "test": "echo \"Error: no Test specified\" && exit 1",
-        "posttest": "",
-        "prestart": "",
-        "start": "node server.js",
-        "poststart": "",
+        "start": "node app.js",
         "explorer": "node ./static/onlineExplorer",
         "jsdoc": "./node_modules/.bin/jsdoc -c ./static/jsdoc.conf.json -d ./jsdoc -r --verbose",
         "apidoc": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -c ./static/apidoc.conf.json -v",
         "docbuild": "npm run jsdoc && npm run apidoc"
     },
-    "config": {},
     "dependencies": {
         "bcryptjs": "^2.4.3",
         "bluebird": "^3.5.1",
@@ -61,7 +33,11 @@
         "eslint": "^4.19.1",
         "jsdoc": "^3.5.5"
     },
-    "peerDependencies": {},
     "optionalDependencies": {},
-    "bundledDependencies": []
+    "peerDependencies": {},
+    "bundledDependencies": [],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DerHerrGammler/traco.nodejs.webapi"
+    }
 }

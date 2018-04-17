@@ -4,18 +4,24 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 require("./prototype/loadPrototype");
 var bluebird = require("bluebird");
+var config = require("./static/config.json");
 var Cookie = require("cookies");
+var enums = require("./static/enums.json");
+var errorcodes = require("./static/errorcodes.json");
 var IORedis = require("ioredis");
+var logger = require("./module/simple-file-logger");
 var fs = require("fs");
 var path = require("path");
 var prohelper = require("./prohelper");
-var config = require("./static/config.json");
-var enums = require("./static/enums.json");
-var logger = require("./module/simple-file-logger");
-var errorcodes = require("./static/errorcodes.json");
+
+
 var redis;
 if (config.redis.enabled) {
-    redis = new IORedis();
+    if (config.redis.socket === undefined || config.redis.socket === ".") {
+        redis = new IORedis();
+    } else {
+        redis = new IORedis(config.redis.socket);
+    }
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,43 +47,148 @@ exports.getEnums = function (sCode) {
     throw new TypeError(sCode + " is not a ENUM");
 };
 
-exports.timeSum = function (iSec, iMin, iHour, iDay, iWeek) {
-    if (!iWeek) {
-        iWeek = 0;
+exports.sqlsafe = function (req, res, next) {
+
+    function safeObject(oArray) {
+        var oData = {};
+        Object.keys(oArray).forEach(function (key) {
+            if (exports.isObject(oArray[key])) {
+                oData[key] = safeObject(oArray[key]);
+            } else {
+                if (exports.isArray(oArray[key])) {
+                    oData[key] = [];
+                    var i = 0;
+                    while (i < oArray[key].length) {
+                        if (exports.isObject(oArray[key][i]) || exports.isArray(oArray[key][i])) {
+                            oData[key].push(safeObject(oArray[key][i]));
+                        } else {
+                            oData[key].push(exports.htmlspecialchars(oArray[key][i]));
+                        }
+                        i += 1;
+                    }
+                } else {
+                    oData[key] = exports.htmlspecialchars(oArray[key]);
+                }
+            }
+        });
+        return oData;
     }
-    if (!iDay) {
-        iDay = 0;
+
+    try {
+        if (req.method === "GET") {
+            req.body = req.query;
+        }
+        req.body = safeObject(req.body);
+        next();
+    } catch (oErr) {
+        console.log(oErr); // eslint-disable-line
+        prohelper.httpErrorHandler(res, {
+            "type": helper.getErrorcode("ERR_individualError"),
+            "SERR": "FailedRequestValidation"
+        });
     }
-    if (!iHour) {
-        iHour = 0;
-    }
-    if (!iMin) {
-        iMin = 0;
-    }
-    if (!iSec) {
-        iSec = 0;
-    }
-    var iTime = iSec * enums.Secound + iMin * enums.Minute + iHour * enums.Hour + iDay * enums.Day + iWeek * enums.Week;
-    return iTime;
 };
 
-exports.timeSplit = function (iTimeSec) {
-    var iWeek = Math.floor(iTimeSec / enums.Week);
-    var iDay = Math.floor(iTimeSec / enums.Day);
-    var iHour = Math.floor(iTimeSec / enums.Hour);
-    var iMin = Math.floor(iTimeSec / enums.Minute);
-    var iSec = iTimeSec - iMin * 60;
-    iMin = iMin - iHour * 60;
-    iHour = iHour - iDay * 24;
-    iDay = iDay - iWeek;
-    var oTime = {
-        "Secound": iSec,
-        "Minute": iMin,
-        "Hour": iHour,
-        "Day": iDay,
-        "Week": iWeek
+exports.startSession = function (oCookie, oParam) {
+    try {
+        if (oParam.session) {
+            var sSessionid = exports.randomString(32, "aA#", {
+                "prefix": oParam.prefix,
+                "suffix": oParam.suffix
+            });
+            if (oParam.cookie === true || oParam.cookie === "true") {
+                oCookie.set(config.cookie.session, sSessionid, {
+                    "overwrite": true,
+                    "httpOnly": true,
+                    "expires": new Date(Date.now() + (enums.Year * 10) * 1000)
+                });
+            } else {
+                oCookie.set(config.cookie.session, sSessionid, {
+                    "overwrite": true,
+                    "httpOnly": true
+                });
+            }
+            if (config.redis.enabled) {
+                redis.set(sSessionid, oParam.redis);
+            }
+        }
+    } catch (err) {
+        console.log(err); // eslint-disable-line
+    }
+};
+
+exports.endSession = function (oCookie, oParam) {
+    if (oParam.sessionid !== undefined) {
+        if (config.redis.enabled) {
+            redis.del(oParam.sessionid);
+            oCookie.set(config.cookie.session);
+        } else {
+            oCookie.set(config.cookie.session);
+        }
+    }
+};
+
+exports.loadSessionData = function (req, res, next) {
+    var oCookie = new Cookie(req, res);
+    var sSessionid = oCookie.get(config.cookie.session);
+    req.clientdata = {
+        "sessionid": "                                ",
+        "sessiondata": {}
     };
-    return oTime;
+
+    exports.startPromiseChain()
+        .then(function () {
+            if (config.redis.enabled) {
+                return new Promise(function (fFulfill, fReject) {
+                    redis.get(sSessionid, function (error, result) {
+                        var err;
+                        if (!error) {
+                            if (result) {
+                                fFulfill(prohelper.loadSessionData(result));
+                            } else {
+                                err = {
+                                    "ERR": "No Redis fetch result",
+                                    "sSessionid": sSessionid
+                                };
+                                fReject(prohelper.loadSessionDataFail(err));
+                            }
+                        } else {
+                            err = {
+                                "ERR": "Redis fetch failed",
+                                "err": error,
+                                "sSessionid": sSessionid
+                            };
+                            fReject(prohelper.loadSessionDataFail(err));
+                        }
+                    });
+                });
+            } else {
+                if (sSessionid !== undefined) {
+                    return prohelper.loadSessionData(sSessionid);
+                } else {
+                    var err = {
+                        "ERR": "Keine Session am laufen!"
+                    };
+                    throw prohelper.loadSessionDataFail(err);
+                }
+            }
+        })
+        .then(function (sessionData) {
+            req.clientdata = {
+                "sessionid": sSessionid,
+                "sessiondata": sessionData
+            };
+            req.oSessionData = sessionData;
+            next();
+        })
+        .catch(function (err) {
+            req.oSessionData = err;
+            next();
+        });
+};
+
+exports.currentTimestamp = function () {
+    return Math.floor(Date.now() / 1000);
 };
 
 exports.randomString = function (iLength, sChars, oOptions) {
@@ -150,106 +261,21 @@ exports.hasChar = function (sString, sChars) {
     }
 };
 
-exports.startSession = function (oCookie, oParam) {
-    try {
-        if (oParam.session) {
-            var sSessionid = exports.randomString(32, "aA#", {
-                "prefix": oParam.prefix,
-                "suffix": oParam.suffix
-            });
-            if (oParam.cookie === true || oParam.cookie === "true") {
-                oCookie.set(config.cookie.session, sSessionid, {
-                    "overwrite": true,
-                    "httpOnly": true,
-                    "expires": new Date(Date.now() + (enums.Year * 10) * 1000)
-                });
-            } else {
-                oCookie.set(config.cookie.session, sSessionid, {
-                    "overwrite": true,
-                    "httpOnly": true
-                });
-            }
-            if (config.redis.enabled) {
-                redis.set(sSessionid, oParam.redis);
-            }
-        }
-    } catch (err) {
-        console.log(err); // eslint-disable-line
-    }
-};
-
-exports.endSession = function (oCookie, oParam) {
-    if (oParam.sessionid !== undefined) {
-        if (config.redis.enabled) {
-            redis.del(oParam.sessionid);
-            oCookie.set(config.cookie.session);
-        } else {
-            oCookie.set(config.cookie.session);
-        }
-    }
-};
-
-exports.loadSessionData = function (req, res, next) {
-    var oCookie = new Cookie(req, res);
-    var sSessionid = oCookie.get(config.cookie.session);
-    req.clientdata = {
-        "sessionid": "                                ",
-        "sessiondata": {}
-    };
-
-    exports.startPromiseChain()
-        .then(function () {
-            if (config.redis.enabled) {
-                return new Promise(function (fFill, fFail) {
-                    redis.get(sSessionid, function (error, result) {
-                        var err;
-                        if (!error) {
-                            if (result) {
-                                fFill(prohelper.loadSessionData(result));
-                            } else {
-                                err = {
-                                    "ERR": "No Redis fetch result",
-                                    "sSessionid": sSessionid
-                                };
-                                fFail(prohelper.loadSessionDataFail(err));
-                            }
-                        } else {
-                            err = {
-                                "ERR": "Redis fetch failed",
-                                "err": error,
-                                "sSessionid": sSessionid
-                            };
-                            fFail(prohelper.loadSessionDataFail(err));
-                        }
-                    });
-                });
-            } else {
-                if (sSessionid !== undefined) {
-                    return prohelper.loadSessionData(sSessionid);
-                } else {
-                    var err = {
-                        "ERR": "Keine Session am laufen!"
-                    };
-                    throw prohelper.loadSessionDataFail(err);
-                }
-            }
-        })
-        .then(function (sessionData) {
-            req.clientdata = {
-                "sessionid": sSessionid,
-                "sessiondata": sessionData
-            };
-            req.oSessionData = sessionData;
-            next();
-        })
-        .catch(function (err) {
-            req.oSessionData = err;
-            next();
-        });
-};
-
-exports.isSet = function (oItem) {
+exports.isset = function (oItem) {
     return (oItem !== undefined && oItem !== null);
+};
+
+exports.isTrue = function (oValue, bAsInteger) {
+    var bIsTrue = oValue === "true" || oValue === "1" || oValue === true || oValue === 1;
+    if (bAsInteger) {
+        if (bIsTrue) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } else {
+        return bIsTrue;
+    }
 };
 
 exports.convertStringToJSON = function (sJSON, oDefault) {
@@ -310,7 +336,7 @@ exports.xor = function (conditionA, conditionB) {
 };
 
 exports.checkRequiredValues = function (aValues) {
-    return new Promise(function (fFill, fFail) {
+    return new Promise(function (fFulfill, fReject) {
         var n = 0;
         var aMissingValues = [];
         while (n < aValues.length) {
@@ -320,9 +346,9 @@ exports.checkRequiredValues = function (aValues) {
             n += 1;
         }
         if (aMissingValues.length === 0) {
-            fFill();
+            fFulfill();
         } else {
-            fFail({
+            fReject({
                 "type": exports.getErrorcode("ERR_checkRequiredValues"),
                 "SERR": "MissingRequiredValues",
                 "arguments": {
@@ -334,8 +360,8 @@ exports.checkRequiredValues = function (aValues) {
 };
 
 exports.startPromiseChain = function () {
-    return new Promise(function (fFill) {
-        fFill();
+    return new Promise(function (fFulfill) {
+        fFulfill();
     });
 };
 
@@ -347,8 +373,8 @@ exports.promiseWhile = bluebird.method(function (condition, action) {
 });
 
 exports.throwPromise = function (errData) {
-    return new Promise(function (fFill, fFail) {
-        fFail(errData);
+    return new Promise(function (fFulfill, fReject) {
+        fReject(errData);
     });
 };
 
@@ -358,27 +384,27 @@ exports.validateEmail = function (sEmail) {
 };
 
 exports.isArray = function (test) {
-    return test.constructor.toString().indexOf("Array") > -1;
+    return (test instanceof Array);
 };
 
 exports.isObject = function (test) {
-    return test.constructor.toString().indexOf("Object") > -1;
+    return (typeof test === "object" && !exports.isArray(test));
 };
 
 exports.isInt = function (test) {
-    return test.constructor.toString().indexOf("Number") > -1;
+    return (typeof test === "number");
 };
 
 exports.isString = function (test) {
-    return test.constructor.toString().indexOf("String") > -1;
+    return (typeof test === "string");
 };
 
 exports.isFunc = function (test) {
-    return test.constructor.toString().indexOf("Function") > -1;
+    return (typeof test === "function");
 };
 
 exports.isBool = function (test) {
-    return test.constructor.toString().indexOf("Boolean") > -1;
+    return (typeof test === "boolean");
 };
 
 exports.htmlspecialchars = function (sString) {
@@ -400,48 +426,6 @@ exports.htmlspecialchars = function (sString) {
     return sString.replace(/[!"$&'<>\\/\t]/g, function (m) {
         return map[m];
     });
-};
-
-exports.sqlsafe = function (req, res, next) {
-
-    function safeObject(oArray) {
-        var oData = {};
-        Object.keys(oArray).forEach(function (key) {
-            if (exports.isObject(oArray[key])) {
-                oData[key] = safeObject(oArray[key]);
-            } else {
-                if (exports.isArray(oArray[key])) {
-                    oData[key] = [];
-                    var i = 0;
-                    while (i < oArray[key].length) {
-                        if (exports.isObject(oArray[key][i]) || exports.isArray(oArray[key][i])) {
-                            oData[key].push(safeObject(oArray[key][i]));
-                        } else {
-                            oData[key].push(exports.htmlspecialchars(oArray[key][i]));
-                        }
-                        i += 1;
-                    }
-                } else {
-                    oData[key] = exports.htmlspecialchars(oArray[key]);
-                }
-            }
-        });
-        return oData;
-    }
-
-    try {
-        if (req.method === "GET") {
-            req.body = req.query;
-        }
-        req.body = safeObject(req.body);
-        next();
-    } catch (oErr) {
-        console.log(oErr); // eslint-disable-line
-        prohelper.httpErrorHandler(res, {
-            "type": helper.getErrorcode("ERR_individualError"),
-            "SERR": "FailedRequestValidation"
-        });
-    }
 };
 
 exports.filewalker = function (dir, done) {

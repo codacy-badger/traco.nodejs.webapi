@@ -20,7 +20,7 @@
     "mysql": {
         "enabled": true,
         "main": {
-            "connectionLimit": 25,
+            "connectionLimit": 50,
             "host": "127.0.0.1",
             "user": "traco",
             "password": "traco",
@@ -28,10 +28,11 @@
             "charset": "utf8mb4_bin"
         }
     },
+    "redis": {
+        "enabled": true,
+        "socket": "."
+    },
     "cookie": {
         "session": "login"
-    },
-    "redis": {
-        "enabled": true
     }
 }

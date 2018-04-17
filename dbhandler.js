@@ -6,7 +6,6 @@ var mysql = require("mysql");
 var helper = require("./helper");
 var config = require("./static/config.json");
 var dbcurser = require("./static/dbcurser.json");
-var logger = require("./module/simple-file-logger");
 var connection;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -36,7 +35,7 @@ function fileLog(sType, sSQL) {
     if (sType === undefined) {
         sType = "UNDEFINED";
     }
-    logger.log(sType, sSQL, {
+    helper.log(sType, sSQL, {
         "bFile": config.debug.logSQL,
         "bConsole": false,
         "sFilename": "logSQL"
@@ -131,15 +130,24 @@ function _generateKey(oDBClass, oOptions) {
 exports.fetch = function (sCurser, aData) {
     var sSQL = sCurser;
     // Wenn nur ein Pointer auf einen Curser gemeint ist dieses Auswählen
-    if (helper.isSet(dbcurser[sCurser])) {
+    if (helper.isset(dbcurser[sCurser])) {
         sSQL = dbcurser[sCurser];
     }
     var iData = 0;
-    if (helper.isSet(aData)) {
+    if (helper.isset(aData)) {
         iData = aData.length;
     }
     var n = 0;
     while (n < iData) {
+        if (helper.isArray(aData[n])) {
+            let sData = "";
+            let i = 0;
+            while (i < aData[n].length) {
+                sData += aData[n][i] + ", ";
+                i += 1;
+            }
+            aData[n] = sData.substring(0, sData.length - 2);
+        }
         // Globales ersetzen der Parameter (Fals ein Parameter mehrfach vorkommt)
         sSQL = sSQL.replace(new RegExp("@" + n, "g"), aData[n]);
         n += 1;
@@ -148,7 +156,7 @@ exports.fetch = function (sCurser, aData) {
 };
 
 exports.insert = function (oDBClass, oOptions) {
-    if (!helper.isSet(oDBClass) || !helper.isSet(oDBClass.fields)) {
+    if (!helper.isset(oDBClass) || !helper.isset(oDBClass.fields)) {
         throw new TypeError("No oDBClass given for insert");
     }
 
@@ -165,7 +173,7 @@ exports.insert = function (oDBClass, oOptions) {
         var aDBValues = Object.values(oDBClass.fields);
         n = 0;
         while (n < aDBFields.length) {
-            if (helper.isSet(aDBValues[n])) {
+            if (helper.isset(aDBValues[n])) {
                 sSQL += "'" + aDBValues[n] + "', ";
             } else {
                 sSQL += "NULL, ";
@@ -184,7 +192,7 @@ exports.insert = function (oDBClass, oOptions) {
 };
 
 exports.insertOrUpdate = function (oDBClass, oOptions) {
-    if (!helper.isSet(oDBClass) || !helper.isSet(oDBClass.fields)) {
+    if (!helper.isset(oDBClass) || !helper.isset(oDBClass.fields)) {
         throw new TypeError("No oDBClass given for insert");
     }
 
@@ -201,7 +209,7 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
         var aDBValues = Object.values(oDBClass.fields);
         n = 0;
         while (n < aDBFields.length) {
-            if (helper.isSet(aDBValues[n])) {
+            if (helper.isset(aDBValues[n])) {
                 sSQL += "'" + aDBValues[n] + "', ";
             } else {
                 sSQL += "NULL, ";
@@ -212,7 +220,7 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
         sSQL += ") ON DUPLICATE KEY UPDATE ";
         n = 0;
         while (n < aDBFields.length) {
-            if (helper.isSet(aDBValues[n])) {
+            if (helper.isset(aDBValues[n])) {
                 sSQL += "`" + aDBFields[n] + "` = '" + aDBValues[n] + "', ";
             } else {
                 sSQL += "`" + aDBFields[n] + "` = NULL, ";
@@ -230,7 +238,7 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
 };
 
 exports.delete = function (oDBClass) {
-    if (!helper.isSet(oDBClass) || !helper.isSet(oDBClass.fields)) {
+    if (!helper.isset(oDBClass) || !helper.isset(oDBClass.fields)) {
         throw new TypeError("No oDBClass given for insert");
     }
 
@@ -244,29 +252,4 @@ exports.getCurser = function (sCurser) {
         return dbcurser[sCurser];
     }
     throw new TypeError("DBCurser '" + sCurser + "' doesn't exists");
-};
-
-exports.generateCurserData = function (oData) {
-    if (!oData) {
-        throw new TypeError("No data for generation given");
-    }
-
-    function _in() {
-        var sData = "";
-        var i = 0;
-        while (i < oData.data.length) {
-            sData += "'" + oData.data[i] + "', ";
-            i += 1;
-        }
-        sData = sData.substring(0, sData.length - 2);
-        return sData;
-    }
-
-    switch (oData.type) {
-        case ("IN"):
-        case ("NOT IN"):
-            return _in();
-        default:
-            throw new TypeError("Wrong type given");
-    }
 };

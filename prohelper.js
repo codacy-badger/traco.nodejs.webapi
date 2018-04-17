@@ -58,7 +58,7 @@ exports.loadSessionDataFail = function (errSet) {
 };
 
 exports.httpErrorHandler = function (oResponse, oError) {
-    if (!helper.isSet(oError.SERR)) {
+    if (!helper.isset(oError.SERR)) {
         oError = {
             "type": "unknown",
             "error": oError

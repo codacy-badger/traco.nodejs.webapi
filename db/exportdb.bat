@@ -4,7 +4,7 @@ echo.
 echo Syntax (defaults in MySQLVARS.bat are used for missing parameters):
 echo EXPORT -f filename [-u USERNAME] [-p PASSWORD] [-db DBNAME] [-s SERVER]
 echo.
-if "%1" == "" echo SQL-script (parameter -f) not defined. 
+if "%1" == "" echo SQL-script (parameter -f) not defined.
 if "%1" == "" goto ENDE
 
 SET exportf=
@@ -36,7 +36,7 @@ IF NOT "%1"=="" (
     GOTO :loop
 )
 
-if "%exportf%"=="" echo Export file (parameter -f) not defined. 
+if "%exportf%"=="" echo Export file (parameter -f) not defined.
 if "%exportf%"=="" goto ENDE
 REM If second letter not :, then the parameter doen not contain an absolute path
 REM In this case use the Pseudo-Variable %CD% to add the current directory.
@@ -48,16 +48,16 @@ del /P %exportf%
 echo.
 )
 echo Export file: %exportf%
-SET /P ABFRAGE=Export database %MySQL_DB% as user %MySQL_USER% on %MySQL_SERV% [Y]es / [N]o? 
+SET /P ABFRAGE=Export database %MySQL_DB% as user %MySQL_USER% on %MySQL_SERV% [Y]es / [N]o?
 IF "%ABFRAGE%"=="N" GOTO FEHLER
 IF "%ABFRAGE%"=="n" GOTO FEHLER
 
 :EXPORT
-echo START: 
+echo START:
 time /T
 echo exporting Database...
 mysqldump -v -i -c --dump-date -n -h %MySQL_SERV% -P %MySQL_PORT% -u %MySQL_USER% --password=%MySQL_PASSWD% %MySQL_DB% | xz > %exportf%
-echo ENDE: 
+echo ENDE:
 time /T
 goto ENDE
 

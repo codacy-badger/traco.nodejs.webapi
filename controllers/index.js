@@ -51,9 +51,6 @@ module.exports = function (router) {
         Object.keys(oRoutes).forEach(function (sFolder) {
             Object.keys(oRoutes[sFolder]).forEach(function (sFile) {
                 sRoute = sFolder + "/";
-                if (sFolder.indexOf("web") !== -1) {
-                    sRoute = sRoute.replace("web/", "");
-                }
 
                 // GET methods
                 if (oRoutes[sFolder][sFile].get !== undefined) {
@@ -77,12 +74,6 @@ module.exports = function (router) {
                 }
             });
         });
-
-        // Fall-back for non existing jobs
-        router.get("/api/*", prohelper.invalid);
-        router.post("/api/*", prohelper.invalid);
-        router.put("/api/*", prohelper.invalid);
-        router.delete("/api/*", prohelper.invalid);
 
         // Fall-back for non existing other jobs
         router.get("/*", prohelper.invalid);
