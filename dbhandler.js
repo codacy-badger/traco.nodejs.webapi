@@ -176,7 +176,7 @@ exports.insert = function (oDBClass, oOptions) {
         n = 0;
         while (n < aDBFields.length) {
             if (helper.isset(aDBValues[n])) {
-                sSQL += "" + connection.escape(aDBValues[n]) + ", ";
+                sSQL += String(connection.escape(aDBValues[n])) + ", ";
             } else {
                 sSQL += "NULL, ";
             }

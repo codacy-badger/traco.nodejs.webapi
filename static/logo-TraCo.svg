@@ -1,6 +1,6 @@
 <svg width="4200" height="1200" xmlns="http://www.w3.org/2000/svg">
-    <text y="888" x="1100" 
-        font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="1000" 
+    <text y="888" x="1100"
+        font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="1000"
         stroke-width="25" stroke="#000" fill="#000000">TraCo</text>
     <svg x="100" y="100">
         <defs>
@@ -28,24 +28,24 @@
                         fill="#000" fill-rule="evenodd"/>
                     <svg x="350" y="350">
                         <g transform="scale(.4)">
-                            <ellipse fill="#fff" 
-                                cx="500" cy="500" rx="350" ry="350" 
-                                stroke-dasharray="2,2" stroke="#000" stroke-width="175" stroke-opacity="null" 
+                            <ellipse fill="#fff"
+                                cx="500" cy="500" rx="350" ry="350"
+                                stroke-dasharray="2,2" stroke="#000" stroke-width="175" stroke-opacity="null"
                                 filter="url(#svg_filter_1)"/>
-                            <text y="517" x="288" 
-                                font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="300" 
+                            <text y="517" x="288"
+                                font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="300"
                                 stroke-width="5" stroke="#000" fill="#000000">T</text>
-                            <text y="620" x="371" 
-                                font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="300" 
+                            <text y="620" x="371"
+                                font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="300"
                                 stroke-width="5" stroke="#000" fill="#000000">r</text>
-                            <text y="719.5" x="459" 
-                                font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="300" 
+                            <text y="719.5" x="459"
+                                font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="300"
                                 stroke-width="5" stroke="#000" fill="#000000">a</text>
-                            <text y="529" x="471" 
-                                font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="300" 
+                            <text y="529" x="471"
+                                font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="300"
                                 stroke-width="5" stroke="#000" fill="#000000">C</text>
-                            <text y="609" x="571" 
-                                font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="300" 
+                            <text y="609" x="571"
+                                font-weight="bold" font-family="'Courier New', Courier, monospace" font-size="300"
                                 stroke-width="6" stroke="#000" fill="#000000">o</text>
                         </g>
                         <!-- <line x1="500" y1="0" x2="500" y2="1000" fill="red" stroke-width="1" stroke="red"></line> -->

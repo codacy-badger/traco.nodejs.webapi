@@ -1,5 +1,5 @@
 
-# TraCo -- NodeJS WebAPI
+# __TraCo -- NodeJS WebAPI__
 
 [![dependencies Status](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi/status.svg)](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi)
 [![devDependencies Status](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi/dev-status.svg)](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi?type=dev)
@@ -28,8 +28,14 @@ Run `node server.js` to start the WebAPI-Server on [localhost:3000](http://local
 
 Run `npm run erplorer` to start a onlineExplorer on [localhost:8001](http://localhost:8001) by default.
 
-Run `npm run apidoc` to compile the documentation to the API into the `./apidoc` directory.
+Run `npm run apidoc` to compile the documentation of the API into the `./apidoc` directory.  
+Run `npm run jsdoc` to compile the documentation of the modules into the `./jsdoc` directory.
 
 ## Build
 
 **-- NOT READY YET --**
+
+## Extra Information
+
+ - [LICENSE](LICENSE)
+ - [TO-DO-List](TODO.md)

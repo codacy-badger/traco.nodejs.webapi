@@ -70,7 +70,10 @@
         "no-else-return": "error",
         "init-declarations": "off",
         "no-lonely-if": "error",
-        "handle-callback-err":"error"
+        "handle-callback-err": "error",
+        "no-negated-condition": "warn",
+        "no-implicit-coercion": "error",
+        "operator-assignment": "warn"
     },
     "settings": {}
 }

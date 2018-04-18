@@ -140,19 +140,18 @@ exports.loadSessionData = function (req, res, next) {
                     redis.get(sSessionid, function (error, result) {
                         var err;
                         if (!error) {
-                            if (result) {
-                                fFulfill(prohelper.loadSessionData(result));
-                            } else {
-                                err = {
-                                    "ERR": "No Redis fetch result",
-                                    "sSessionid": sSessionid
-                                };
-                                fReject(prohelper.loadSessionDataFail(err));
-                            }
-                        } else {
                             err = {
                                 "ERR": "Redis fetch failed",
                                 "err": error,
+                                "sSessionid": sSessionid
+                            };
+                            fReject(prohelper.loadSessionDataFail(err));
+                        }
+                        if (result) {
+                            fFulfill(prohelper.loadSessionData(result));
+                        } else {
+                            err = {
+                                "ERR": "No Redis fetch result",
                                 "sSessionid": sSessionid
                             };
                             fReject(prohelper.loadSessionDataFail(err));
@@ -230,22 +229,22 @@ exports.hasChar = function (sString, sChars) {
     var iChar = sChars.length;
     if (sChars.indexOf("a") > -1) {
         if (sString.match(/[abcdefghijklmnopqrstuvwxyz]/)) {
-            iChar = iChar - 1;
+            iChar -= 1;
         }
     }
     if (sChars.indexOf("A") > -1) {
         if (sString.match(/[ABCDEFGHIJKLMNOPQRSTUVWXYZ]/)) {
-            iChar = iChar - 1;
+            iChar -= 1;
         }
     }
     if (sChars.indexOf("#") > -1) {
         if (sString.match(/[1234567890]/)) {
-            iChar = iChar - 1;
+            iChar -= 1;
         }
     }
     if (sChars.indexOf("!") > -1) {
         if (sString.match(/[~`!@#$%^&*()_+-={}[\]:";'<>?,./|\\]/)) {
-            iChar = iChar - 1;
+            iChar -= 1;
         }
     }
     if (iChar === 0) {

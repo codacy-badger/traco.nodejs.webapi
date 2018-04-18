@@ -7,7 +7,7 @@
 	],
     "settings": {
         "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
-        "extensions.ignoreRecommendations": true,
+        "extensions.ignoreRecommendations": false,
         "git.confirmSync": false,
         "git.autofetch": true,
         "files.autoSave": "afterDelay",
@@ -44,7 +44,8 @@
 			"cssho.vscode-svgviewer",
 			"howardzuo.vscode-gitk",
             "PKief.material-icon-theme",
-            "myax.appidocsnippets"
+            "myax.appidocsnippets",
+            "yzhang.markdown-all-in-one"
 		]
     }
 }

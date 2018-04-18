@@ -1,8 +1,15 @@
 "use strict";
+/**
+ * @class
+ */
 //************************************************
 // neue Prototypes
 //************************************************
 if (Array.prototype.sortBy) console.warn("Override existing Array.prototype.sortBy!"); // eslint-disable-line
+/**
+ * Order the Array with an Object insite by multiple rows ASC or DESC. With - before the rowname it would be DESC.
+ * @returns {Object[]}
+ */
 Array.prototype.sortBy = function () {
 
     var _sortByAttr = function (attr) {
@@ -49,6 +56,11 @@ Array.prototype.sortBy = function () {
 };
 
 if (Array.prototype.compare) console.warn("Override existing Array.prototype.compare!"); // eslint-disable-line
+/**
+ * Compares the Array. If they are the same return true else false.
+ * @param {Object[]} array
+ * @returns {Boolean}
+ */
 Array.prototype.compare = function (array) {
     if (!array) {
         return false;
@@ -78,6 +90,10 @@ Array.prototype.compare = function (array) {
 };
 
 if (Array.prototype.isEmpty) console.warn("Override existing Array.prototype.isEmpty!"); // eslint-disable-line
+/**
+ * Returns true if the Array is empty and has no values inside.
+ * @returns {Boolean}
+ */
 Array.prototype.isEmpty = function () {
     if (this.length === 0) {
         return true;
@@ -87,9 +103,8 @@ Array.prototype.isEmpty = function () {
 
 if (Array.prototype.unique) console.warn("Override existing Array.prototype.unique!"); // eslint-disable-line
 /**
- * @method unique
- * @returns {any[]}
- * Gibt den Array als unique Array wieder. Keine Daten sind doppelt vorhanden.
+ * Creates a array with every entry just one time.
+ * @returns {string[]}
  */
 Array.prototype.unique = function () {
     var arr = [];
@@ -104,6 +119,11 @@ Array.prototype.unique = function () {
 };
 
 if (Array.prototype.removePos) console.warn("Override existing Array.prototype.removePos!"); // eslint-disable-line
+/**
+ * Removes a spezific position in the array.
+ * @param {number} iPos
+ * @returns {void}
+ */
 Array.prototype.removePos = function (iPos) {
     if (!iPos) {
         throw new TypeError("No Position given");
@@ -116,6 +136,11 @@ Array.prototype.removePos = function (iPos) {
 };
 
 if (Array.prototype.removeStr) console.warn("Override existing Array.prototype.removeStr!"); // eslint-disable-line
+/**
+ * Removes a spezific string complete from the array.
+ * @param {string} sStr
+ * @returns {void}
+ */
 Array.prototype.removeStr = function (sStr) {
     if (!sStr) {
         throw new TypeError("No String given");
@@ -124,4 +149,20 @@ Array.prototype.removeStr = function (sStr) {
     while (this.includes(sStr)) {
         this.removePos(this.indexOf(sStr));
     }
+};
+
+if (Array.prototype.indexOfAll) console.warn("Override existing Array.prototype.indexOfAll!"); // eslint-disable-line
+/**
+ * Creates a array out of the Positions of the searched string.
+ * @param {string} search
+ * @returns {number[]}
+ */
+Array.prototype.indexOfAll = function (search) {
+    var idx = [];
+    var i = -1;
+    while (this.indexOf(search, i + 1) !== -1) {
+        i = this.indexOf(search, i + 1);
+        idx.push(i);
+    }
+    return idx;
 };

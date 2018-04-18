@@ -5,7 +5,7 @@ var oUser = new classes.User();
 
 oUser.set.sEmail("test@1mein.mail");
 
-return dbhandler.insertOrUpdate(oUser)
+dbhandler.insertOrUpdate(oUser)
     .then(function (data) {
         console.log(data);
         return dbhandler.fetch("Test", ["test@1mein.mail", "00000"]);
