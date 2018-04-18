@@ -56,7 +56,20 @@
         "no-tabs": "error",
         "no-useless-escape": "error",
         "complexity": ["warn", 15],
-        "curly": "warn"
+        "curly": "warn",
+        "strict": "off",
+        "prefer-const": "warn",
+        "no-magic-numbers": "off",
+        "no-extra-parens": "warn",
+        "comma-dangle": "error",
+        "space-before-function-paren": "off",
+        "callback-return": "error",
+        "consistent-this": ["error", "that"],
+        "func-style": ["error", "expression"],
+        "no-mixed-operators": "off",
+        "no-else-return": "error",
+        "init-declarations": "off",
+        "no-lonely-if": "error"
     },
     "settings": {}
 }

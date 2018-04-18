@@ -11,7 +11,7 @@ var connection;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Functions
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function handleDisconnect() {
+var handleDisconnect = function () {
     // Create connection pool
     connection = mysql.createPool(config.mysql.main);
 
@@ -25,13 +25,13 @@ function handleDisconnect() {
             throw err;
         }
     });
-}
+};
 
 if (config.mysql.enabled) {
     handleDisconnect();
 }
 
-function fileLog(sType, sSQL) {
+var fileLog = function (sType, sSQL) {
     if (sType === undefined) {
         sType = "UNDEFINED";
     }
@@ -40,16 +40,16 @@ function fileLog(sType, sSQL) {
         "bConsole": false,
         "sFilename": "logSQL"
     });
-}
+};
 
-function _errorHandler(err, sType) {
+var _errorHandler = function (err, sType) {
     if (!err) {
         err = {};
     }
     console.log(err); // eslint-disable-line
     var oErr = {};
     switch (err.code) {
-        case ("ER_DUP_ENTRY"):
+        case "ER_DUP_ENTRY":
             oErr = {
                 "SERR": "DB_DUP"
             };
@@ -61,21 +61,17 @@ function _errorHandler(err, sType) {
     }
     fileLog("ERROR", "---------- ONE Statement above was an ERROR ----------");
     return oErr;
-}
+};
 
-function _escape(sData) {
+var _escape = function (sData) {
     if (helper.isString(sData)) {
-        return connection.escape(sData.replace(new RegExp("@", "g"), "\x40"));
+        sData = sData.replace(new RegExp("@", "g"), "\x40");
     }
-    return sData;
-}
+    return connection.escape(sData);
+};
 
-function _unescapeAt(sSQLString) {
-    return sSQLString.replace(new RegExp("\x40", "g"), "@");
-}
-
-function _doQuery(sSQL, sType) {
-    sSQL = _unescapeAt(sSQL);
+var _doQuery = function (sSQL, sType) {
+    sSQL = sSQL.replace(/\x40/g, "@");
     fileLog(sType, sSQL);
     return new Promise(function (fFulfill, fReject) {
         if (config.mysql.enabled) {
@@ -92,9 +88,9 @@ function _doQuery(sSQL, sType) {
             });
         }
     });
-}
+};
 
-function _generateKey(oDBClass, oOptions) {
+var _generateKey = function (oDBClass, oOptions) {
     oOptions = oOptions || {};
     oOptions.prefix = oOptions.prefix || "";
     oOptions.suffix = oOptions.suffix || "";
@@ -136,7 +132,7 @@ function _generateKey(oDBClass, oOptions) {
                 return oDBClass;
             });
     });
-}
+};
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DB-Functions
@@ -174,7 +170,7 @@ exports.insert = function (oDBClass, oOptions) {
         throw new TypeError("No oDBClass given for insert");
     }
 
-    function _generateInsert() {
+    var _generateInsert = function () {
         var aDBFields = Object.keys(oDBClass.fields);
         var sSQL = "INSERT INTO`" + oDBClass.classname + "` (";
         var n = 0;
@@ -197,7 +193,7 @@ exports.insert = function (oDBClass, oOptions) {
         sSQL = sSQL.substring(0, sSQL.length - 2);
         sSQL += ");";
         return _doQuery(sSQL, "insert");
-    }
+    };
 
     return _generateKey(oDBClass, oOptions)
         .then(function () {
@@ -210,7 +206,7 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
         throw new TypeError("No oDBClass given for insert");
     }
 
-    function _generateInsert() {
+    var _generateInsert = function () {
         var aDBFields = Object.keys(oDBClass.fields);
         var sSQL = "INSERT INTO `" + oDBClass.classname + "` (";
         var n = 0;
@@ -224,7 +220,7 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
         n = 0;
         while (n < aDBFields.length) {
             if (helper.isset(aDBValues[n])) {
-                sSQL += "" + _escape(aDBValues[n]) + ", ";
+                sSQL += _escape(aDBValues[n]) + ", ";
             } else {
                 sSQL += "NULL, ";
             }
@@ -243,7 +239,7 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
         }
         sSQL = sSQL.substring(0, sSQL.length - 2) + ";";
         return _doQuery(sSQL, "insertOrUpdate");
-    }
+    };
 
     return _generateKey(oDBClass, oOptions)
         .then(function () {

@@ -1,4 +1,3 @@
-/** @module */
 "use strict";
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
@@ -13,7 +12,7 @@ var oConfig = {};
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Function
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function setOptions(oOptions) {
+var setOptions = function (oOptions) {
     var sDirPath = oOptions.sPath || ".tmp";
     oConfig = {
         "bConsole": true,
@@ -40,18 +39,18 @@ function setOptions(oOptions) {
         oConfig.bDatelog = false;
     }
     // console.log(oConfig)
-}
+};
 
-function _setFile(sType, oMessage) {
+var _setFile = function (sType, oMessage) {
     if (oConfig.sFilename === "default") {
         switch (sType) {
-            case ("info"):
+            case "info":
                 oConfig.sFilename = "logInfo";
                 break;
-            case ("warn"):
+            case "warn":
                 oConfig.sFilename = "logWarn";
                 break;
-            case ("error"):
+            case "error":
                 oConfig.sFilename = "logError";
                 break;
             default:
@@ -85,23 +84,23 @@ function _setFile(sType, oMessage) {
             // console.log("The " + sFile + ".log file was saved!");
         }
     });
-}
+};
 
-function logging(sType, oMessage) {
+var logging = function (sType, oMessage) {
     if (oConfig.bConsole) {
         if (oConfig.sColor === "default") {
             switch (sType) {
-                case ("info"):
+                case "info":
                     if (oMessage.type !== "") {
                         console.log(colors.green("----- " + oMessage.type + " -----")); // eslint-disable-line
                     }
                     break;
-                case ("warn"):
+                case "warn":
                     if (oMessage.type !== "") {
                         console.log(colors.yellow("----- " + oMessage.type + " -----")); // eslint-disable-line
                     }
                     break;
-                case ("error"):
+                case "error":
                     if (oMessage.type !== "") {
                         console.log(colors.red("----- " + oMessage.type + " -----")); // eslint-disable-line
                     }
@@ -122,9 +121,9 @@ function logging(sType, oMessage) {
     if (oConfig.bFile) {
         _setFile(sType, oMessage);
     }
-}
+};
 
-function convertJSONToString(oObject) {
+var convertJSONToString = function (oObject) {
     var sJSON = "";
     try {
         if (typeof oObject === "object") {
@@ -153,7 +152,7 @@ function convertJSONToString(oObject) {
         /*eslint-enable*/
     }
     return sJSON;
-}
+};
 
 exports.log = function (sType, osMessage, oOptions) {
     var oMessage = {
@@ -173,13 +172,13 @@ exports.log = function (sType, osMessage, oOptions) {
     setOptions(oOptions);
 
     switch (sType) {
-        case ("info"):
+        case "info":
             oMessage.type = "info";
             break;
-        case ("warn"):
+        case "warn":
             oMessage.type = "warn";
             break;
-        case ("error"):
+        case "error":
             oMessage.type = "error";
             break;
         default:

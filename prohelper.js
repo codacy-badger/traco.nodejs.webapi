@@ -20,7 +20,7 @@ exports.loadSessionData = function (dataSet) {
         return dbhandler.fetch(["FetchUserdataID"], [data])
             .then(function (aData) {
                 oUserdata = new classes.Userdata(aData[0]);
-                if ((oUserdata.get.lastAccess() + enums.Minute) < helper.date("unixTime")) {
+                if (oUserdata.get.lastAccess() + enums.Minute < helper.date("unixTime")) {
                     oUserdata.set.lastAccess();
                     return dbhandler.insertOrUpdate(oUserdata);
                 }
@@ -35,10 +35,9 @@ exports.loadSessionData = function (dataSet) {
         .then(function () {
             if (config.redis.enabled) {
                 return _load(dataSet);
-            } else {
-                var aSplitId = dataSet.split("-");
-                return _load(aSplitId[0]);
             }
+            var aSplitId = dataSet.split("-");
+            return _load(aSplitId[0]);
         })
         .then(function (sessionData) {
             return sessionData;
@@ -77,25 +76,25 @@ exports.httpErrorHandler = function (oResponse, oError) {
         };
     }
     switch (oError.type) {
-        case (errorcode.ERR_invalidCommand):
+        case errorcode.ERR_invalidCommand:
             oResponse.statusCode = HttpStatusCodes.NotFound;
             oResponse.json({
                 "SERR": oError.SERR
             });
             break;
-        case (errorcode.ERR_individualError):
+        case errorcode.ERR_individualError:
             oResponse.statusCode = HttpStatusCodes.BadRequest;
             oResponse.json({
                 "SERR": oError.SERR
             });
             break;
-        case (errorcode.ERR_invalidUserPermission):
+        case errorcode.ERR_invalidUserPermission:
             oResponse.statusCode = HttpStatusCodes.Unauthorized;
             oResponse.json({
                 "SERR": oError.SERR
             });
             break;
-        case (errorcode.ERR_checkRequiredValues):
+        case errorcode.ERR_checkRequiredValues:
             oResponse.statusCode = HttpStatusCodes.BadRequest;
             oResponse.json({
                 "SERR": oError.SERR,

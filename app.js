@@ -11,6 +11,7 @@ var bodyParser = require("body-parser");
 var compress = require("compression");
 var config = require("./static/config.json");
 var express = require("express");
+var helper = require("./helper");
 var http = require("http");
 var morgan = require("morgan");
 var path = require("path");

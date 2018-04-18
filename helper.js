@@ -48,37 +48,35 @@ exports.getEnums = function (sCode) {
 
 exports.sqlsafe = function (req, res, next) {
 
-    function safeObject(oArray) {
+    var _safeObject = function (oArray) {
         var oData = {};
         Object.keys(oArray).forEach(function (key) {
             if (exports.isObject(oArray[key])) {
-                oData[key] = safeObject(oArray[key]);
-            } else {
-                if (exports.isArray(oArray[key])) {
-                    oData[key] = [];
-                    var i = 0;
-                    while (i < oArray[key].length) {
-                        if (exports.isObject(oArray[key][i]) || exports.isArray(oArray[key][i])) {
-                            oData[key].push(safeObject(oArray[key][i]));
-                        } else {
-                            oData[key].push(exports.htmlspecialchars(oArray[key][i]));
-                        }
-                        i += 1;
+                oData[key] = _safeObject(oArray[key]);
+            } else if (exports.isArray(oArray[key])) {
+                oData[key] = [];
+                var i = 0;
+                while (i < oArray[key].length) {
+                    if (exports.isObject(oArray[key][i]) || exports.isArray(oArray[key][i])) {
+                        oData[key].push(_safeObject(oArray[key][i]));
+                    } else {
+                        oData[key].push(exports.htmlspecialchars(oArray[key][i]));
                     }
-                } else {
-                    oData[key] = exports.htmlspecialchars(oArray[key]);
+                    i += 1;
                 }
+            } else {
+                oData[key] = exports.htmlspecialchars(oArray[key]);
             }
         });
         return oData;
-    }
+    };
 
     try {
         if (req.method === "GET") {
             req.body = req.query;
         }
-        req.body = safeObject(req.body);
-        next();
+        req.body = _safeObject(req.body);
+        return next();
     } catch (oErr) {
         console.log(oErr); // eslint-disable-line
         prohelper.httpErrorHandler(res, {
@@ -99,7 +97,7 @@ exports.startSession = function (oCookie, oParam) {
                 oCookie.set(config.cookie.session, sSessionid, {
                     "overwrite": true,
                     "httpOnly": true,
-                    "expires": new Date(Date.now() + (enums.Year * 10) * 1000)
+                    "expires": new Date(Date.now() + enums.Year * 10 * 1000)
                 });
             } else {
                 oCookie.set(config.cookie.session, sSessionid, {
@@ -161,16 +159,13 @@ exports.loadSessionData = function (req, res, next) {
                         }
                     });
                 });
-            } else {
-                if (sSessionid !== undefined) {
-                    return prohelper.loadSessionData(sSessionid);
-                } else {
-                    var err = {
-                        "ERR": "Keine Session am laufen!"
-                    };
-                    throw prohelper.loadSessionDataFail(err);
-                }
+            } else if (sSessionid !== undefined) {
+                return prohelper.loadSessionData(sSessionid);
             }
+            var err = {
+                "ERR": "Keine Session am laufen!"
+            };
+            throw prohelper.loadSessionDataFail(err);
         })
         .then(function (sessionData) {
             req.clientdata = {
@@ -228,7 +223,7 @@ exports.randomString = function (iLength, sChars, oOptions) {
 };
 
 exports.randomInt = function (iFrom, iTo) {
-    return Math.round((Math.random() * (iTo - iFrom)) + iFrom);
+    return Math.round(Math.random() * (iTo - iFrom) + iFrom);
 };
 
 exports.hasChar = function (sString, sChars) {
@@ -255,13 +250,12 @@ exports.hasChar = function (sString, sChars) {
     }
     if (iChar === 0) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 };
 
 exports.isset = function (oItem) {
-    return (oItem !== undefined && oItem !== null);
+    return oItem !== undefined && oItem !== null;
 };
 
 exports.isTrue = function (oValue, bAsInteger) {
@@ -269,12 +263,10 @@ exports.isTrue = function (oValue, bAsInteger) {
     if (bAsInteger) {
         if (bIsTrue) {
             return 1;
-        } else {
-            return 0;
         }
-    } else {
-        return bIsTrue;
+        return 0;
     }
+    return bIsTrue;
 };
 
 exports.xor = function (conditionA, conditionB) {
@@ -286,7 +278,7 @@ exports.checkRequiredValues = function (aValues) {
         var n = 0;
         var aMissingValues = [];
         while (n < aValues.length) {
-            if (aValues[n][1] === undefined || (Object.keys(aValues[n][1]).length <= 0)) {
+            if (aValues[n][1] === undefined || Object.keys(aValues[n][1]).length <= 0) {
                 aMissingValues.push(aValues[n][0]);
             }
             n += 1;
@@ -324,27 +316,27 @@ exports.validateEmail = function (sEmail) {
 };
 
 exports.isArray = function (test) {
-    return (test instanceof Array);
+    return test instanceof Array;
 };
 
 exports.isObject = function (test) {
-    return (typeof test === "object" && !exports.isArray(test));
+    return typeof test === "object" && !exports.isArray(test);
 };
 
 exports.isInt = function (test) {
-    return (typeof test === "number");
+    return typeof test === "number";
 };
 
 exports.isString = function (test) {
-    return (typeof test === "string");
+    return typeof test === "string";
 };
 
 exports.isFunc = function (test) {
-    return (typeof test === "function");
+    return typeof test === "function";
 };
 
 exports.isBool = function (test) {
-    return (typeof test === "boolean");
+    return typeof test === "boolean";
 };
 
 exports.htmlspecialchars = function (sString) {

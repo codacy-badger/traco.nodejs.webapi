@@ -49,7 +49,7 @@ if (Date.prototype.take) console.warn("Override existing Date.prototype.take!");
 Date.prototype.take = function (sType) {
     var that = this;
 
-    function _generate(sPick) {
+    var _generate = function (sPick) {
         var aDate = that.split();
         var aSupport = ["YY", "MM", "DD", "hh", "mm", "ss"];
         var i = 0;
@@ -63,11 +63,11 @@ Date.prototype.take = function (sType) {
     }
 
     switch (sType) {
-        case ("unix"):
+        case "unix":
             return Math.floor(this.getTime() / 1000);
-        case ("utc"):
+        case "utc":
             return this.toUTCString();
-        case ("iso"):
+        case "iso":
             return this.toISOString();
         default:
             return _generate(sType);

@@ -8,6 +8,7 @@ Object.prototype.compare = function (object) { // eslint-disable-line
         return false;
     }
 
+    var propName;
     for (propName in this) {
         if (this.hasOwnProperty(propName) !== object.hasOwnProperty(propName)) {
             return false;

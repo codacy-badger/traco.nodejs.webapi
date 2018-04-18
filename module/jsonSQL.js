@@ -1,5 +1,4 @@
 "use strict";
-/** @module */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8,13 +7,6 @@ require("../prototype/loadPrototype");
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Function
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-/**
- * Das ist der Construktor der JsonDB-Klasse.
- * @method _JsonDB
- * @param {Object|Object[]|string[]} [iniData] Ein Datensatz, viele Datensätze oder ein Array aus String für Collumn Namen.
- * @returns {void}
- */
 var JsonDB = function (iniData) {
     this.cols = [];
     this.data = [];
@@ -33,13 +25,6 @@ var JsonDB = function (iniData) {
     }
 };
 
-
-/**
- * Eine neuer Datensatz wird zu der Tabelle hinzugefügt.
- * @method insert
- * @param {Object} oData Datensatz zum hinzufügen
- * @returns {void}
- */
 JsonDB.prototype.insert = function (oData) {
     if (!oData) {
         throw new TypeError("No Data given");
@@ -58,11 +43,6 @@ JsonDB.prototype.insert = function (oData) {
     return this;
 };
 
-/**
- * @method insertMulti
- * @param {Object[]} aData Ein Array aus Datensätzen, die Conform sind
- * @returns {void}
- */
 JsonDB.prototype.insertMulti = function (aData) {
     if (!aData) {
         throw new TypeError("No Data given");
@@ -79,23 +59,10 @@ JsonDB.prototype.insertMulti = function (aData) {
     return this;
 };
 
-
-/**
- * @method getData
- * @returns {Object[]}
- * Alle Daten, die eingetragen sind, werden zurückgegeben.
- */
 JsonDB.prototype.getData = function () {
     return this.data;
 };
 
-
-/**
- * Die Datenbankstruktur wird neu angelegt. Dafür dürfen keine Daten vorhanden sein.
- * @method setCols
- * @param {string[]} aCols Array as Collums, welche gesetzt werden sollen.
- * @returns {void}
- */
 JsonDB.prototype.setCols = function (aCols) {
     if (this.cols.length !== 0) {
         console.warn("Overwrite old collumns! Collumns where already set"); // eslint-disable-line
@@ -110,13 +77,6 @@ JsonDB.prototype.setCols = function (aCols) {
     return this;
 };
 
-/**
- * Eine neue Collumn wird mit dem default-Wert oder null-Wert angelegt.
- * @method addCol
- * @param {string} newCol Namen der neuen Collumn zum hinzufügen.
- * @param {string} dData Datenwert der zu den vorhanden Rows als default eingefügt wird.
- * @returns {void}
- */
 JsonDB.prototype.addCol = function (newCol, [dData]) {
     if (!newCol) {
         throw new TypeError("No Collumn given");
@@ -136,11 +96,6 @@ JsonDB.prototype.addCol = function (newCol, [dData]) {
     return this;
 };
 
-/**
- * @method dropCol
- * @param {string} sCol Collumne welche gedropped werden soll
- * @param {void}
- */
 JsonDB.prototype.dropCol = function (sCol) {
     if (!sCol) {
         throw new TypeError("No Collumn for dropping given");
@@ -159,12 +114,6 @@ JsonDB.prototype.dropCol = function (sCol) {
     return this;
 };
 
-
-/**
- * @method getRow
- * @returns {Object}
- * Ein neues Object, welches der Strucktur der Datenbank entspricht.
- */
 JsonDB.prototype.getRow = function () {
     var oRow = {};
     var i = 0;
@@ -175,22 +124,11 @@ JsonDB.prototype.getRow = function () {
     return oRow;
 };
 
-/**
- * Die Daten aus der Datenbank werden vollständig gelöscht.
- * @method clearDB
- * @returns {void}
- */
 JsonDB.prototype.clearDB = function () {
     this.data = [];
     return this;
 };
 
-/**
- * @method unique
- * @param {string} sCol
- * @returns {any[]}
- * Die daten der ausgewählten spalte werden als Unique Array zurückgegeben.
- */
 JsonDB.prototype.unique = function (sCol) {
     if (!sCol) {
         throw new TypeError("No Collumn given");
@@ -198,7 +136,7 @@ JsonDB.prototype.unique = function (sCol) {
     if (!this.cols.includes(sCol)) {
         throw new TypeError("Collumn doesn't exists");
     }
-
+    var arr;
     var i = 0;
     while (i < this.data.length) {
         arr.push(this.data[i][sCol]);
@@ -207,14 +145,6 @@ JsonDB.prototype.unique = function (sCol) {
     return arr.unique();
 };
 
-
-/**
- * Die Daten in this.data werden mit den angegebenen Collumns sortiert.
- * @method orderBy
- * @param {string[]} aCols Collumns die sortiert werden sollen der Reihnfolge nach
- * @param {string[]} [aDest] ASC oder DESC für jedes Element. Wenn es nicht DESC ist wird ASC soritert
- * @returns {void}
- */
 JsonDB.prototype.orderBy = function (aCols, aDest) {
     if (arguments.length === 0) {
         throw new TypeError("orderBy() MUST have at least 1 argument");
@@ -247,16 +177,6 @@ JsonDB.prototype.orderBy = function (aCols, aDest) {
     return this;
 };
 
-/**
- * Die Daten die eingefügt wurden, werden dabei verändert und zu einem neuen JsonDB-Objekt.
- * @method select
- * @param {Object} oOpt Alle Optionen zum select Query auf die Daten.
- * @param {string} oOpt.col auf welche spalte bezogen
- * @param {string} oOpt.op Operation die Ausgeführt werden soll
- * @param {string} oOpt.param mit welchem parameter
- * @returns {JsonDB}
- * Ein neues JsonDB Objekt mit dem weitergearbeitet werden kann wird zurückgegeben
- */
 JsonDB.prototype.select = function (oOpt) {
     if (!oOpt) {
         throw new TypeError("No Options for operation set");
@@ -265,7 +185,7 @@ JsonDB.prototype.select = function (oOpt) {
     var that = this;
     var _fFunc;
     switch (oOpt.op) {
-        case (">="):
+        case ">=":
             _fFunc = function (row) {
                 if (row[oOpt.col] >= oOpt.param) {
                     return true;
@@ -273,7 +193,7 @@ JsonDB.prototype.select = function (oOpt) {
                 return false;
             };
             break;
-        case ("<="):
+        case "<=":
             _fFunc = function (row) {
                 if (row[oOpt.col] <= oOpt.param) {
                     return true;
@@ -281,7 +201,7 @@ JsonDB.prototype.select = function (oOpt) {
                 return false;
             };
             break;
-        case (">"):
+        case ">":
             _fFunc = function (row) {
                 if (row[oOpt.col] > oOpt.param) {
                     return true;
@@ -289,7 +209,7 @@ JsonDB.prototype.select = function (oOpt) {
                 return false;
             };
             break;
-        case ("<"):
+        case "<":
             _fFunc = function (row) {
                 if (row[oOpt.col] < oOpt.param) {
                     return true;
@@ -297,7 +217,7 @@ JsonDB.prototype.select = function (oOpt) {
                 return false;
             };
             break;
-        case ("!=="):
+        case "!==":
             _fFunc = function (row) {
                 if (row[oOpt.col] !== oOpt.param) {
                     return true;
@@ -305,7 +225,7 @@ JsonDB.prototype.select = function (oOpt) {
                 return false;
             };
             break;
-        case ("==="):
+        case "===":
             _fFunc = function (row) {
                 if (row[oOpt.col] === oOpt.param) {
                     return true;
@@ -320,15 +240,6 @@ JsonDB.prototype.select = function (oOpt) {
     return that;
 };
 
-/**
- * Die eingefügten Daten werden auf den Operator überprüft und zu einem where Index hinzugefügt.
- * @method find
- * @param {Object} oOpt Alle Optionen zum select Query auf die Daten.
- * @param {string} oOpt.col auf welche spalte bezogen
- * @param {string} oOpt.op Operation die Ausgeführt werden soll
- * @param {string} oOpt.param mit welchem parameter
- * @returns {void}
- */
 JsonDB.prototype.find = function (oOpt) {
     if (!oOpt) {
         throw new TypeError("No Options for operation set");
@@ -336,7 +247,7 @@ JsonDB.prototype.find = function (oOpt) {
 
     var _fFunc;
     switch (oOpt.op) {
-        case (">="):
+        case ">=":
             _fFunc = function (row) {
                 if (row[oOpt.col] >= oOpt.param) {
                     return true;
@@ -344,7 +255,7 @@ JsonDB.prototype.find = function (oOpt) {
                 return false;
             };
             break;
-        case ("<="):
+        case "<=":
             _fFunc = function (row) {
                 if (row[oOpt.col] <= oOpt.param) {
                     return true;
@@ -352,7 +263,7 @@ JsonDB.prototype.find = function (oOpt) {
                 return false;
             };
             break;
-        case (">"):
+        case ">":
             _fFunc = function (row) {
                 if (row[oOpt.col] > oOpt.param) {
                     return true;
@@ -360,7 +271,7 @@ JsonDB.prototype.find = function (oOpt) {
                 return false;
             };
             break;
-        case ("<"):
+        case "<":
             _fFunc = function (row) {
                 if (row[oOpt.col] < oOpt.param) {
                     return true;
@@ -368,7 +279,7 @@ JsonDB.prototype.find = function (oOpt) {
                 return false;
             };
             break;
-        case ("!=="):
+        case "!==":
             _fFunc = function (row) {
                 if (row[oOpt.col] !== oOpt.param) {
                     return true;
@@ -376,7 +287,7 @@ JsonDB.prototype.find = function (oOpt) {
                 return false;
             };
             break;
-        case ("==="):
+        case "===":
             _fFunc = function (row) {
                 if (row[oOpt.col] === oOpt.param) {
                     return true;
