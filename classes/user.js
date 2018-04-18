@@ -28,7 +28,7 @@ exports.class = function (fields) {
         "sComment": ""
     };
 
-    let that = this;
+    const that = this;
     // Getter und Setter
     this.get = {
         userID: function () {

@@ -9,7 +9,7 @@ var prohelper = require("../prohelper");
 //************************************************
 // Functions
 //************************************************
-function fLoadModules(callback) {
+var fLoadModules = function (callback) {
     var oRoutes = {};
     var sPath = "";
     var sFile = "";
@@ -39,7 +39,7 @@ function fLoadModules(callback) {
         }
         callback(oRoutes);
     });
-}
+};
 
 //************************************************
 // Routes

@@ -60,7 +60,7 @@ Date.prototype.take = function (sType) {
             i += 1;
         }
         return sPick;
-    }
+    };
 
     switch (sType) {
         case "unix":

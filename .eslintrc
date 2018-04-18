@@ -69,7 +69,8 @@
         "no-mixed-operators": "off",
         "no-else-return": "error",
         "init-declarations": "off",
-        "no-lonely-if": "error"
+        "no-lonely-if": "error",
+        "handle-callback-err":"error"
     },
     "settings": {}
 }

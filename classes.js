@@ -1,16 +1,11 @@
 "use strict";
-//************************************************
-// Module dependencies
-//************************************************
+/*
 var fs = require("fs");
 var path = require("path");
 
-//************************************************
-// Classes
-//************************************************
-function firstLetterUpperCase(sString) {
+var firstLetterUpperCase = function (sString) {
     return sString[0].toUpperCase() + sString.substr(1);
-}
+};
 
 var sPath = "";
 var sFile = "";
@@ -32,3 +27,6 @@ while (i < aFiles.length) {
     }
     i += 1;
 }
+*/
+
+exports.User = require("./classes/user");

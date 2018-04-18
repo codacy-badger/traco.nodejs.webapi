@@ -63,15 +63,7 @@ var _errorHandler = function (err, sType) {
     return oErr;
 };
 
-var _escape = function (sData) {
-    if (helper.isString(sData)) {
-        sData = sData.replace(new RegExp("@", "g"), "\x40");
-    }
-    return connection.escape(sData);
-};
-
 var _doQuery = function (sSQL, sType) {
-    sSQL = sSQL.replace(/\x40/g, "@");
     fileLog(sType, sSQL);
     return new Promise(function (fFulfill, fReject) {
         if (config.mysql.enabled) {
@@ -153,13 +145,13 @@ exports.fetch = function (sCurser, aData) {
             let sData = "";
             let i = 0;
             while (i < aData[n].length) {
-                sData += _escape(aData[n][i]) + ", ";
+                sData += connection.escape(aData[n][i]) + ", ";
                 i += 1;
             }
             aData[n] = sData.substring(0, sData.length - 2);
         }
         // Globales ersetzen der Parameter (Fals ein Parameter mehrfach vorkommt)
-        sSQL = sSQL.replace(new RegExp("@" + n, "g"), _escape(aData[n]));
+        sSQL = sSQL.replace(new RegExp("@" + n, "g"), connection.escape(aData[n]));
         n += 1;
     }
     return _doQuery(sSQL, "fetch");
@@ -184,7 +176,7 @@ exports.insert = function (oDBClass, oOptions) {
         n = 0;
         while (n < aDBFields.length) {
             if (helper.isset(aDBValues[n])) {
-                sSQL += "" + _escape(aDBValues[n]) + ", ";
+                sSQL += "" + connection.escape(aDBValues[n]) + ", ";
             } else {
                 sSQL += "NULL, ";
             }
@@ -220,7 +212,7 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
         n = 0;
         while (n < aDBFields.length) {
             if (helper.isset(aDBValues[n])) {
-                sSQL += _escape(aDBValues[n]) + ", ";
+                sSQL += connection.escape(aDBValues[n]) + ", ";
             } else {
                 sSQL += "NULL, ";
             }
@@ -231,7 +223,7 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
         n = 0;
         while (n < aDBFields.length) {
             if (helper.isset(aDBValues[n])) {
-                sSQL += "`" + aDBFields[n] + "` = " + _escape(aDBValues[n]) + ", ";
+                sSQL += "`" + aDBFields[n] + "` = " + connection.escape(aDBValues[n]) + ", ";
             } else {
                 sSQL += "`" + aDBFields[n] + "` = NULL, ";
             }
@@ -253,7 +245,7 @@ exports.delete = function (oDBClass) {
     }
 
     var sSQL = "DELETE FROM `" + oDBClass.classname + "` WHERE ";
-    sSQL += "`" + Object.keys(oDBClass.fields)[0] + "` = " + _escape(Object.values(oDBClass.fields)[0]) + ";";
+    sSQL += "`" + Object.keys(oDBClass.fields)[0] + "` = " + connection.escape(Object.values(oDBClass.fields)[0]) + ";";
     return _doQuery(sSQL, "delete");
 };
 

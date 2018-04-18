@@ -378,12 +378,18 @@ exports.filewalker = function (dir, done) {
             file = path.resolve(dir, file);
 
             fs.stat(file, function (err, stat) {
+                if (err) {
+                    done(err, null);
+                }
                 // If directory, execute a recursive call
                 if (stat && stat.isDirectory()) {
                     // Add directory to array [comment if you need to remove the directories from the array]
                     results.push(file);
 
-                    exports.filewalker(file, function (errr, res) {
+                    exports.filewalker(file, function (oErr, res) {
+                        if (oErr) {
+                            done(oErr, null);
+                        }
                         results = results.concat(res);
                         if (!(pending -= 1)) {
                             done(null, results);

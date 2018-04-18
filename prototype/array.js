@@ -5,7 +5,7 @@
 if (Array.prototype.sortBy) console.warn("Override existing Array.prototype.sortBy!"); // eslint-disable-line
 Array.prototype.sortBy = function () {
 
-    function _sortByAttr(attr) {
+    var _sortByAttr = function (attr) {
         var sortOrder = 1;
         if (attr[0] === "-") {
             sortOrder = -1;
@@ -22,9 +22,9 @@ Array.prototype.sortBy = function () {
             }
             return result * sortOrder;
         };
-    }
+    };
 
-    function _getSortFunc() {
+    var _getSortFunc = function () {
         if (arguments.length === 0) {
             throw new TypeError("Array.sortBy() MUST have at least 1 argument");
         }
@@ -43,7 +43,7 @@ Array.prototype.sortBy = function () {
             }
             return result;
         };
-    }
+    };
 
     return this.sort(_getSortFunc.apply(null, arguments));
 };
