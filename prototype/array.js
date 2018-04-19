@@ -89,10 +89,6 @@ Array.prototype.isEmpty = function () {
 };
 
 if (Array.prototype.unique) console.warn("Override existing Array.prototype.unique!"); // eslint-disable-line
-/**
- * Creates a array with every entry just one time.
- * @returns {string[]}
- */
 Array.prototype.unique = function () {
     var arr = [];
     var i = 0;
@@ -106,11 +102,6 @@ Array.prototype.unique = function () {
 };
 
 if (Array.prototype.removePos) console.warn("Override existing Array.prototype.removePos!"); // eslint-disable-line
-/**
- * Removes a spezific position in the array.
- * @param {number} iPos
- * @returns {void}
- */
 Array.prototype.removePos = function (iPos) {
     if (!iPos) {
         throw new TypeError("No Position given");
@@ -123,11 +114,6 @@ Array.prototype.removePos = function (iPos) {
 };
 
 if (Array.prototype.removeStr) console.warn("Override existing Array.prototype.removeStr!"); // eslint-disable-line
-/**
- * Removes a spezific string complete from the array.
- * @param {string} sStr
- * @returns {void}
- */
 Array.prototype.removeStr = function (sStr) {
     if (!sStr) {
         throw new TypeError("No String given");

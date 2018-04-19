@@ -1,8 +1,9 @@
 "use strict";
+/** @module */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-var array = require("./array");
+var eArray = require("./array");
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Modul
@@ -42,7 +43,7 @@ exports.compare = function (obj1, obj2) { // eslint-disable-line
         if (obj1[propName] instanceof Array &&
             obj2[propName] instanceof Array) {
             /** REQUIRES array.compare **/
-            if (!array.compare(obj1[propName], obj2[propName])) {
+            if (!eArray.compare(obj1[propName], obj2[propName])) {
                 return false;
             }
         } else if (obj1[propName] instanceof Object &&

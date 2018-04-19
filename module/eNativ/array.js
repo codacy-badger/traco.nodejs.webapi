@@ -1,8 +1,9 @@
 "use strict";
+/** @module */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-var object = require("./object");
+var eObject = require("./object");
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Modul
@@ -33,7 +34,7 @@ exports.compare = function (arr1, arr2) {
         } else if (arr1[n] instanceof Object &&
             arr2[n] instanceof Object) {
             /** REQUIRES Object.compare **/
-            if (!object.compare(arr1[n], arr2[n])) {
+            if (!eObject.compare(arr1[n], arr2[n])) {
                 return false;
             }
         } else if (arr1[n] !== arr2[n]) {
@@ -114,19 +115,46 @@ exports.unique = function (arr) {
         if (!unq.includes(arr[i])) {
             unq.push(arr[i]);
         }
-
         i += 1;
     }
     return unq;
 };
 
-exports.unique2 = function (arr) {
-    var unq = [];
-    return arr.filter(function (oIten) {
-        if (unq.includes(oIten)) {
-            return false;
-        }
-        unq.push(oIten);
-        return true;
-    });
+/**
+ * Removes a spezific position in the array.
+ * @param {any[]} arr
+ * @param {number} iPos
+ * @returns {any[]}
+ */
+exports.removePos = function (arr, iPos) {
+    return arr.splice(iPos, 1);
+};
+
+/**
+ * Removes a spezific string-value completely from the array.
+ * @param {string[]} arr
+ * @param {string[]} sStr
+ * @returns {string[]}
+ */
+exports.removeStr = function (arr, sStr) {
+    while (arr.includes(sStr)) {
+        arr.removePos(arr.indexOf(sStr));
+    }
+    return arr;
+};
+
+/**
+ * Searchs every index of the searched value.
+ * @param {any[]} arr
+ * @param {any[]} search
+ * @returns {any[]}
+ */
+exports.indexOfAll = function (arr, search) {
+    var idx = [];
+    var i = -1;
+    while (arr.indexOf(search, i + 1) !== -1) {
+        i = arr.indexOf(search, i + 1);
+        idx.push(i);
+    }
+    return idx;
 };

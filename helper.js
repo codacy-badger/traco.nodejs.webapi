@@ -10,7 +10,7 @@ var enums = require("./static/enums.json");
 var errorcodes = require("./static/errorcodes.json");
 var IORedis = require("ioredis");
 var logger = require("./module/simple-file-logger");
-var fs = require("fs");
+var fs = require("fs-extra");
 var path = require("path");
 var prohelper = require("./prohelper");
 

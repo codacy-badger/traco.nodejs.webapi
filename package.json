@@ -9,8 +9,8 @@
         "postversion": "git push",
         "start": "node app.js",
         "explorer": "node ./static/onlineExplorer",
-        "jsdoc": "./node_modules/.bin/jsdoc -c ./static/jsdoc.conf.json -d ./jsdoc -r --verbose",
-        "apidoc": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -c ./static/apidoc.conf.json -v",
+        "jsdoc": "./node_modules/.bin/jsdoc -c ./.info/jsdoc.conf.json -d ./jsdoc -r --verbose",
+        "apidoc": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -c ./.info/apidoc.conf.json -v",
         "docbuild": "npm run jsdoc && npm run apidoc"
     },
     "dependencies": {
@@ -21,6 +21,7 @@
         "compression": "^1.7.2",
         "cookies": "^0.7.1",
         "express": "^4.16.3",
+        "fs-extra": "^5.0.0",
         "ioredis": "^3.2.2",
         "morgan": "^1.9.0",
         "mysql": "^2.15.0",

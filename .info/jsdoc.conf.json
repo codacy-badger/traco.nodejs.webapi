@@ -5,7 +5,9 @@
     "recurseDepth": 10,
     "source": {
         "include": [
+
             "./README.md",
+            "./.info/TODO.md",
             "."
         ],
         "exclude": [

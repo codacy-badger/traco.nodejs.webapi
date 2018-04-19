@@ -3,8 +3,8 @@
 
 [![dependencies Status](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi/status.svg)](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi)
 [![devDependencies Status](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi/dev-status.svg)](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi?type=dev)
-[![peerDependencies Status](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi/peer-status.svg)](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi?type=peer)
 [![optionalDependencies Status](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi/optional-status.svg)](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi?type=optional)
+<!-- [![peerDependencies Status](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi/peer-status.svg)](https://david-dm.org/DerHerrGammler/traco.nodejs.webapi?type=peer) -->
 
 [![GitHub package version](https://img.shields.io/github/package-json/v/DerHerrGammler/traco.nodejs.webapi.svg?logo=github&logoWidth=20)](https://github.com/DerHerrGammler/traco.nodejs.webapi/)
 [![GitHub license](https://img.shields.io/github/license/DerHerrGammler/traco.nodejs.webapi.svg?logo=github&logoWidth=20)](https://github.com/DerHerrGammler/traco.nodejs.webapi/blob/master/LICENSE)
@@ -12,7 +12,7 @@
 [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/DerHerrGammler/traco.nodejs.webapi.svg)](https://github.com/DerHerrGammler/traco.nodejs.webapi/)
 [![GitHub repo size in bytes](https://img.shields.io/github/repo-size/DerHerrGammler/traco.nodejs.webapi.svg)](https://github.com/DerHerrGammler/traco.nodejs.webapi/)
 
-[![Logo](/static/logo-TraCo.svg)](https://github.com/DerHerrGammler/traco.nodejs.webapi/)
+[![Logo](/.info/logo-TraCo.svg)](https://github.com/DerHerrGammler/traco.nodejs.webapi/)
 
 ## Setup
 
@@ -38,4 +38,4 @@ Run `npm run jsdoc` to compile the documentation of the modules into the `./jsdo
 ## Extra Information
 
  - [LICENSE](LICENSE.md)
- - [TO-DO-List](static/TODO.md)
+ - [TO-DO-List](.info/TODO.md)
