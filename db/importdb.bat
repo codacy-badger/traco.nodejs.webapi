@@ -4,9 +4,10 @@ echo.
 echo Syntax (defaults in MySQLVARS.bat are used for missing parameters):
 echo IMPORT -f filename [-u USERNAME] [-p PASSWORD] [-db DBNAME] [-s SERVER]
 echo.
-if "%1" == "" echo SQL-script (parameter -f) not defined. 
-if "%1" == "" goto ENDE
+IF "%1" == "" echo SQL-script (parameter -f) not defined.
+IF "%1" == "" goto ENDE
 
+SET tmpfolder=%CD%\import
 SET importf=
 call MySQLVars.bat
 
@@ -36,24 +37,46 @@ IF NOT "%1"=="" (
     GOTO :loop
 )
 
-if "%importf%"=="" echo Import file (parameter -f) not defined. 
-if "%importf%"=="" goto ENDE
-REM If second letter not :, then the parameter doen not contain an absolute path
+IF "%importf%"=="" echo Import file (parameter -f) not defined.
+IF "%importf%"=="" goto ENDE
+REM IF second letter not :, then the parameter doen not contain an absolute path
 REM In this case use the Pseudo-Variable %CD% to add the current directory.
 IF NOT "%importf:~1,1%" == ":" SET importf=%CD%\%importf%
 
 echo Import file: %importf%
-SET /P ABFRAGE=Import database %MySQL_DB% on %MySQL_SERV% [Y]es / [N]o? 
+SET /P ABFRAGE=Import database %MySQL_DB% on %MySQL_SERV% [Y]es / [N]o?
 IF "%ABFRAGE%"=="N" GOTO FEHLER
 IF "%ABFRAGE%"=="n" GOTO FEHLER
 
 :EXPORT
-echo START: 
-time /T
-echo importing Database...
-xzdec %importf% | mysql -h %MySQL_SERV% -P %MySQL_PORT% -u %MySQL_USER% --password=%MySQL_PASSWD% -D %MySQL_DB%
-echo ENDE: 
-time /T
+echo. && echo.
+echo --- START: %time:~0,2%:%time:~3,2%:%time:~6,2% ---
+
+echo.
+echo start IMPORT pre-processing...
+IF EXIST %tmpfolder%.tar rmdir /s /q %tmpfolder%.tar
+IF EXIST %tmpfolder%.sql rmdir /s /q %tmpfolder%.sql
+REM More Information about 7za in the 7-zip Installation directory `7-zip.chm`
+7za e %importf% -o%tmpfolder%.tar -aoa | FIND "Files"
+7za e "%tmpfolder%.tar/*.tar" -o%tmpfolder%.sql -aoa | FIND "Files"
+
+echo.
+echo start IMPORT Database...
+SET tbl_count=0
+FOR /F "tokens=*" %%F IN ('dir /A /B %tmpfolder%.sql') DO (
+    echo  -- IMPORT TABLE-File: %%F
+    mysql -h %MySQL_SERV% -P %MySQL_PORT% -u %MySQL_USER% --password=%MySQL_PASSWD% -D %MySQL_DB% < %tmpfolder%.sql\%%F
+    SET /a tbl_count += 1
+)
+echo %tbl_count% table[s] restored into database '%MySQL_DB%'
+
+echo.
+echo start IMPORT post-processing...
+rmdir /s /q %tmpfolder%.tar
+rmdir /s /q %tmpfolder%.sql
+
+echo.
+echo --- ENDE:  %time:~0,2%:%time:~3,2%:%time:~6,2% ---
 goto ENDE
 
 :FEHLER

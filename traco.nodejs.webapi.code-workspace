@@ -7,7 +7,7 @@
 	],
     "settings": {
         "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
-        "extensions.ignoreRecommendations": false,
+        "extensions.ignoreRecommendations": true,
         "git.confirmSync": false,
         "git.autofetch": true,
         "files.autoSave": "afterDelay",

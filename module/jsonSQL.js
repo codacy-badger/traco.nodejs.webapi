@@ -3,6 +3,7 @@
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 require("../prototype/loadPrototype");
+var enativ = require("./eNativ");
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Function
@@ -174,6 +175,7 @@ JsonDB.prototype.orderBy = function (aCols, aDest) {
         i += 1;
     }
     this.data = this.data.sortBy(aArgs);
+    // this.data = enativ.Array.sortBy(this.data, aArgs);
     return this;
 };
 

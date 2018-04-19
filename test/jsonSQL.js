@@ -19,17 +19,19 @@ var aData2 = [
     {"id": "BB", "name": "Proj2"}
 ];
 var data2db = new jsonSQL.JsonDB(aData2);
-data1db.createIndex("text");
+// data1db.createIndex("text");
 // console.log(data1db);
 // data1db.dropCol("text");
 console.log(data1db);
 console.log(data2db);
 
-data1db.find({
-    col:"pID",
-    op: "!==",
-    param: "AA"
-});
+data1db.orderBy(["pID"], ["ASC"]);
+
+// data1db.find({
+//     col:"pID",
+//     op: "!==",
+//     param: "AA"
+// });
 console.log(data1db);
 // console.log(data1db.where({
 //     col: "pID",

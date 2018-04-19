@@ -1,5 +1,4 @@
 "use strict";
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// exports Classes
+// Modul
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-exports.User = require("./classes/user").class;

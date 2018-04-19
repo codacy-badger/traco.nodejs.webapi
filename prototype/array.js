@@ -6,10 +6,6 @@
 // neue Prototypes
 //************************************************
 if (Array.prototype.sortBy) console.warn("Override existing Array.prototype.sortBy!"); // eslint-disable-line
-/**
- * Order the Array with an Object insite by multiple rows ASC or DESC. With - before the rowname it would be DESC.
- * @returns {Object[]}
- */
 Array.prototype.sortBy = function () {
 
     var _sortByAttr = function (attr) {
@@ -56,11 +52,6 @@ Array.prototype.sortBy = function () {
 };
 
 if (Array.prototype.compare) console.warn("Override existing Array.prototype.compare!"); // eslint-disable-line
-/**
- * Compares the Array. If they are the same return true else false.
- * @param {Object[]} array
- * @returns {Boolean}
- */
 Array.prototype.compare = function (array) {
     if (!array) {
         return false;
@@ -90,10 +81,6 @@ Array.prototype.compare = function (array) {
 };
 
 if (Array.prototype.isEmpty) console.warn("Override existing Array.prototype.isEmpty!"); // eslint-disable-line
-/**
- * Returns true if the Array is empty and has no values inside.
- * @returns {Boolean}
- */
 Array.prototype.isEmpty = function () {
     if (this.length === 0) {
         return true;

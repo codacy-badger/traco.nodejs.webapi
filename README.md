@@ -37,5 +37,5 @@ Run `npm run jsdoc` to compile the documentation of the modules into the `./jsdo
 
 ## Extra Information
 
- - [LICENSE](LICENSE)
- - [TO-DO-List](TODO.md)
+ - [LICENSE](LICENSE.md)
+ - [TO-DO-List](static/TODO.md)
