@@ -175,9 +175,9 @@ var _buildSQLCurserObject = function (sCursor, aParams) {
  * @param {string} sCursor
  * @param {string[]} aData
  * @param {Object} [oOptions]
- * @param {Array[]} [oOptions.orderby]
- * @param {string} oOptions.orderby.0 Tablename
- * @param {string} oOptions.orderby.1 ASC | DESC
+ * @param {Object[]} [oOptions.orderby]
+ * @param {string} oOptions.orderby.col Table collumn
+ * @param {string} oOptions.orderby.order ASC | DESC
  * @param {number} [oOptions.limit]
  * @param {number} [oOptions.offset]
  * @return {Promise}
@@ -186,8 +186,6 @@ exports.fetch = function (sCursor, aData, oOptions) {
     if (!oOptions) {
         oOptions = {};
     }
-    console.log(oOptions);
-    console.log(oOptions.orderby);
     if (!oOptions.orderby) {
         // Order Bys müssen per array eingefügt werden mit
         // [["spaltenname", "ASC"], ["spaltenname2", "DESC"]]
@@ -230,7 +228,7 @@ exports.fetch = function (sCursor, aData, oOptions) {
     if (oOptions.orderby.length > 0) {
         n = 0;
         while (n < oOptions.orderby.length) {
-            sSQL += " ORDER BY `" + oOptions.orderby[n][0] + "` " + oOptions.orderby[n][1] + ",";
+            sSQL += " ORDER BY `" + oOptions.orderby[n].col + "` " + oOptions.orderby[n].order + ",";
             n += 1;
         }
         sSQL = sSQL.substring(0, sSQL.length - 1);

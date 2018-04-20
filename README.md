@@ -45,8 +45,8 @@ Run `npm run docbuild` to compile both documentations.
  - [ ] Include the new module instead of using the prototypes
  - [ ] Rework the `simple-file-logger.js` to easyer use and replace the old logger
  - [ ] Extend `nativ/date.js` with `.normalizeDate()`. A function wich will generate a `new Date()` with given input like unix, iso or something else date format.
-- [ ]  Build a function in `dbhandler.js` that generate a INSERT-Statement with given DBClass and then extend THIS in the `insertOrUpdate()` instead of dobble the code.
-- [ ]  Implement in the new `module/logger.js` a function for automatik file deletion if the file is older than the max Date
+ - [ ]  Build a function in `dbhandler.js` that generate a INSERT-Statement with given DBClass and then extend THIS in the `insertOrUpdate()` instead of dobble the code.
+ - [ ]  Implement in the new `module/logger.js` a function for automatik file deletion if the file is older than the max Date
 
 
 ## Backlog
@@ -57,6 +57,8 @@ Run `npm run docbuild` to compile both documentations.
 
 ## Finished
 
+ - [x] Extend all `db-Scripts` with the `-v Vars-file` Option and a better view in the cmd.
+ - [x] Extend the `importdb.bat` and `exportdb.bat` with an option like `-v filename` to import a database configuration from a file. This is important, because then i can save multiple configuration und doesn't have change the main `MySQLVars.bat`. I can configure one `Vars.bat` per maintained Server/Database.
  - [x] New `dbhandler.fetch()` function with safe @0, @1... insert into dbcurser 
  - [x] Create JSDoc Information for `dbhandler.js`
  - [x] Prototype `array.js` rebuild to modul

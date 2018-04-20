@@ -9,13 +9,20 @@ dbhandler.insertOrUpdate(oUser)
     .then(function (data) {
         console.log(data);
         return dbhandler.fetch("Test", ["test@1mein.mail", "00000"], {
-            orderby: [["userID", "ASC"]],
             limit: 5,
             offset: 10
         });
     })
     .then(function (data) {
         console.log(data);
+        // return dbhandler.fetch("Test", ["kjsda"], {
+        //     orderby: [{
+        //         col: "test",
+        //         order: "ASC"
+        //     }],
+        //     limit: 10,
+        //     offset: 10
+        // })
     })
     .catch(function (err) {
         console.log(err);

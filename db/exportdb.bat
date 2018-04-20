@@ -2,7 +2,7 @@
 REM Syntax:
 echo.
 echo Syntax (defaults in MySQLVARS.bat are used for missing parameters):
-echo EXPORT -f filename [-u USERNAME] [-p PASSWORD] [-db DBNAME] [-s SERVER]
+echo EXPORT -f filename [-u USERNAME] [-p PASSWORD] [-db DBNAME] [-s SERVER] [-v Vars-File]
 echo.
 IF "%1" == "" echo SQL-script (parameter -f) not defined.
 IF "%1" == "" goto ENDE
@@ -32,6 +32,10 @@ IF NOT "%1"=="" (
         SET exportf=%2
         SHIFT
     )
+    IF "%1"=="-v" (
+        call %2
+        SHIFT
+    )
     SHIFT
     GOTO :loop
 )
@@ -47,12 +51,12 @@ IF EXIST %exportf%.tar.xz (
     echo.
 )
 echo Export file: %exportf%
-SET /P ABFRAGE=Export database %MySQL_DB% as user %MySQL_USER% on %MySQL_SERV% [Y]es / [N]o?
+SET /P ABFRAGE=Export database %MySQL_DB% as user %MySQL_USER% on %MySQL_SERV%:%MySQL_PORT% [Y]es / [N]o?
 IF "%ABFRAGE%"=="N" ( GOTO FEHLER )
 IF "%ABFRAGE%"=="n" ( GOTO FEHLER )
 
 :EXPORT
-echo. && echo.
+echo. && echo. && echo.
 echo --- START: %time:~0,2%:%time:~3,2%:%time:~6,2% ---
 
 echo.
@@ -84,6 +88,7 @@ del /q %exportf%.tar
 
 echo.
 echo --- ENDE:  %time:~0,2%:%time:~3,2%:%time:~6,2% ---
+echo. && echo.
 goto ENDE
 
 :FEHLER

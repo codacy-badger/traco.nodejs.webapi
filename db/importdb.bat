@@ -2,7 +2,7 @@
 REM Syntax:
 echo.
 echo Syntax (defaults in MySQLVARS.bat are used for missing parameters):
-echo IMPORT -f filename [-u USERNAME] [-p PASSWORD] [-db DBNAME] [-s SERVER]
+echo IMPORT -f filename [-u USERNAME] [-p PASSWORD] [-db DBNAME] [-s SERVER] -v Vars[]
 echo.
 IF "%1" == "" echo SQL-script (parameter -f) not defined.
 IF "%1" == "" goto ENDE
@@ -33,6 +33,10 @@ IF NOT "%1"=="" (
         SET importf=%2
         SHIFT
     )
+    IF "%1"=="-v" (
+        call %2
+        SHIFT
+    )
     SHIFT
     GOTO :loop
 )
@@ -44,12 +48,12 @@ REM In this case use the Pseudo-Variable %CD% to add the current directory.
 IF NOT "%importf:~1,1%" == ":" SET importf=%CD%\%importf%
 
 echo Import file: %importf%
-SET /P ABFRAGE=Import database %MySQL_DB% on %MySQL_SERV% [Y]es / [N]o?
+SET /P ABFRAGE=Import database %MySQL_DB% on %MySQL_SERV%:%MySQL_PORT% [Y]es / [N]o?
 IF "%ABFRAGE%"=="N" GOTO FEHLER
 IF "%ABFRAGE%"=="n" GOTO FEHLER
 
 :EXPORT
-echo. && echo.
+echo. && echo. && echo.
 echo --- START: %time:~0,2%:%time:~3,2%:%time:~6,2% ---
 
 echo.
@@ -77,6 +81,7 @@ rmdir /s /q %tmpfolder%.sql
 
 echo.
 echo --- ENDE:  %time:~0,2%:%time:~3,2%:%time:~6,2% ---
+echo. && echo.
 goto ENDE
 
 :FEHLER
