@@ -70,7 +70,7 @@ var _setFile = function (sType, oMessage) {
     if (oMessage.message !== "") {
         sMessage += oMessage.message;
     }
-    sMessage = sMessage.replace(/\r/g, "	"); // eslint-disable-line
+    sMessage = sMessage.replace(/\r\n/g, "	"); // eslint-disable-line
     sMessage = sMessage.replace(/\n/g, "	"); // eslint-disable-line
     var sDate = "";
     if (oConfig.bDatelog) {

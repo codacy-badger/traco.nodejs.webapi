@@ -8,7 +8,11 @@ oUser.set.sEmail("test@1mein.mail");
 dbhandler.insertOrUpdate(oUser)
     .then(function (data) {
         console.log(data);
-        return dbhandler.fetch("Test", ["test@1mein.mail", "00000"]);
+        return dbhandler.fetch("Test", ["test@1mein.mail", "00000"], {
+            orderby: [["userID", "ASC"]],
+            limit: 5,
+            offset: 10
+        });
     })
     .then(function (data) {
         console.log(data);

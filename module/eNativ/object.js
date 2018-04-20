@@ -11,47 +11,47 @@ var eArray = require("./array");
 
 /**
  * Compare two Object and returns true if they are the same.
- * @param {Object} obj1
- * @param {Object} obj2
+ * @param {Object} oObj1
+ * @param {Object} oObj2
  * @returns {Boolean}
  */
-exports.compare = function (obj1, obj2) { // eslint-disable-line
-    if (!obj1 || !obj2) {
+exports.compare = function (oObj1, oObj2) { // eslint-disable-line
+    if (!oObj1 || !oObj2) {
         return false;
     }
 
     var propName;
-    for (propName in obj1) {
-        if (obj1.hasOwnProperty(propName) !== obj2.hasOwnProperty(propName)) {
+    for (propName in oObj1) {
+        if (oObj1.hasOwnProperty(propName) !== oObj2.hasOwnProperty(propName)) {
             return false;
-        } else if (typeof obj1[propName] !== typeof obj2[propName]) {
+        } else if (typeof oObj1[propName] !== typeof oObj2[propName]) {
             return false;
         }
     }
 
-    for (propName in obj2) {
-        if (obj1.hasOwnProperty(propName) !== obj2.hasOwnProperty(propName)) {
+    for (propName in oObj2) {
+        if (oObj1.hasOwnProperty(propName) !== oObj2.hasOwnProperty(propName)) {
             return false;
-        } else if (typeof obj1[propName] !== typeof obj2[propName]) {
+        } else if (typeof oObj1[propName] !== typeof oObj2[propName]) {
             return false;
         }
 
-        if (!obj1.hasOwnProperty(propName)) {
+        if (!oObj1.hasOwnProperty(propName)) {
             continue;
         }
 
-        if (obj1[propName] instanceof Array &&
-            obj2[propName] instanceof Array) {
+        if (oObj1[propName] instanceof Array &&
+            oObj2[propName] instanceof Array) {
             /** REQUIRES array.compare **/
-            if (!eArray.compare(obj1[propName], obj2[propName])) {
+            if (!eArray.compare(oObj1[propName], oObj2[propName])) {
                 return false;
             }
-        } else if (obj1[propName] instanceof Object &&
-            obj2[propName] instanceof Object) {
-            if (exports.compare(obj1[propName], obj2[propName])) {
+        } else if (oObj1[propName] instanceof Object &&
+            oObj2[propName] instanceof Object) {
+            if (exports.compare(oObj1[propName], oObj2[propName])) {
                 return false;
             }
-        } else if (obj1[propName] !== obj2[propName]) {
+        } else if (oObj1[propName] !== oObj2[propName]) {
             return false;
         }
     }
@@ -60,11 +60,11 @@ exports.compare = function (obj1, obj2) { // eslint-disable-line
 
 /**
  * Check the object for some propertys.
- * @param {Object} obj
+ * @param {Object} oObj
  * @returns {Boolean}
  */
-exports.isEmpty = function (obj) {
-    if (Object.keys(obj).length === 0) {
+exports.isEmpty = function (oObj) {
+    if (Object.keys(oObj).length === 0) {
         return true;
     }
     return false;

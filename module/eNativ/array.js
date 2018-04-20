@@ -11,33 +11,33 @@ var eObject = require("./object");
 
 /**
  * Compare two Array and returns true if they are the same.
- * @param {any[]} arr1
- * @param {any[]} arr2
+ * @param {any[]} aArr1
+ * @param {any[]} aArr2
  * @returns {Boolean}
  */
-exports.compare = function (arr1, arr2) {
-    if (!arr1 || !arr2) {
+exports.compare = function (aArr1, aArr2) {
+    if (!aArr1 || !aArr2) {
         return false;
     }
 
-    if (arr1.length !== arr2.length) {
+    if (aArr1.length !== aArr2.length) {
         return false;
     }
 
     var n = 0;
-    while (n < arr1.length) {
-        if (arr1[n] instanceof Array &&
-            arr2[n] instanceof Array) {
-            if (!exports.compare(arr1[n], arr2[n])) {
+    while (n < aArr1.length) {
+        if (aArr1[n] instanceof Array &&
+            aArr2[n] instanceof Array) {
+            if (!exports.compare(aArr1[n], aArr2[n])) {
                 return false;
             }
-        } else if (arr1[n] instanceof Object &&
-            arr2[n] instanceof Object) {
+        } else if (aArr1[n] instanceof Object &&
+            aArr2[n] instanceof Object) {
             /** REQUIRES Object.compare **/
-            if (!eObject.compare(arr1[n], arr2[n])) {
+            if (!eObject.compare(aArr1[n], aArr2[n])) {
                 return false;
             }
-        } else if (arr1[n] !== arr2[n]) {
+        } else if (aArr1[n] !== aArr2[n]) {
             return false;
         }
         n += 1;
@@ -47,11 +47,11 @@ exports.compare = function (arr1, arr2) {
 
 /**
  * Reorder the array with objects like an SQL-OrderBy Statement. If propname starts with `-` the order is DESC.
- * @param {Object[]} arr
+ * @param {Object[]} aArr
  * @param {string[]} aProps
  * @returns {Object[]}
  */
-exports.sortBy = function (arr, aProps) {
+exports.sortBy = function (aArr, aProps) {
 
     var _sortByAttr = function (attr) {
         var sortOrder = 1;
@@ -88,16 +88,16 @@ exports.sortBy = function (arr, aProps) {
         };
     };
 
-    return arr.sort(_getSortFunc(aProps));
+    return aArr.sort(_getSortFunc(aProps));
 };
 
 /**
  * Check if the array is emty and returns true if empty.
- * @param {any[]} arr
+ * @param {any[]} aArr
  * @returns {Boolean}
  */
-exports.isEmpty = function (arr) {
-    if (arr.length === 0) {
+exports.isEmpty = function (aArr) {
+    if (aArr.length === 0) {
         return true;
     }
     return false;
@@ -105,15 +105,15 @@ exports.isEmpty = function (arr) {
 
 /**
  * Creates the same array trimmed down to unique values.
- * @param {any[]} arr
+ * @param {any[]} aArr
  * @returns {any[]}
  */
-exports.unique = function (arr) {
+exports.unique = function (aArr) {
     var unq = [];
     var i = 0;
-    while (i < arr.length) {
-        if (!unq.includes(arr[i])) {
-            unq.push(arr[i]);
+    while (i < aArr.length) {
+        if (!unq.includes(aArr[i])) {
+            unq.push(aArr[i]);
         }
         i += 1;
     }
@@ -122,38 +122,38 @@ exports.unique = function (arr) {
 
 /**
  * Removes a spezific position in the array.
- * @param {any[]} arr
+ * @param {any[]} aArr
  * @param {number} iPos
  * @returns {any[]}
  */
-exports.removePos = function (arr, iPos) {
-    return arr.splice(iPos, 1);
+exports.removePos = function (aArr, iPos) {
+    return aArr.splice(iPos, 1);
 };
 
 /**
  * Removes a spezific string-value completely from the array.
- * @param {string[]} arr
+ * @param {string[]} aArr
  * @param {string[]} sStr
  * @returns {string[]}
  */
-exports.removeStr = function (arr, sStr) {
-    while (arr.includes(sStr)) {
-        arr.removePos(arr.indexOf(sStr));
+exports.removeStr = function (aArr, sStr) {
+    while (aArr.includes(sStr)) {
+        aArr.removePos(aArr.indexOf(sStr));
     }
-    return arr;
+    return aArr;
 };
 
 /**
  * Searchs every index of the searched value.
- * @param {any[]} arr
+ * @param {any[]} aArr
  * @param {any[]} search
  * @returns {any[]}
  */
-exports.indexOfAll = function (arr, search) {
+exports.allIndexOf = function (aArr, search) {
     var idx = [];
     var i = -1;
-    while (arr.indexOf(search, i + 1) !== -1) {
-        i = arr.indexOf(search, i + 1);
+    while (aArr.indexOf(search, i + 1) !== -1) {
+        i = aArr.indexOf(search, i + 1);
         idx.push(i);
     }
     return idx;

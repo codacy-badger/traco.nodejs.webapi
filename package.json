@@ -9,7 +9,7 @@
         "postversion": "git push",
         "start": "node app.js",
         "explorer": "node ./static/onlineExplorer",
-        "jsdoc": "./node_modules/.bin/jsdoc -c ./.info/jsdoc.conf.json -d ./jsdoc -r --verbose",
+        "jsdoc": "./node_modules/.bin/jsdoc -c ./.info/jsdoc.conf.json",
         "apidoc": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -c ./.info/apidoc.conf.json -v",
         "docbuild": "npm run jsdoc && npm run apidoc"
     },
@@ -30,7 +30,8 @@
     "devDependencies": {
         "apidoc": "^0.17.6",
         "eslint": "^4.19.1",
-        "jsdoc": "^3.5.5"
+        "jsdoc": "^3.5.5",
+        "tui-jsdoc-template": "^1.2.2"
     },
     "peerDependencies": {},
     "optionalDependencies": {

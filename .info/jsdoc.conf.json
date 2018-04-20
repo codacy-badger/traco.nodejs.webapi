@@ -5,9 +5,8 @@
     "recurseDepth": 10,
     "source": {
         "include": [
-
             "./README.md",
-            "./.info/TODO.md",
+            "package.json",
             "."
         ],
         "exclude": [
@@ -26,8 +25,19 @@
         "allowUnknownTags": true,
         "dictionaries": ["jsdoc", "closure"]
     },
+    "opts": {
+        "template": "./node_modules/tui-jsdoc-template",
+        "destination": "./jsdoc/",
+        "recurse": true,
+        "verbose": true,
+        "encoding": "utf8",
+        "private": true
+    },
     "templates": {
-        "cleverLinks": false,
-        "monospaceLinks": false
+        "logo": {
+            "link": "https://github.com/DerHerrGammler/traco.nodejs.webapi"
+        },
+        "name": "TraCo",
+        "footerText": "Usage of the `module` in TraCo Development"
     }
 }

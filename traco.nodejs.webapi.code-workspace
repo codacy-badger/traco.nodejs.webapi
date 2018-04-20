@@ -33,6 +33,31 @@
             "other": true,
             "comments": true,
             "strings": false
+        },
+        "editor.tokenColorCustomizations": {
+            "textMateRules": [
+                {
+                    "scope": "log.debug",
+                    "settings": {
+                        "foreground": "#6e55ff",
+                        "fontStyle": "italic bold"
+                    }
+                },
+                {
+                    "scope": "log.warning",
+                    "settings": {
+                        "foreground": "#d1884dc5",
+                        "fontStyle": ""
+                    }
+                },
+                {
+                    "scope": "log.error",
+                    "settings": {
+                        "foreground": "#FF0000",
+                        "fontStyle": "bold"
+                    }
+                }
+            ]
         }
     },
     "extensions": {

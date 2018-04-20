@@ -1,6 +1,10 @@
 "use strict";
 /** @module */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Dependencies
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Modul
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -26,7 +30,7 @@ exports.split = function (oDate) {
  * @param {Date} oDate
  * @returns {string}
  */
-exports.logfileDate = function (oDate) {
+exports.logFileDate = function (oDate) {
     if (!oDate) {
         oDate = new Date();
     }
@@ -40,7 +44,7 @@ exports.logfileDate = function (oDate) {
 };
 
 /**
- * Turns a date into
+ * Turns a date into Log-File readeble format "YYYY-MM-DD hh:mm:ss".
  * @param {Date} oDate
  * @returns {string}
  */
@@ -48,23 +52,13 @@ exports.logDate = function (oDate) {
     if (!oDate) {
         oDate = new Date();
     }
-
-    var sDate = "";
-    // Aus ISO-Format lässt sich leich generieren
-    var aDate = oDate.toISOString().split("T");
-    // YYYY-MM-DD
-    sDate += aDate[0];
-    sDate += " ";
-    aDate = aDate[1].split(".");
-    // hh:mm:ss
-    sDate += aDate[0];
-    return sDate;
+    return exports.genDate(oDate, "YY-MM-DD hh:mm:ss");
 };
 
 /**
  * Turns the date in a string with given template
  * @param {Date} oDate
- * @param {string} sTmpl
+ * @param {string} sTmpl Configure with ["YY", "MM", "DD", "hh", "mm", "ss"]
  * @returns {string}
  */
 exports.genDate = function (oDate, sTmpl) {

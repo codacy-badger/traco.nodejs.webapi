@@ -1,4 +1,5 @@
 "use strict";
+/** @module */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -126,14 +127,85 @@ var _generateKey = function (oDBClass, oOptions) {
     });
 };
 
+var _buildSQLCurserObject = function (sCursor, aParams) {
+    var i = 0;
+    var x = 0;
+    var aIndices = [];
+    var aObjectParams = [];
+    var oCursor = {
+        "query": sCursor,
+        "params": []
+    };
+    // Find and sort all parameters for the cursor
+    while (i < aParams.length) {
+        aIndices = helper.eNativ.Array.allIndexOf(oCursor.query, "@" + i);
+        x = 0;
+        while (x < aIndices.length) {
+            aObjectParams.push({
+                "index": aIndices[x],
+                "value": aParams[i]
+            });
+            x += 1;
+        }
+        i += 1;
+    }
+    aObjectParams.sort(function (a, b) {
+        return a.index - b.index;
+    });
+    i = 0;
+    while (i < aObjectParams.length) {
+        oCursor.params.push(aObjectParams[i].value);
+        i += 1;
+    }
+    // Replace all old spaceholders with a questionmark
+    i = 0;
+    while (i < aParams.length) {
+        oCursor.query = oCursor.query.replace(new RegExp("@" + i, "g"), "?");
+        i += 1;
+    }
+    return oCursor;
+};
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DB-Functions
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-exports.fetch = function (sCurser, aData) {
-    var sSQL = sCurser;
+
+/**
+ * Perorme a Database Fetch with given cursor-Statement and inserted data.
+ * @param {string} sCursor
+ * @param {string[]} aData
+ * @param {Object} [oOptions]
+ * @param {Array[]} [oOptions.orderby]
+ * @param {string} oOptions.orderby.0 Tablename
+ * @param {string} oOptions.orderby.1 ASC | DESC
+ * @param {number} [oOptions.limit]
+ * @param {number} [oOptions.offset]
+ * @return {Promise}
+ */
+exports.fetch = function (sCursor, aData, oOptions) {
+    if (!oOptions) {
+        oOptions = {};
+    }
+    console.log(oOptions);
+    console.log(oOptions.orderby);
+    if (!oOptions.orderby) {
+        // Order Bys müssen per array eingefügt werden mit
+        // [["spaltenname", "ASC"], ["spaltenname2", "DESC"]]
+        oOptions.orderby = [];
+    }
+    if (!oOptions.limit) {
+        oOptions.limit = 0;
+    }
+    if (oOptions.limit > 1000) {
+        oOptions.limit = 1000;
+    }
+    if (!oOptions.offset) {
+        oOptions.offset = 0;
+    }
+    var sSQL = sCursor;
     // Wenn nur ein Pointer auf einen Curser gemeint ist dieses Auswählen
-    if (helper.isset(dbcurser[sCurser])) {
-        sSQL = dbcurser[sCurser];
+    if (helper.isset(dbcurser[sCursor])) {
+        sSQL = dbcurser[sCursor];
     }
     var iData = 0;
     if (helper.isset(aData)) {
@@ -141,22 +213,63 @@ exports.fetch = function (sCurser, aData) {
     }
     var n = 0;
     while (n < iData) {
+        // Wenn Parameter ein Array ist, muss an der stelle ein IN () angenommen werden
         if (helper.isArray(aData[n])) {
-            let sData = "";
+            var sAt = "";
             let i = 0;
             while (i < aData[n].length) {
-                sData += connection.escape(aData[n][i]) + ", ";
+                sAt += "@" + n + ",";
                 i += 1;
             }
-            aData[n] = sData.substring(0, sData.length - 2);
+            sAt = sAt.substring(0, sAt.length - 1);
+            // Globales ersetzen (Fals ein Parameter mehrfach vorkommt) der Parameter durch mehrfach Parameterinsert
+            sSQL = sSQL.replace(new RegExp("@" + n, "g"), sAt);
         }
-        // Globales ersetzen der Parameter (Fals ein Parameter mehrfach vorkommt)
-        sSQL = sSQL.replace(new RegExp("@" + n, "g"), connection.escape(aData[n]));
         n += 1;
     }
-    return _doQuery(sSQL, "fetch");
+    if (oOptions.orderby.length > 0) {
+        n = 0;
+        while (n < oOptions.orderby.length) {
+            sSQL += " ORDER BY `" + oOptions.orderby[n][0] + "` " + oOptions.orderby[n][1] + ",";
+            n += 1;
+        }
+        sSQL = sSQL.substring(0, sSQL.length - 1);
+    }
+    if (oOptions.limit > 0) {
+        sSQL += " LIMIT " + oOptions.limit;
+    }
+    if (oOptions.offset > 0) {
+        sSQL += " OFFSET " + oOptions.offset;
+    }
+
+    var oCursor = _buildSQLCurserObject(sSQL, aData);
+    fileLog("fetch", oCursor.query);
+    return new Promise(function (fFulfill, fReject) {
+        if (config.mysql.enabled) {
+            connection.query(oCursor.query, oCursor.params, function (err, data) {
+                if (err) {
+                    fReject(_errorHandler(err, "fetch"));
+                } else {
+                    fFulfill(data);
+                }
+            });
+        } else {
+            fReject({
+                "SERR": "DB_DISABLED"
+            });
+        }
+    });
 };
 
+/**
+ * Performe a INSERT-Statement with the given DBClass-
+ * @param {Object} oDBClass DBClass
+ * @param {Object} [oOptions] Options for keygen
+ * @param {string} [oOptions.prefix]
+ * @param {string} [oOptions.suffix]
+ * @param {string} [oOptions.chars] 'aA#!'
+ * @returns {Promise}
+ */
 exports.insert = function (oDBClass, oOptions) {
     if (!helper.isset(oDBClass) || !helper.isset(oDBClass.fields)) {
         throw new TypeError("No oDBClass given for insert");
@@ -175,11 +288,7 @@ exports.insert = function (oDBClass, oOptions) {
         var aDBValues = Object.values(oDBClass.fields);
         n = 0;
         while (n < aDBFields.length) {
-            if (helper.isset(aDBValues[n])) {
-                sSQL += String(connection.escape(aDBValues[n])) + ", ";
-            } else {
-                sSQL += "NULL, ";
-            }
+            sSQL += connection.escape(aDBValues[n]) + ", ";
             n += 1;
         }
         sSQL = sSQL.substring(0, sSQL.length - 2);
@@ -193,6 +302,15 @@ exports.insert = function (oDBClass, oOptions) {
         });
 };
 
+/**
+ * Performe a INSERT-Statement with the given DBClass or UPDATE a dataset in the database.
+ * @param {Object} oDBClass DBClass
+ * @param {Object} [oOptions] Options for keygen
+ * @param {string} [oOptions.prefix]
+ * @param {string} [oOptions.suffix]
+ * @param {string} [oOptions.chars] 'aA#!'
+ * @returns {Promise}
+ */
 exports.insertOrUpdate = function (oDBClass, oOptions) {
     if (!helper.isset(oDBClass) || !helper.isset(oDBClass.fields)) {
         throw new TypeError("No oDBClass given for insert");
@@ -211,25 +329,17 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
         var aDBValues = Object.values(oDBClass.fields);
         n = 0;
         while (n < aDBFields.length) {
-            if (helper.isset(aDBValues[n])) {
-                sSQL += connection.escape(aDBValues[n]) + ", ";
-            } else {
-                sSQL += "NULL, ";
-            }
+            sSQL += connection.escape(aDBValues[n]) + ", ";
             n += 1;
         }
         sSQL = sSQL.substring(0, sSQL.length - 2);
         sSQL += ") ON DUPLICATE KEY UPDATE ";
         n = 0;
         while (n < aDBFields.length) {
-            if (helper.isset(aDBValues[n])) {
-                sSQL += "`" + aDBFields[n] + "` = " + connection.escape(aDBValues[n]) + ", ";
-            } else {
-                sSQL += "`" + aDBFields[n] + "` = NULL, ";
-            }
+            sSQL += "`" + aDBFields[n] + "` = " + connection.escape(aDBValues[n]) + ", ";
             n += 1;
         }
-        sSQL = sSQL.substring(0, sSQL.length - 2) + ";";
+        sSQL = sSQL.substring(0, sSQL.length - 2);
         return _doQuery(sSQL, "insertOrUpdate");
     };
 
@@ -239,19 +349,17 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
         });
 };
 
+/**
+ * Performe a DELETE-Statement to the Database with the given DBClass
+ * @param {Object} oDBClass
+ * @returns {Promise}
+ */
 exports.delete = function (oDBClass) {
     if (!helper.isset(oDBClass) || !helper.isset(oDBClass.fields)) {
         throw new TypeError("No oDBClass given for insert");
     }
 
     var sSQL = "DELETE FROM `" + oDBClass.classname + "` WHERE ";
-    sSQL += "`" + Object.keys(oDBClass.fields)[0] + "` = " + connection.escape(Object.values(oDBClass.fields)[0]) + ";";
+    sSQL += "`" + Object.keys(oDBClass.fields)[0] + "` = " + connection.escape(Object.values(oDBClass.fields)[0]);
     return _doQuery(sSQL, "delete");
-};
-
-exports.getCurser = function (sCurser) {
-    if (dbcurser[sCurser]) {
-        return dbcurser[sCurser];
-    }
-    throw new TypeError("DBCurser '" + sCurser + "' doesn't exists");
 };

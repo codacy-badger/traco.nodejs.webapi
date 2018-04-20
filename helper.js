@@ -13,6 +13,7 @@ var logger = require("./module/simple-file-logger");
 var fs = require("fs-extra");
 var path = require("path");
 var prohelper = require("./prohelper");
+var eNativ = require("./module/eNativ");
 
 var redis;
 if (config.redis.enabled) {
@@ -26,6 +27,8 @@ if (config.redis.enabled) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Functions
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+exports.eNativ = eNativ;
+
 exports.log = function (sType, osMessage, oOptions) {
     logger.log(sType, osMessage, oOptions);
 };
@@ -319,7 +322,8 @@ exports.isArray = function (test) {
 };
 
 exports.isObject = function (test) {
-    return typeof test === "object" && !exports.isArray(test);
+    return test instanceof Object;
+    // return typeof test === "object" && !exports.isArray(test);
 };
 
 exports.isInt = function (test) {
