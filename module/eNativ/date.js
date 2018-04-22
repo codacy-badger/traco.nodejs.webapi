@@ -10,7 +10,7 @@
 
 /**
  * Turns a date into a array of dates with [YYYY, MM, DD, hh, mm, ss] values.
- * @param {Date} oDate
+ * @param {Date} [oDate]
  * @returns {string[]}
  */
 exports.split = function (oDate) {
@@ -27,7 +27,7 @@ exports.split = function (oDate) {
 
 /**
  * Returns a date string pre-compiled for a filename: "YYYYMMDD"
- * @param {Date} oDate
+ * @param {Date} [oDate]
  * @returns {string}
  */
 exports.logFileDate = function (oDate) {
@@ -45,23 +45,23 @@ exports.logFileDate = function (oDate) {
 
 /**
  * Turns a date into Log-File readeble format "YYYY-MM-DD hh:mm:ss".
- * @param {Date} oDate
+ * @param {Date} [oDate]
  * @returns {string}
  */
 exports.logDate = function (oDate) {
     if (!oDate) {
         oDate = new Date();
     }
-    return exports.genDate(oDate, "YY-MM-DD hh:mm:ss");
+    return exports.genDate("YY-MM-DD hh:mm:ss", oDate);
 };
 
 /**
  * Turns the date in a string with given template
- * @param {Date} oDate
  * @param {string} sTmpl Configure with ["YY", "MM", "DD", "hh", "mm", "ss"]
+ * @param {Date} [oDate]
  * @returns {string}
  */
-exports.genDate = function (oDate, sTmpl) {
+exports.genDate = function (sTmpl, oDate) {
     if (!oDate) {
         oDate = new Date();
     }

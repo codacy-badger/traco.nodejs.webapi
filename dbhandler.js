@@ -166,6 +166,27 @@ var _buildSQLCurserObject = function (sCursor, aParams) {
     return oCursor;
 };
 
+var _buildInsert = function (oDBClass) {
+    var aDBFields = Object.keys(oDBClass.fields);
+    var sSQL = "INSERT INTO`" + oDBClass.classname + "` (";
+    var n = 0;
+    while (n < aDBFields.length) {
+        sSQL += "`" + aDBFields[n] + "`, ";
+        n += 1;
+    }
+    sSQL = sSQL.substring(0, sSQL.length - 2);
+    sSQL += ") VALUES (";
+    var aDBValues = Object.values(oDBClass.fields);
+    n = 0;
+    while (n < aDBFields.length) {
+        sSQL += connection.escape(aDBValues[n]) + ", ";
+        n += 1;
+    }
+    sSQL = sSQL.substring(0, sSQL.length - 2);
+    sSQL += ")";
+    return sSQL;
+};
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DB-Functions
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -173,7 +194,7 @@ var _buildSQLCurserObject = function (sCursor, aParams) {
 /**
  * Perorme a Database Fetch with given cursor-Statement and inserted data.
  * @param {string} sCursor
- * @param {string[]} aData
+ * @param {string[]} [aData]
  * @param {Object} [oOptions]
  * @param {Object[]} [oOptions.orderby]
  * @param {string} oOptions.orderby.col Table collumn
@@ -226,9 +247,10 @@ exports.fetch = function (sCursor, aData, oOptions) {
         n += 1;
     }
     if (oOptions.orderby.length > 0) {
+        sSQL += " ORDER BY";
         n = 0;
         while (n < oOptions.orderby.length) {
-            sSQL += " ORDER BY `" + oOptions.orderby[n].col + "` " + oOptions.orderby[n].order + ",";
+            sSQL += " `" + oOptions.orderby[n].col + "` " + oOptions.orderby[n].order + ",";
             n += 1;
         }
         sSQL = sSQL.substring(0, sSQL.length - 1);
@@ -274,23 +296,7 @@ exports.insert = function (oDBClass, oOptions) {
     }
 
     var _generateInsert = function () {
-        var aDBFields = Object.keys(oDBClass.fields);
-        var sSQL = "INSERT INTO`" + oDBClass.classname + "` (";
-        var n = 0;
-        while (n < aDBFields.length) {
-            sSQL += "`" + aDBFields[n] + "`, ";
-            n += 1;
-        }
-        sSQL = sSQL.substring(0, sSQL.length - 2);
-        sSQL += ") VALUES (";
-        var aDBValues = Object.values(oDBClass.fields);
-        n = 0;
-        while (n < aDBFields.length) {
-            sSQL += connection.escape(aDBValues[n]) + ", ";
-            n += 1;
-        }
-        sSQL = sSQL.substring(0, sSQL.length - 2);
-        sSQL += ");";
+        var sSQL = _buildInsert(oDBClass);
         return _doQuery(sSQL, "insert");
     };
 
@@ -315,24 +321,11 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
     }
 
     var _generateInsert = function () {
+        var sSQL = _buildInsert(oDBClass);
         var aDBFields = Object.keys(oDBClass.fields);
-        var sSQL = "INSERT INTO `" + oDBClass.classname + "` (";
-        var n = 0;
-        while (n < aDBFields.length) {
-            sSQL += "`" + aDBFields[n] + "`, ";
-            n += 1;
-        }
-        sSQL = sSQL.substring(0, sSQL.length - 2);
-        sSQL += ") VALUES (";
         var aDBValues = Object.values(oDBClass.fields);
-        n = 0;
-        while (n < aDBFields.length) {
-            sSQL += connection.escape(aDBValues[n]) + ", ";
-            n += 1;
-        }
-        sSQL = sSQL.substring(0, sSQL.length - 2);
-        sSQL += ") ON DUPLICATE KEY UPDATE ";
-        n = 0;
+        sSQL += " ON DUPLICATE KEY UPDATE ";
+        var n = 0;
         while (n < aDBFields.length) {
             sSQL += "`" + aDBFields[n] + "` = " + connection.escape(aDBValues[n]) + ", ";
             n += 1;

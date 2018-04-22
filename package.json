@@ -11,7 +11,7 @@
         "explorer": "node ./static/onlineExplorer",
         "jsdoc": "./node_modules/.bin/jsdoc -c ./.info/jsdoc.conf.json",
         "apidoc": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -c ./.info/apidoc.conf.json -v",
-        "docbuild": "npm run jsdoc && npm run apidoc"
+        "doc": "npm run jsdoc && npm run apidoc"
     },
     "dependencies": {
         "bcryptjs": "^2.4.3",

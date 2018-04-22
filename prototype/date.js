@@ -2,38 +2,6 @@
 //************************************************
 // neue Prototypes
 //************************************************
-if (Date.prototype.logfileDate) console.warn("Override existing Date.prototype.logfileDate!"); // eslint-disable-line
-Date.prototype.logfileDate = function () {
-
-    var sDate = "";
-    sDate += this.getFullYear();
-    if (this.getMonth() + 1 < 10) {
-        sDate += "0" + (this.getMonth() + 1);
-    } else {
-        sDate += this.getMonth() + 1;
-    }
-    if (this.getDate() < 10) {
-        sDate += "0" + this.getDate();
-    } else {
-        sDate += this.getDate();
-    }
-    return sDate;
-};
-
-if (Date.prototype.logDate) console.warn("Override existing Date.prototype.logDate!"); // eslint-disable-line
-Date.prototype.logDate = function () {
-
-    var sDate = "";
-    // Aus ISO-Format lässt sich leich generieren
-    var aDate = this.toISOString().split("T");
-    // YYYY-MM-DD
-    sDate += aDate[0];
-    sDate += " ";
-    aDate = aDate[1].split(".");
-    // hh:mm:ss
-    sDate += aDate[0];
-    return sDate;
-};
 
 if (Date.prototype.split) console.warn("Override existing Date.prototype.split!"); // eslint-disable-line
 Date.prototype.split = function () {

@@ -30,7 +30,7 @@ Run `npm run erplorer` to start a onlineExplorer on [localhost:8001](http://loca
 
 Run `npm run apidoc` to compile the documentation of the API into the `./apidoc` directory.  
 Run `npm run jsdoc` to compile the documentation of the modules into the `./jsdoc` directory.  
-Run `npm run docbuild` to compile both documentations.
+Run `npm run doc` to compile both documentations.
 
 <!-- ## Build
 
@@ -42,11 +42,10 @@ Run `npm run docbuild` to compile both documentations.
 
 ## On Deck
 
- - [ ] Include the new module instead of using the prototypes
  - [ ] Rework the `simple-file-logger.js` to easyer use and replace the old logger
  - [ ] Extend `nativ/date.js` with `.normalizeDate()`. A function wich will generate a `new Date()` with given input like unix, iso or something else date format.
- - [ ]  Build a function in `dbhandler.js` that generate a INSERT-Statement with given DBClass and then extend THIS in the `insertOrUpdate()` instead of dobble the code.
- - [ ]  Implement in the new `module/logger.js` a function for automatik file deletion if the file is older than the max Date
+ - [ ] Build a function in `dbhandler.js` that generate a INSERT-Statement with given DBClass and then extend THIS in the `insertOrUpdate()` instead of dobble the code.
+ - [ ] `modul/logger.js` deltetion prozess as a cron-job. Done every day/hour/minute.
 
 
 ## Backlog
@@ -57,6 +56,10 @@ Run `npm run docbuild` to compile both documentations.
 
 ## Finished
 
+ - [x] Include the new module instead of using the prototypes
+ - [x] Implement in the new `module/logger.js` a function for automatik file deletion if the file is older than the max Date
+ - [x] `module/logger.js` have to log hourly a file if the iSaveDays timer is smaller than a day and have to log minute files if the iSaveDays is smaller than one hour. And if the iSaveDays is smaller than a minute it will automaticly scaled up to 5 minutes.
+ - [x] New `module/logger.js` need a enum with logfile default loglevel values like `DEBUG`, `INFO`, `WARN`, `ERROR`.
  - [x] Extend all `db-Scripts` with the `-v Vars-file` Option and a better view in the cmd.
  - [x] Extend the `importdb.bat` and `exportdb.bat` with an option like `-v filename` to import a database configuration from a file. This is important, because then i can save multiple configuration und doesn't have change the main `MySQLVars.bat`. I can configure one `Vars.bat` per maintained Server/Database.
  - [x] New `dbhandler.fetch()` function with safe @0, @1... insert into dbcurser 

@@ -1,7 +1,4 @@
 {
-    "update": [
-
-    ],
     "server": {
         "main": {
             "cluster": false,

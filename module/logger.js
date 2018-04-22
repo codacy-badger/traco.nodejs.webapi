@@ -117,9 +117,22 @@ var _delOldFiles = function () {
 var _logFile = function () {
     _delOldFiles();
     var sFile = "";
+
     sFile += oConfig.sFilename;
+    if (oConfig.iSaveDays * enums.Day < enums.Minute) {
+        oConfig.iSaveDays = enums.Minute;
+    }
     if (oConfig.bFiledate) {
         sFile += "_" + date.logFileDate();
+        switch (true) {
+            case oConfig.iSaveDays * enums.Day < enums.Day && oConfig.iSaveDays * enums.Day >= enums.Hour:
+                sFile += "-" + date.genDate("hh");
+                break;
+            case oConfig.iSaveDays * enums.Day < enums.Hour && oConfig.iSaveDays * enums.Day >= enums.Minute:
+                sFile += "-" + date.genDate("hhmm");
+                break;
+            default:
+        }
     }
     sFile += "." + oConfig.sExtension;
     sMess = sMess.replace(/\r/g, "	"); // eslint-disable-line
@@ -157,6 +170,10 @@ var _logFile = function () {
 exports.log = function (sMessage, sType, oOptions) {
     if (!sMessage) {
         sMessage = "";
+    }
+    if (typeof sType === "number") {
+        const code = ["DEBUG", "INFO", "WARN", "ERROR"];
+        sType = code[sType];
     }
     if (!sType) {
         sType = "INFO";

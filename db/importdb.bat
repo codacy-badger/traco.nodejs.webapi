@@ -2,7 +2,7 @@
 REM Syntax:
 echo.
 echo Syntax (defaults in MySQLVARS.bat are used for missing parameters):
-echo IMPORT -f filename [-u USERNAME] [-p PASSWORD] [-db DBNAME] [-s SERVER] -v Vars[]
+echo IMPORT -f filename [-u USERNAME] [-p PASSWORD] [-db DBNAME] [-s SERVER] [-v Vars-File]
 echo.
 IF "%1" == "" echo SQL-script (parameter -f) not defined.
 IF "%1" == "" goto ENDE
