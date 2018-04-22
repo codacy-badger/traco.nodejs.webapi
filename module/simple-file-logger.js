@@ -6,6 +6,7 @@ require("../prototype/loadPrototype");
 var fs = require("fs-extra");
 var path = require("path");
 var colors = require("colors");
+var exDate = require("./eNativ/date");
 
 var oConfig = {};
 
@@ -75,7 +76,7 @@ var _setFile = function (sType, oMessage) {
     var sDate = "";
     if (oConfig.bDatelog) {
         sDate += "_";
-        sDate += new Date().logfileDate();
+        sDate += exDate.logFileDate();
     }
     fs.appendFile(path.join(oConfig.sPath, oConfig.sFilename + sDate + "." + oConfig.sExtansion), sMessage + "\n", function (err) {
         if (err) {
@@ -190,7 +191,7 @@ exports.log = function (sType, osMessage, oOptions) {
 
     }
     if (oConfig.bLogDate) {
-        oMessage.date = new Date().logDate();
+        oMessage.date = exDate.logDate();
     }
     logging(sType, oMessage);
 };

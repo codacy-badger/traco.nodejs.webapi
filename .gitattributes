@@ -9,6 +9,7 @@ db/*.tar.xz linguist-language=SQL
 
 # linguist-documentation=true/false
 test/* linguist-documentation=true
+.info/* linguist-documentation=true
 
 
 # linguist-vendored=true/false

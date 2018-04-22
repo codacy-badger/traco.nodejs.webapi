@@ -38,6 +38,15 @@
             "link": "https://github.com/DerHerrGammler/traco.nodejs.webapi"
         },
         "name": "TraCo",
-        "footerText": "Usage of the `module` in TraCo Development"
+        "footerText": "Usage of the `module` in TraCo Development",
+        "useCollapsibles": true,
+        "default": {
+            "staticFiles": {
+                "include": [".info/jsdoc/"]
+            }
+        },
+        "css": [
+            "custom.css"
+        ]
     }
 }

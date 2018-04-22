@@ -147,7 +147,7 @@ exports.removeStr = function (aArr, sStr) {
  * Searchs every index of the searched value.
  * @param {any[]} aArr
  * @param {any[]} search
- * @returns {any[]}
+ * @returns {number[]}
  */
 exports.allIndexOf = function (aArr, search) {
     var idx = [];

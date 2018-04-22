@@ -20,7 +20,7 @@ Run `npm install` to install the dependencies.
 
 In the `./db` directory are script to create and import a MySQL Database. The Scriptnames are self-explanatory
 
-In the `./static` folder copy the `config.default.json` or `config.dev.json` into a `config.json`.
+Create a `config.json` in the `./static` folder wich has a structure like `config.default.json`.
 
 ## Development
 
@@ -32,9 +32,6 @@ Run `npm run apidoc` to compile the documentation of the API into the `./apidoc`
 Run `npm run jsdoc` to compile the documentation of the modules into the `./jsdoc` directory.  
 Run `npm run doc` to compile both documentations.
 
-<!-- ## Build
-
-**-- NOT READY YET --** -->
 
 ---
 

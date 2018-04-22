@@ -10,7 +10,7 @@
         "start": "node app.js",
         "explorer": "node ./static/onlineExplorer",
         "jsdoc": "./node_modules/.bin/jsdoc -c ./.info/jsdoc.conf.json",
-        "apidoc": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -c ./.info/apidoc.conf.json -v",
+        "apidocbuild": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -c ./.info/apidoc.conf.json -v",
         "doc": "npm run jsdoc && npm run apidoc"
     },
     "dependencies": {
