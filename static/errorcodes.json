@@ -1,6 +1,8 @@
 {
     "ERR_invalidCommand": 0,
-    "ERR_individualError": 1,
-    "ERR_invalidUserPermission": 2,
-    "ERR_checkRequiredValues": 3
+    "ERR_internal": 1,
+    "ERR_sqlerror": 2,
+    "ERR_individualError": 3,
+    "ERR_invalidUserPermission": 4,
+    "ERR_checkRequiredValues": 5
 }

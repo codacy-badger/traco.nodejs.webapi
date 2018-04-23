@@ -1,12 +1,13 @@
 "use strict";
+/** @module */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 require("../prototype/loadPrototype");
-var enativ = require("./eNativ");
+var exNativ = require("./exNativ");
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Function
+// Exports
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var JsonDB = function (iniData) {
     this.cols = [];
@@ -37,7 +38,7 @@ JsonDB.prototype.insert = function (oData) {
     var aCols = Object.keys(oData);
     if (this.cols.length === 0) {
         this.setCols(aCols);
-    } else if (!enativ.Array.compare(aCols)){
+    } else if (!exNativ.Array.compare(aCols)) {
         throw new TypeError("Your Dataset is not the expected");
     }
     this.data.push(oData);
@@ -105,7 +106,7 @@ JsonDB.prototype.dropCol = function (sCol) {
         throw new TypeError("Collumn doesn't exists");
     }
 
-    this.cols = enativ.Array.removeStr(this.cols, sCol);
+    this.cols = exNativ.Array.removeStr(this.cols, sCol);
 
     var i = 0;
     while (i < this.data.length) {
@@ -143,7 +144,7 @@ JsonDB.prototype.unique = function (sCol) {
         arr.push(this.data[i][sCol]);
         i += 1;
     }
-    return enativ.Array.unique(arr);
+    return exNativ.Array.unique(arr);
 };
 
 JsonDB.prototype.orderBy = function (aCols, aDest) {
@@ -174,7 +175,7 @@ JsonDB.prototype.orderBy = function (aCols, aDest) {
         }
         i += 1;
     }
-    this.data = enativ.Array.sortBy(this.data, aArgs);
+    this.data = exNativ.Array.sortBy(this.data, aArgs);
     return this;
 };
 

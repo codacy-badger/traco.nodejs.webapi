@@ -5,16 +5,42 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var mysql = require("mysql");
 var helper = require("./helper");
-var config = require("./static/config.json");
-var dbcurser = require("./static/dbcurser.json");
+var errorcode = helper.getErrorcodes();
+var Logger = require("./module/logger").Logger;
+var dbLogger = new Logger({
+    bConsole: false,
+    sFilename: "logSQL"
+});
+var config;
 var connection;
+var dbcursor;
+
+/**
+ * Setup for the dbhandler individual for every require
+ * @param {Object} oConfig
+ * @param {boolean} oConfig.enabled MUST be true
+ * @param {Object} oConfig.main
+ * @param {number} oConfig.main.connectionLimit
+ * @param {string} oConfig.main.host
+ * @param {string} oConfig.main.user
+ * @param {string} oConfig.main.password
+ * @param {string} oConfig.main.database
+ * @param {string} oConfig.main.charset
+ * @param {boolean} oConfig.debug
+ * @param {Object} oCursor
+ */
+module.exports = function (oConfig, oCursor) {
+    config = oConfig;
+    dbcursor = oCursor;
+    return exports;
+};
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Functions
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var handleDisconnect = function () {
     // Create connection pool
-    connection = mysql.createPool(config.mysql.main);
+    connection = mysql.createPool(config.main);
 
     // If you are also serving http, display a 503 error.
     connection.on("error", function (err) {
@@ -28,7 +54,7 @@ var handleDisconnect = function () {
     });
 };
 
-if (config.mysql.enabled) {
+if (config.enabled) {
     handleDisconnect();
 }
 
@@ -36,11 +62,9 @@ var fileLog = function (sType, sSQL) {
     if (sType === undefined) {
         sType = "UNDEFINED";
     }
-    helper.log(sType, sSQL, {
-        "bFile": config.debug.logSQL,
-        "bConsole": false,
-        "sFilename": "logSQL"
-    });
+    if (config.debug) {
+        dbLogger.log(sSQL, 0);
+    }
 };
 
 var _errorHandler = function (err, sType) {
@@ -48,26 +72,26 @@ var _errorHandler = function (err, sType) {
         err = {};
     }
     console.log(err); // eslint-disable-line
-    var oErr = {};
+    var oErr = {
+        "type": errorcode.ERR_sqlerror,
+        "SERR": ""
+    };
     switch (err.code) {
         case "ER_DUP_ENTRY":
-            oErr = {
-                "SERR": "DB_DUP"
-            };
+            oErr.SERR = "DB_DUP";
             break;
         default:
-            oErr = {
-                "SERR": "DB_QEURY_" + sType
-            };
+            oErr.SERR = "DB_QEURY_" + sType;
     }
-    fileLog("ERROR", "---------- ONE Statement above was an ERROR ----------");
+    Logger.log(helper.convertJSONToString(err), 3);
+    fileLog("---------- ONE Statement above was an ERROR ----------", 3);
     return oErr;
 };
 
 var _doQuery = function (sSQL, sType) {
     fileLog(sType, sSQL);
     return new Promise(function (fFulfill, fReject) {
-        if (config.mysql.enabled) {
+        if (config.enabled) {
             connection.query(sSQL, function (err, data) {
                 if (err) {
                     fReject(_errorHandler(err, sType));
@@ -138,7 +162,7 @@ var _buildSQLCurserObject = function (sCursor, aParams) {
     };
     // Find and sort all parameters for the cursor
     while (i < aParams.length) {
-        aIndices = helper.eNativ.Array.allIndexOf(oCursor.query, "@" + i);
+        aIndices = helper.exNativ.Array.allIndexOf(oCursor.query, "@" + i);
         x = 0;
         while (x < aIndices.length) {
             aObjectParams.push({
@@ -223,8 +247,8 @@ exports.fetch = function (sCursor, aData, oOptions) {
     }
     var sSQL = sCursor;
     // Wenn nur ein Pointer auf einen Curser gemeint ist dieses Auswählen
-    if (helper.isset(dbcurser[sCursor])) {
-        sSQL = dbcurser[sCursor];
+    if (helper.isset(dbcursor[sCursor])) {
+        sSQL = dbcursor[sCursor];
     }
     var iData = 0;
     if (helper.isset(aData)) {
@@ -265,7 +289,7 @@ exports.fetch = function (sCursor, aData, oOptions) {
     var oCursor = _buildSQLCurserObject(sSQL, aData);
     fileLog("fetch", oCursor.query);
     return new Promise(function (fFulfill, fReject) {
-        if (config.mysql.enabled) {
+        if (config.enabled) {
             connection.query(oCursor.query, oCursor.params, function (err, data) {
                 if (err) {
                     fReject(_errorHandler(err, "fetch"));

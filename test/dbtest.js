@@ -1,4 +1,4 @@
-var dbhandler = require("../dbhandler");
+var dbhandler = require("../dbhandler")();
 var classes = require("../classes");
 
 var oUser = new classes.User();

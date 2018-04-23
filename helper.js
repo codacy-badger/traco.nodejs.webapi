@@ -1,54 +1,54 @@
 "use strict";
+/** @module */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-require("./prototype/loadPrototype");
 var bluebird = require("bluebird");
 var config = require("./static/config.json");
-var Cookie = require("cookies");
 var enums = require("./static/enums.json");
-var errorcodes = require("./static/errorcodes.json");
-var IORedis = require("ioredis");
-var logger = require("./module/simple-file-logger");
+var errorcode = require("./static/errorcodes.json");
 var fs = require("fs-extra");
 var path = require("path");
-var prohelper = require("./prohelper");
-var eNativ = require("./module/eNativ");
-
-var redis;
-if (config.redis.enabled) {
-    if (config.redis.socket === undefined || config.redis.socket === ".") {
-        redis = new IORedis();
-    } else {
-        redis = new IORedis(config.redis.socket);
-    }
-}
+var exNativ = require("./module/exNativ");
+var logger = require("./module/logger");
+var Logger = new logger.Logger({
+    bConsole: config.debug,
+    sFilename: "helper",
+    iSaveDays: config.logger.iSaveDays
+});
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Functions
+// Exports
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-exports.eNativ = eNativ;
+exports.log = Logger.log;
 
-exports.log = function (sType, osMessage, oOptions) {
-    logger.log(sType, osMessage, oOptions);
+/**
+ * Returns all enums from `static/enums.json` and add the oAdditionalEnums.
+ * @param {Object} oAdditionalEnums
+ * @returns {Object}
+ */
+exports.getEnums = function (oAdditionalEnums) {
+    oAdditionalEnums = oAdditionalEnums || {};
+    return exNativ.Object.merge(enums, oAdditionalEnums);
 };
 
-exports.getErrorcode = function (sCode) {
-    if (exports.isSet(errorcodes[sCode])) {
-        return errorcodes[sCode];
-    }
-    // Wenn der errocode nicht existiert, wird ein FATAL Error angenommen.
-    return 99;
+/**
+ * Returns all errorcodes from `static/errorcodes.json` and add the oAdditionalError.
+ * @param {Object} oAdditionalError
+ * @returns {Object}
+ */
+exports.getErrorcodes = function (oAdditionalError) {
+    oAdditionalError = oAdditionalError || {};
+    return exNativ.Object.merge(errorcode, oAdditionalError);
 };
 
-exports.getEnums = function (sCode) {
-    if (exports.isSet(enums[sCode])) {
-        return enums[sCode];
-    }
-    // Wenn der enum nicht existiert, wird ein TypeError zurückgegeben.
-    throw new TypeError(sCode + " is not a ENUM");
-};
-
+/**
+ * Turns the data in req.body into SQL-Safe data without htmlspezialchars.
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Object} next
+ * @returns {void}
+ */
 exports.sqlsafe = function (req, res, next) {
 
     var _safeObject = function (oArray) {
@@ -81,112 +81,31 @@ exports.sqlsafe = function (req, res, next) {
         req.body = _safeObject(req.body);
         return next();
     } catch (oErr) {
-        console.log(oErr); // eslint-disable-line
-        prohelper.httpErrorHandler(res, {
-            "type": exports.getErrorcode("ERR_individualError"),
-            "SERR": "FailedRequestValidation"
-        });
+        console.log(oErr);
+        // prohelper.httpErrorHandler(res, {
+        //     "type": errorcode.ERR_individualError,
+        //     "SERR": "FailedRequestValidation"
+        // });
     }
 };
 
-exports.startSession = function (oCookie, oParam) {
-    try {
-        if (oParam.session) {
-            var sSessionid = exports.randomString(32, "aA#", {
-                "prefix": oParam.prefix,
-                "suffix": oParam.suffix
-            });
-            if (oParam.cookie === true || oParam.cookie === "true") {
-                oCookie.set(config.cookie.session, sSessionid, {
-                    "overwrite": true,
-                    "httpOnly": true,
-                    "expires": new Date(Date.now() + enums.Year * 10 * 1000)
-                });
-            } else {
-                oCookie.set(config.cookie.session, sSessionid, {
-                    "overwrite": true,
-                    "httpOnly": true
-                });
-            }
-            if (config.redis.enabled) {
-                redis.set(sSessionid, oParam.redis);
-            }
-        }
-    } catch (err) {
-        console.log(err); // eslint-disable-line
-    }
-};
-
-exports.endSession = function (oCookie, oParam) {
-    if (oParam.sessionid !== undefined) {
-        if (config.redis.enabled) {
-            redis.del(oParam.sessionid);
-            oCookie.set(config.cookie.session);
-        } else {
-            oCookie.set(config.cookie.session);
-        }
-    }
-};
-
-exports.loadSessionData = function (req, res, next) {
-    var oCookie = new Cookie(req, res);
-    var sSessionid = oCookie.get(config.cookie.session);
-    req.clientdata = {
-        "sessionid": "                                ",
-        "sessiondata": {}
-    };
-
-    exports.startPromiseChain()
-        .then(function () {
-            if (config.redis.enabled) {
-                return new Promise(function (fFulfill, fReject) {
-                    redis.get(sSessionid, function (error, result) {
-                        var err;
-                        if (!error) {
-                            err = {
-                                "ERR": "Redis fetch failed",
-                                "err": error,
-                                "sSessionid": sSessionid
-                            };
-                            fReject(prohelper.loadSessionDataFail(err));
-                        }
-                        if (result) {
-                            fFulfill(prohelper.loadSessionData(result));
-                        } else {
-                            err = {
-                                "ERR": "No Redis fetch result",
-                                "sSessionid": sSessionid
-                            };
-                            fReject(prohelper.loadSessionDataFail(err));
-                        }
-                    });
-                });
-            } else if (sSessionid !== undefined) {
-                return prohelper.loadSessionData(sSessionid);
-            }
-            var err = {
-                "ERR": "Keine Session am laufen!"
-            };
-            throw prohelper.loadSessionDataFail(err);
-        })
-        .then(function (sessionData) {
-            req.clientdata = {
-                "sessionid": sSessionid,
-                "sessiondata": sessionData
-            };
-            req.oSessionData = sessionData;
-            next();
-        })
-        .catch(function (err) {
-            req.oSessionData = err;
-            next();
-        });
-};
-
+/**
+ * Generate the current unix-timestamp
+ * @returns {number}
+ */
 exports.currentTimestamp = function () {
     return Math.floor(Date.now() / 1000);
 };
 
+/**
+ * Generates a random string with given parameters
+ * @param {number} iLength
+ * @param {string} sChars 'aA#!'
+ * @param {Object} [oOptions]
+ * @param {string} [oOptions.prefix]
+ * @param {string} [oOptions.suffix]
+ * @returns {string}
+ */
 exports.randomString = function (iLength, sChars, oOptions) {
     var sMask = "";
     var sResult = "";
@@ -224,10 +143,22 @@ exports.randomString = function (iLength, sChars, oOptions) {
     return sResult;
 };
 
+/**
+ * Generates a random Number.
+ * @param {number} iFrom
+ * @param {number} iTo
+ * @returns {number}
+ */
 exports.randomInt = function (iFrom, iTo) {
     return Math.round(Math.random() * (iTo - iFrom) + iFrom);
 };
 
+/**
+ * Check if the string includes the searched char.
+ * @param {string} sString
+ * @param {string} sChars 'aA#!'
+ * @returns {boolean}
+ */
 exports.hasChar = function (sString, sChars) {
     var iChar = sChars.length;
     if (sChars.indexOf("a") > -1) {
@@ -256,10 +187,21 @@ exports.hasChar = function (sString, sChars) {
     return false;
 };
 
+/**
+ * Check the item to undefined and null.
+ * @param {any} oItem
+ * @returns {boolean}
+ */
 exports.isset = function (oItem) {
     return oItem !== undefined && oItem !== null;
 };
 
+/**
+ * Check the value to string number and boolean true values.
+ * @param {any} oValue
+ * @param {boolean} bAsInteger
+ * @returns {boolean|number}
+ */
 exports.isTrue = function (oValue, bAsInteger) {
     var bIsTrue = oValue === "true" || oValue === "1" || oValue === true || oValue === 1;
     if (bAsInteger) {
@@ -271,10 +213,23 @@ exports.isTrue = function (oValue, bAsInteger) {
     return bIsTrue;
 };
 
+/**
+ * Performes a XOR Operation to some conditions.
+ * @param {condition} conditionA
+ * @param {condition} conditionB
+ * @returns {boolean}
+ */
 exports.xor = function (conditionA, conditionB) {
     return (conditionA || conditionB) && !(conditionA && conditionB);
 };
 
+/**
+ * Check the given Values to be set.
+ * @param {Array[]} aValues
+ * @param {any} aValues.0 Value to check
+ * @param {any} aValues.1 Valuename
+ * @returns {Promise}
+ */
 exports.checkRequiredValues = function (aValues) {
     return new Promise(function (fFulfill, fReject) {
         var n = 0;
@@ -289,7 +244,7 @@ exports.checkRequiredValues = function (aValues) {
             fFulfill();
         } else {
             fReject({
-                "type": exports.getErrorcode("ERR_checkRequiredValues"),
+                "type": errorcode.ERR_checkRequiredValues,
                 "SERR": "MissingRequiredValues",
                 "arguments": {
                     "aMissingValues": aMissingValues
@@ -299,12 +254,34 @@ exports.checkRequiredValues = function (aValues) {
     });
 };
 
+/**
+ * Starts a Promise chain.
+ * @returns {Promise}
+ */
 exports.startPromiseChain = function () {
     return new Promise(function (fFulfill) {
         fFulfill();
     });
 };
 
+/**
+ * Starts a while-loop with Promises.
+ * @method
+ * @returns {Promise}
+ * @example
+ * return helper.promiseWhile(function () {
+ *      return i < n;
+ * }, function () {
+ *      return new Promise (function (fFulfill, fReject) {
+ *          try {
+ *              i += 1;
+ *              fFulfill();
+ *          } catch (err) {
+ *              fReject(err);
+ *          }
+ *      });
+ * });
+ */
 exports.promiseWhile = bluebird.method(function (condition, action) {
     if (!condition()) {
         return;
@@ -312,36 +289,76 @@ exports.promiseWhile = bluebird.method(function (condition, action) {
     return action().then(exports.promiseWhile.bind(null, condition, action));
 });
 
+/**
+ * Try to confirm a validate email-address.
+ * @param {string} sEmail
+ * @returns {boolean}
+ */
 exports.validateEmail = function (sEmail) {
     var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(sEmail);
 };
 
+/**
+ * Test to be a instanceof Array.
+ * @param {any|Array} test
+ * @returns {boolean}
+ */
 exports.isArray = function (test) {
     return test instanceof Array;
 };
 
+/**
+ * Test to be a instanceof Object.
+ * @param {any|Object} test
+ * @returns {boolean}
+ */
 exports.isObject = function (test) {
     return test instanceof Object;
     // return typeof test === "object" && !exports.isArray(test);
 };
 
+/**
+ * test to be typeof "number".
+ * @param {any|number} test
+ * @returns {boolean}
+ */
 exports.isInt = function (test) {
     return typeof test === "number";
 };
 
+/**
+ * Test to be typeof "string".
+ * @param {any|string} test
+ * @returns {boolean}
+ */
 exports.isString = function (test) {
     return typeof test === "string";
 };
 
+/**
+ * Test to be typeof "function".
+ * @param {any|function} test
+ * @returns {boolean}
+ */
 exports.isFunc = function (test) {
     return typeof test === "function";
 };
 
+/**
+ * Test to be typeof "boolean".
+ * @param {any|boolean} test
+ * @returns {boolean}
+ */
 exports.isBool = function (test) {
     return typeof test === "boolean";
 };
 
+/**
+ * Convert a string into a string without htmlspecialchars.
+ * @param {string} sString
+ * @returns {string}
+ */
 exports.htmlspecialchars = function (sString) {
     if (!exports.isString(sString)) {
         sString = String(sString);
@@ -363,6 +380,12 @@ exports.htmlspecialchars = function (sString) {
     });
 };
 
+/**
+ * Walk into every directory to every file in the given directory.
+ * @param {string} dir
+ * @param {callback} done
+ * @returns {void}
+ */
 exports.filewalker = function (dir, done) {
     let results = [];
 
@@ -410,6 +433,52 @@ exports.filewalker = function (dir, done) {
     });
 };
 
+/**
+ * Turns the first letter of the string to uppercase.
+ * @param {string} sString
+ * @returns {string}
+ */
 exports.firstLetterUpperCase = function (sString) {
     return sString[0].toUpperCase() + sString.substr(1);
+};
+
+/**
+ * Turns a string from convertJSONToString() back into JSON.
+ * @param {string} sJSON
+ * @param {Object} oDefault
+ * @returns {Object}
+ */
+exports.convertStringToJSON = function (sJSON, oDefault) {
+    try {
+        if (sJSON !== undefined && sJSON.length > 0) {
+            sJSON = sJSON.replace(/(?:\r\n|\r|\n)/g, "");
+            oDefault = JSON.parse(sJSON);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    return oDefault;
+};
+
+/**
+ * Turns a JSON into a string.
+ * @param {Object} oObject
+ * @returns {string}
+ */
+exports.convertJSONToString = function (oObject) {
+    var sJSON = "";
+    try {
+        if (typeof oObject === "object") {
+            sJSON = JSON.stringify(oObject);
+            var map = {
+                "'": "&#039;"
+            };
+            sJSON = sJSON.replace(/[']/g, function (m) {
+                return map[m];
+            });
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    return sJSON;
 };

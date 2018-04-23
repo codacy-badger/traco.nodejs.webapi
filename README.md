@@ -39,20 +39,19 @@ Run `npm run doc` to compile both documentations.
 
 ## On Deck
 
- - [ ] Rework the `simple-file-logger.js` to easyer use and replace the old logger
  - [ ] Extend `nativ/date.js` with `.normalizeDate()`. A function wich will generate a `new Date()` with given input like unix, iso or something else date format.
- - [ ] Build a function in `dbhandler.js` that generate a INSERT-Statement with given DBClass and then extend THIS in the `insertOrUpdate()` instead of dobble the code.
- - [ ] `modul/logger.js` deltetion prozess as a cron-job. Done every day/hour/minute.
-
+ - [ ] Extend the errorhandling in `dbhandler.js`. Must be include some type for httpErrorHandler that the client has information Code 500 internal server error.
 
 ## Backlog
 
  - [ ] Create JSDoc Information for `helper.js`
  - [ ] Create JSDoc Information for `prohelper.js`
 
-
 ## Finished
 
+ - [x] `modul/logger.js` deltetion prozess as a cron-job. Done every day/hour/minute.
+ - [x] Build a function in `dbhandler.js` that generate a INSERT-Statement with given DBClass and then extend THIS in the `insertOrUpdate()` instead of dobble the code.
+ - [x] Rework the `simple-file-logger.js` to easyer use and replace the old logger
  - [x] Include the new module instead of using the prototypes
  - [x] Implement in the new `module/logger.js` a function for automatik file deletion if the file is older than the max Date
  - [x] `module/logger.js` have to log hourly a file if the iSaveDays timer is smaller than a day and have to log minute files if the iSaveDays is smaller than one hour. And if the iSaveDays is smaller than a minute it will automaticly scaled up to 5 minutes.

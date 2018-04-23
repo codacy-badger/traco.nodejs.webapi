@@ -1,19 +1,13 @@
 {
+    "update": [
+
+    ],
     "server": {
-        "main": {
-            "cluster": false,
-            "concurrency": 0,
-            "port": 80
-        },
-        "file": {
-            "port": 8001
-        }
+        "cluster": false,
+        "concurrency": 0,
+        "port": 3000
     },
-    "debug": {
-        "mode": "build",
-        "enabled": false,
-        "logSQL": false
-    },
+    "debug": true,
     "mysql": {
         "enabled": true,
         "main": {
@@ -23,13 +17,19 @@
             "password": "traco",
             "database": "traco",
             "charset": "utf8mb4_bin"
+        },
+        "debug": true
+    },
+    "session": {
+        "user": {
+            "redis": {
+                "enabled": true,
+                "socket": "."
+            },
+            "cookie": "login"
         }
     },
-    "redis": {
-        "enabled": true,
-        "socket": "."
-    },
-    "cookie": {
-        "session": "login"
+    "logger": {
+        "iSaveDays": 7
     }
 }

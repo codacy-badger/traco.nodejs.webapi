@@ -69,3 +69,20 @@ exports.isEmpty = function (oObj) {
     }
     return false;
 };
+
+/**
+ * Merge the objects into one object
+ * @param {Object} oObj1
+ * @param {Object} oObj2
+ * @returns {Object}
+ */
+exports.merge = function (oObj1, oObj2) {
+    var oObj3 = {};
+    Object.keys(oObj1).forEach(function (key) {
+        oObj3[key] = oObj1[key];
+    });
+    Object.keys(oObj2).forEach(function (key) {
+        oObj3[key] = oObj2[key];
+    });
+    return oObj3;
+};

@@ -32,5 +32,5 @@ app.use("/", serveIndex(__base, {
     "view": "details"
 }));
 
-app.listen(config.server.file.port);
+app.listen(8001);
 console.log("Server running..."); // eslint-disable-line

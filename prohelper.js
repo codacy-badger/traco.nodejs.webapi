@@ -2,59 +2,22 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-var classes = require("./classes");
-var helper = require("./helper");
-var dbhandler = require("./dbhandler");
+// var classes = require("./classes");
 var config = require("./static/config.json");
-var enums = require("./static/enums.json");
-var errorcode = require("./static/errorcodes.json");
+var helper = require("./helper");
+// var dbhandler = require("./dbhandler")(config.mysql, require("./static/dbcursor.json"));
+// var enums = helper.getEnums();
+var errorcode = helper.getErrorcodes();
+var logger = require("./module/logger");
+var Logger = new logger.Logger({
+    bConsole: config.debug,
+    sFilename: "prohelper",
+    iSaveDays: config.logger.iSaveDays
+});
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Function
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-exports.loadSessionData = function (dataSet) {
-
-    // Die _load Funktion soll Projektspezifische sessionDaten laden.
-    var _load = function (data) {
-        var oUserdata;
-        return dbhandler.fetch(["FetchUserdataID"], [data])
-            .then(function (aData) {
-                oUserdata = new classes.Userdata(aData[0]);
-                if (oUserdata.get.lastAccess() + enums.Minute < helper.date("unixTime")) {
-                    oUserdata.set.lastAccess();
-                    return dbhandler.insertOrUpdate(oUserdata);
-                }
-                return;
-            })
-            .then(function () {
-                return oUserdata;
-            });
-    };
-
-    return helper.startPromiseChain()
-        .then(function () {
-            if (config.redis.enabled) {
-                return _load(dataSet);
-            }
-            var aSplitId = dataSet.split("-");
-            return _load(aSplitId[0]);
-        })
-        .then(function (sessionData) {
-            return sessionData;
-        });
-};
-
-exports.loadSessionDataFail = function (errSet) {
-    var rtn = {
-        "err": errSet
-    };
-    // Aufbau alle Objektinhalte die in den SessionData an anderer Stelle gebraucht werden.
-
-    rtn = new classes.Userdata();
-
-    // Zurückgeben von genau diesem Object.
-    return rtn;
-};
 
 exports.httpErrorHandler = function (oResponse, oError) {
     const HttpStatusCodes = {
@@ -101,8 +64,9 @@ exports.httpErrorHandler = function (oResponse, oError) {
                 "values": oError.arguments.aMissingValues
             });
             break;
+        case errorcode.ERR_internal:
         default:
-            console.log(oError); // eslint-disable-line
+            Logger.log(helper.convertJSONToString(oError), 3);
             oResponse.statusCode = 500; // Internal Server Error
             oResponse.json({
                 "SERR": "UnknownError"
@@ -112,7 +76,7 @@ exports.httpErrorHandler = function (oResponse, oError) {
 
 exports.invalid = function (req, res) {
     exports.httpErrorHandler(res, {
-        "type": helper.getErrorcode("ERR_invalidCommand"),
+        "type": errorcode.ERR_invalidCommand,
         "error": "WrongAPICommand"
     });
 };

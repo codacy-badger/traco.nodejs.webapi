@@ -54,23 +54,23 @@ module.exports = function (router) {
 
                 // GET methods
                 if (oRoutes[sFolder][sFile].get !== undefined) {
-                    router.get("/" + sRoute + sFile, helper.sqlsafe, helper.loadSessionData, oRoutes[sFolder][sFile].get);
-                    router.get("/" + sRoute + sFile + "/*", helper.sqlsafe, helper.loadSessionData, oRoutes[sFolder][sFile].get);
+                    router.get("/" + sRoute + sFile, helper.sqlsafe, oRoutes[sFolder][sFile].get);
+                    router.get("/" + sRoute + sFile + "/*", helper.sqlsafe, oRoutes[sFolder][sFile].get);
                 }
                 // POST methods
                 if (oRoutes[sFolder][sFile].post !== undefined) {
-                    router.post("/" + sRoute + sFile, helper.sqlsafe, helper.loadSessionData, oRoutes[sFolder][sFile].post);
-                    router.post("/" + sRoute + sFile + "/*", helper.sqlsafe, helper.loadSessionData, oRoutes[sFolder][sFile].post);
+                    router.post("/" + sRoute + sFile, helper.sqlsafe, oRoutes[sFolder][sFile].post);
+                    router.post("/" + sRoute + sFile + "/*", helper.sqlsafe, oRoutes[sFolder][sFile].post);
                 }
                 // PUT methods
                 if (oRoutes[sFolder][sFile].put !== undefined) {
-                    router.put("/" + sRoute + sFile, helper.sqlsafe, helper.loadSessionData, oRoutes[sFolder][sFile].put);
-                    router.put("/" + sRoute + sFile + "/*", helper.sqlsafe, helper.loadSessionData, oRoutes[sFolder][sFile].put);
+                    router.put("/" + sRoute + sFile, helper.sqlsafe, oRoutes[sFolder][sFile].put);
+                    router.put("/" + sRoute + sFile + "/*", helper.sqlsafe, oRoutes[sFolder][sFile].put);
                 }
                 // DELETE methods
                 if (oRoutes[sFolder][sFile].delete !== undefined) {
-                    router.delete("/" + sRoute + sFile, helper.sqlsafe, helper.loadSessionData, oRoutes[sFolder][sFile].delete);
-                    router.delete("/" + sRoute + sFile + "/*", helper.sqlsafe, helper.loadSessionData, oRoutes[sFolder][sFile].delete);
+                    router.delete("/" + sRoute + sFile, helper.sqlsafe, oRoutes[sFolder][sFile].delete);
+                    router.delete("/" + sRoute + sFile + "/*", helper.sqlsafe, oRoutes[sFolder][sFile].delete);
                 }
             });
         });
