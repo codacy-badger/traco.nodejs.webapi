@@ -6,11 +6,8 @@
 var mysql = require("mysql");
 var helper = require("./helper");
 var errorcode = helper.getErrorcodes();
-var Logger = require("./module/logger").Logger;
-var dbLogger = new Logger({
-    bConsole: false,
-    sFilename: "logSQL"
-});
+var logger = require("./module/logger");
+var dbLogger;
 var config;
 var connection;
 var dbcursor;
@@ -32,6 +29,11 @@ var dbcursor;
 module.exports = function (oConfig, oCursor) {
     config = oConfig;
     dbcursor = oCursor;
+    dbLogger = new logger.Logger({
+        bConsole: config.debug.enabled,
+        sFilename: "logSQL",
+        iSaveDays: config.debug.iSaveDays
+    });
     return exports;
 };
 
@@ -48,6 +50,7 @@ var handleDisconnect = function () {
         if (err.code === "PROTOCOL_CONNECTION_LOST") {
             handleDisconnect();
         } else {
+            dbLogger.log("CAN'T CONNECT TO DATABASE!!", 3);
             console.log(err); // eslint-disable-line
             throw err;
         }
@@ -63,7 +66,7 @@ var fileLog = function (sType, sSQL) {
         sType = "UNDEFINED";
     }
     if (config.debug) {
-        dbLogger.log(sSQL, 0);
+        dbLogger.log(sType + " >-< " + sSQL, 0);
     }
 };
 
@@ -83,8 +86,11 @@ var _errorHandler = function (err, sType) {
         default:
             oErr.SERR = "DB_QEURY_" + sType;
     }
-    Logger.log(helper.convertJSONToString(err), 3);
-    fileLog("---------- ONE Statement above was an ERROR ----------", 3);
+    dbLogger.log(helper.convertJSONToString({
+        "Code": err.code,
+        "Query": err.sql,
+        "fatal": err.fatal
+    }), 3);
     return oErr;
 };
 
@@ -227,7 +233,7 @@ var _buildInsert = function (oDBClass) {
  * @param {number} [oOptions.offset]
  * @return {Promise}
  */
-exports.fetch = function (sCursor, aData, oOptions) {
+exports.fetch = function (sCursor, aData, oOptions) { // eslint-disable-line
     if (!oOptions) {
         oOptions = {};
     }

@@ -8,6 +8,7 @@
     "scripts": {
         "postversion": "git push",
         "start": "node app.js",
+        "test": "node test/test.js",
         "explorer": "node ./static/onlineExplorer",
         "jsdoc": "./node_modules/.bin/jsdoc -c ./.info/jsdoc.conf.json",
         "apidocbuild": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -c ./.info/apidoc.conf.json -v",

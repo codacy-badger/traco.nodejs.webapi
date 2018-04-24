@@ -90,3 +90,43 @@ exports.genDate = function (sTmpl, oDate) {
             return _generate();
     }
 };
+
+/**
+ * Turns a date in many formates in a normal Date.
+ * @param {number} oDate as normal Date.now() or as unix Timestamp
+ * @returns {Date}
+ *//**
+ * @param {string} oDate as possible string date format like ISO or UTC
+ * @returns {Date}
+ *//**
+ * @param {Object} oDate
+ * @param {Object} oDate.year
+ * @param {Object} oDate.month
+ * @param {Object} [oDate.day]
+ * @param {Object} [oDate.hour]
+ * @param {Object} [oDate.minute]
+ * @param {Object} [oDate.secound]
+ * @param {Object} [oDate.ms]
+ * @returns {Date}
+ *//**
+ * @param {Date} oDate
+ * @returns {Date}
+ */
+exports.normalize = function (oDate) {
+    try {
+        if (oDate instanceof Date) {
+            return new Date(oDate);
+        } else if (typeof oDate === "number") {
+            if (oDate < 10000000000) {
+                return new Date(oDate * 1000);
+            }
+            return new Date(oDate);
+        } else if (oDate instanceof Object) {
+            return new Date(oDate.year, oDate.month, oDate.day, oDate.hour, oDate.minute, oDate.secound, oDate.ms);
+        } else if (typeof oDate === "string") {
+            return new Date(oDate);
+        }
+    } catch (err) {
+        return oDate;
+    }
+};

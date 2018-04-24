@@ -235,8 +235,8 @@ exports.checkRequiredValues = function (aValues) {
         var n = 0;
         var aMissingValues = [];
         while (n < aValues.length) {
-            if (aValues[n][1] === undefined || Object.keys(aValues[n][1]).length <= 0) {
-                aMissingValues.push(aValues[n][0]);
+            if (aValues[n][0] === undefined || Object.keys(aValues[n][0]).length <= 0) {
+                aMissingValues.push(aValues[n][1]);
             }
             n += 1;
         }
@@ -301,57 +301,56 @@ exports.validateEmail = function (sEmail) {
 
 /**
  * Test to be a instanceof Array.
- * @param {any|Array} test
+ * @param {any|Array} oItem
  * @returns {boolean}
  */
-exports.isArray = function (test) {
-    return test instanceof Array;
+exports.isArray = function (oItem) {
+    return oItem instanceof Array;
 };
 
 /**
  * Test to be a instanceof Object.
- * @param {any|Object} test
+ * @param {any|Object} oItem
  * @returns {boolean}
  */
-exports.isObject = function (test) {
-    return test instanceof Object;
-    // return typeof test === "object" && !exports.isArray(test);
+exports.isObject = function (oItem) {
+    return oItem instanceof Object;
 };
 
 /**
  * test to be typeof "number".
- * @param {any|number} test
+ * @param {any|number} oItem
  * @returns {boolean}
  */
-exports.isInt = function (test) {
-    return typeof test === "number";
+exports.isInt = function (oItem) {
+    return typeof oItem === "number";
 };
 
 /**
  * Test to be typeof "string".
- * @param {any|string} test
+ * @param {any|string} oItem
  * @returns {boolean}
  */
-exports.isString = function (test) {
-    return typeof test === "string";
+exports.isString = function (oItem) {
+    return typeof oItem === "string";
 };
 
 /**
  * Test to be typeof "function".
- * @param {any|function} test
+ * @param {any|function} oItem
  * @returns {boolean}
  */
-exports.isFunc = function (test) {
-    return typeof test === "function";
+exports.isFunc = function (oItem) {
+    return typeof oItem === "function";
 };
 
 /**
  * Test to be typeof "boolean".
- * @param {any|boolean} test
+ * @param {any|boolean} oItem
  * @returns {boolean}
  */
-exports.isBool = function (test) {
-    return typeof test === "boolean";
+exports.isBool = function (oItem) {
+    return typeof oItem === "boolean";
 };
 
 /**

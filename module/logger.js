@@ -38,16 +38,18 @@ var promiseWhile = bluebird.method(function (condition, action) {
  * Create a Logger with default or alternativ Options.
  * @class
  * @param {Object} [oOptions]
- * @param {Boolean} [oOptions.bConsole]
+ * @param {boolean} [oOptions.bConsole]
  * @param {string} [oOptions.sColor]
- * @param {Boolean} [oOptions.bFile]
- * @param {Boolean} [oOptions.bFiledate]
+ * @param {boolean} [oOptions.bFile]
+ * @param {boolean} [oOptions.bFiledate]
+ * @param {boolean} [oOptions.sFilemode] to enable hourly/minutely files: ["day", "hour", "min"]
  * @param {string} [oOptions.sFilename]
  * @param {string} [oOptions.sExtension]
  * @param {string} [oOptions.sPath] Depend from root. MUST exists
  * @param {number} [oOptions.iSaveDays]
- * @param {Boolean} [oOptions.bLogdate]
- * @param {Boolean} [oOptions.bLogtyp]
+ * @param {boolean} [oOptions.bLogdate]
+ * @param {boolean} [oOptions.bLogtyp]
+ * @param {boolean} [oOptions.bAutodel] To disable the deletion cronjob
  */
 var Logger = function (oOptions) {
     /** @default */
@@ -57,12 +59,14 @@ var Logger = function (oOptions) {
 
         bFile: true,
         bFiledate: true,
+        sFilemode: "day",
         sFilename: "log",
         sExtension: "log",
         sPath: path.join(__dirname, "..", ".tmp"),
         iSaveDays: 7,
         bLogdate: true,
-        bLogtyp: true
+        bLogtyp: true,
+        bAutodel: true
     };
     /** @default */
     this.fCron = undefined;
@@ -75,16 +79,18 @@ var Logger = function (oOptions) {
  * Set the Options of the actually Logger<br>
  * ⛔ WARNING ⛔ Be carefull with this function. Better setup the Config in the constructor!
  * @param {Object} oOptions
- * @param {Boolean} [oOptions.bConsole]
+ * @param {boolean} [oOptions.bConsole]
  * @param {string} [oOptions.sColor]
- * @param {Boolean} [oOptions.bFile]
- * @param {Boolean} [oOptions.bFiledate]
+ * @param {boolean} [oOptions.bFile]
+ * @param {boolean} [oOptions.bFiledate]
+ * @param {boolean} [oOptions.sFilemode] to enable hourly/minutely files: ["day", "hour", "min"]
  * @param {string} [oOptions.sFilename]
  * @param {string} [oOptions.sExtension]
  * @param {string} [oOptions.sPath] Depend from root. MUST exists
  * @param {number} [oOptions.iSaveDays]
- * @param {Boolean} [oOptions.bLogdate]
- * @param {Boolean} [oOptions.bLogtyp]
+ * @param {boolean} [oOptions.bLogdate]
+ * @param {boolean} [oOptions.bLogtyp]
+ * @param {boolean} [oOptions.bAutodel] To disable the deletion cronjob
  * @returns {void}
  */
 Logger.prototype.setOptions = function (oOptions) { // eslint-disable-line
@@ -96,6 +102,7 @@ Logger.prototype.setOptions = function (oOptions) { // eslint-disable-line
     if (!oOptions.bFile && oOptions.bFile !== undefined) this.oConfig.bFile = false;
     if (!oOptions.bFiledate && oOptions.bFiledate !== undefined) this.oConfig.bFiledate = false;
     if (oOptions.sFilename) this.oConfig.sFilename = oOptions.sFilename;
+    if (oOptions.sFilemode) this.oConfig.sFilemode = oOptions.sFilemode;
     if (oOptions.sExtension) this.oConfig.sExtension = oOptions.sExtension;
     if (oOptions.sPath) this.oConfig.sPath = path.join(__dirname, "..", oOptions.sPath);
     if (oOptions.iSaveDays) {
@@ -107,6 +114,7 @@ Logger.prototype.setOptions = function (oOptions) { // eslint-disable-line
     }
     if (!oOptions.bLogdate && oOptions.bLogdate !== undefined) this.oConfig.bLogdate = false;
     if (!oOptions.bLogtyp && oOptions.bLogtyp !== undefined) this.oConfig.bLogtyp = false;
+    if (!oOptions.bAutodel && oOptions.bAutodel !== undefined) this.oConfig.bAutodel = false;
     /* eslint-enable curly */
 };
 
@@ -156,9 +164,9 @@ Logger.prototype.log = function (sMessage, sType) {
         }
         if (that.oConfig.bFiledate) {
             sFile += "_" + exDate.logFileDate();
-            if (that.oConfig.iSaveDays * enums.Day >= enums.Day) {
+            if (that.oConfig.iSaveDays * enums.Day >= enums.Day && that.oConfig.sFilemode === "day") {
                 // Default braucht nicht mehr
-            } else if (that.oConfig.iSaveDays * enums.Day >= enums.Hour) {
+            } else if (that.oConfig.iSaveDays * enums.Day >= enums.Hour && that.oConfig.sFilemode !== "min" || that.oConfig.sFilemode === "hour") {
                 sFile += "-" + exDate.genDate("hh");
             } else {
                 sFile += "-" + exDate.genDate("hhmm");
@@ -235,6 +243,9 @@ Logger.prototype.delOldFiles = function () {
  * @returns {void}
  */
 Logger.prototype.setupCron = function () {
+    if (!this.oConfig.bAutodel) {
+        return;
+    }
     var that = this;
     if (that.fCron !== undefined) {
         that.fCron.stop();

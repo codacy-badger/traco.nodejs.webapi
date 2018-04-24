@@ -1,8 +1,6 @@
 {
-    "update": [
-
-    ],
     "server": {
+        "mode": "dev",
         "cluster": false,
         "concurrency": 0,
         "port": 3000
@@ -18,7 +16,10 @@
             "database": "traco",
             "charset": "utf8mb4_bin"
         },
-        "debug": true
+        "debug": {
+            "enabled": true,
+            "iSaveDays": 14
+        }
     },
     "session": {
         "user": {
@@ -30,6 +31,6 @@
         }
     },
     "logger": {
-        "iSaveDays": 7
+        "iSaveDays": 14
     }
 }

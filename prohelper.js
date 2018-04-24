@@ -1,4 +1,5 @@
 "use strict";
+/** @module */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -11,14 +12,23 @@ var errorcode = helper.getErrorcodes();
 var logger = require("./module/logger");
 var Logger = new logger.Logger({
     bConsole: config.debug,
-    sFilename: "prohelper",
-    iSaveDays: config.logger.iSaveDays
+    sFilename: "logProhelper",
+    iSaveDays: config.logger.iSaveDays,
+    sFilemode: "min"
 });
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Function
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+/**
+ * Response handling for error inside the server like wrong request or internal error.
+ * @param {Object} oResponse the browser response Object
+ * @param {Object} oError
+ * @param {Object} [oError.type] intern code for spezial http response codes
+ * @param {Object} [oError.SERR] Code for browser
+ * @returns {void}
+ */
 exports.httpErrorHandler = function (oResponse, oError) {
     const HttpStatusCodes = {
         BadRequest: 400,
@@ -74,9 +84,15 @@ exports.httpErrorHandler = function (oResponse, oError) {
     }
 };
 
+/**
+ * Response for invalid requests
+ * @param {Object} req
+ * @param {Object} res
+ * @returns {void}
+ */
 exports.invalid = function (req, res) {
     exports.httpErrorHandler(res, {
         "type": errorcode.ERR_invalidCommand,
-        "error": "WrongAPICommand"
+        "SERR": "WrongAPICommand"
     });
 };

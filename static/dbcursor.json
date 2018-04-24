@@ -1,3 +1,2 @@
 {
-    "Test": "SELECT * FROM `user` WHERE `sEmail` = @0 AND cPermission = @1"
 }

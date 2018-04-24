@@ -1,4 +1,3 @@
-var config = require("./config.json");
 var path = require("path");
 var express = require("express");
 var serveIndex = require("serve-index");

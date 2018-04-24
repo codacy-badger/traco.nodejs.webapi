@@ -39,16 +39,19 @@ Run `npm run doc` to compile both documentations.
 
 ## On Deck
 
- - [ ] Extend `nativ/date.js` with `.normalizeDate()`. A function wich will generate a `new Date()` with given input like unix, iso or something else date format.
- - [ ] Extend the errorhandling in `dbhandler.js`. Must be include some type for httpErrorHandler that the client has information Code 500 internal server error.
  - [ ] Recreate the `jsonSQL.js` modul.
+ - [ ] `module/logger.js` need a function to automaticly create the logging folder if it doesen't exists.
 
 ## Backlog
 
- - [ ] Create JSDoc Information for `prohelper.js`
+ - [ ] ...
 
 ## Finished
 
+ - [x] Extend the errorhandling in `dbhandler.js`. Must be include some type for httpErrorHandler that the client has information Code 500 internal server error.
+ - [x] Extend `exNativ/date.js` with `.normalizeDate()`. A function wich will generate a `new Date()` with given input like unix, iso or something else date format.
+ - [x] Create JSDoc Information for `prohelper.js`
+ - [x] Add a boolean to the options of the Logger to disable the delete process.
  - [x] Create JSDoc Information for `helper.js`
  - [x] `modul/logger.js` deltetion prozess as a cron-job. Done every day/hour/minute.
  - [x] Build a function in `dbhandler.js` that generate a INSERT-Statement with given DBClass and then extend THIS in the `insertOrUpdate()` instead of dobble the code.

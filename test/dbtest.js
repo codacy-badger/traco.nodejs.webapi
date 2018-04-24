@@ -1,4 +1,7 @@
-var dbhandler = require("../dbhandler")();
+var cursor = {
+    "Test": "SELECT * FROM `user` WHERE `sEmail` = @0 AND cPermission = @1"
+}
+var dbhandler = require("../dbhandler")(require("../static/config.json").mysql, cursor);
 var classes = require("../classes");
 
 var oUser = new classes.User();

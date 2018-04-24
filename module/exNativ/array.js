@@ -15,7 +15,7 @@ var eObject = require("./object");
  * @param {any[]} aArr2
  * @returns {Boolean}
  */
-exports.compare = function (aArr1, aArr2) {
+exports.compare = function (aArr1, aArr2) { // eslint-disable-line
     if (!aArr1 || !aArr2) {
         return false;
     }
@@ -127,18 +127,19 @@ exports.unique = function (aArr) {
  * @returns {any[]}
  */
 exports.removePos = function (aArr, iPos) {
-    return aArr.splice(iPos, 1);
+    aArr.splice(iPos, 1);
+    return aArr;
 };
 
 /**
  * Removes a spezific string-value completely from the array.
  * @param {string[]} aArr
- * @param {string[]} sStr
+ * @param {string} sStr
  * @returns {string[]}
  */
 exports.removeStr = function (aArr, sStr) {
     while (aArr.includes(sStr)) {
-        aArr.removePos(aArr.indexOf(sStr));
+        exports.removePos(aArr, aArr.indexOf(sStr));
     }
     return aArr;
 };
@@ -157,4 +158,17 @@ exports.allIndexOf = function (aArr, search) {
         idx.push(i);
     }
     return idx;
+};
+
+/**
+ * Suffles the Array.
+ * @param {any[]} aArr
+ * @returns {any[]}
+ */
+exports.shuffle = function (aArr) {
+    var aShuffledArray = [];
+    while (aArr.length) {
+        aShuffledArray.push(aArr.splice(Math.floor(Math.random() * aArr.length), 1)[0]);
+    }
+    return aShuffledArray;
 };
