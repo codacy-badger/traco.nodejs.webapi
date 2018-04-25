@@ -51,7 +51,7 @@ var promiseWhile = bluebird.method(function (condition, action) {
  * @param {boolean} [oOptions.bLogtyp]
  * @param {boolean} [oOptions.bAutodel] To disable the deletion cronjob
  */
-var Logger = function (oOptions) {
+var Logger = function (oOptions) { // eslint-disable-line
     /** @default */
     this.oConfig = {
         bConsole: true,
@@ -71,29 +71,6 @@ var Logger = function (oOptions) {
     /** @default */
     this.fCron = undefined;
 
-    this.setOptions(oOptions);
-    this.setupCron();
-};
-
-/**
- * Set the Options of the actually Logger<br>
- * ⛔ WARNING ⛔ Be carefull with this function. Better setup the Config in the constructor!
- * @param {Object} oOptions
- * @param {boolean} [oOptions.bConsole]
- * @param {string} [oOptions.sColor]
- * @param {boolean} [oOptions.bFile]
- * @param {boolean} [oOptions.bFiledate]
- * @param {boolean} [oOptions.sFilemode] to enable hourly/minutely files: ["day", "hour", "min"]
- * @param {string} [oOptions.sFilename]
- * @param {string} [oOptions.sExtension]
- * @param {string} [oOptions.sPath] Depend from root
- * @param {number} [oOptions.iSaveDays]
- * @param {boolean} [oOptions.bLogdate]
- * @param {boolean} [oOptions.bLogtyp]
- * @param {boolean} [oOptions.bAutodel] To disable the deletion cronjob
- * @returns {void}
- */
-Logger.prototype.setOptions = function (oOptions) { // eslint-disable-line
     /* eslint-disable curly */
     if (!oOptions) oOptions = {};
     if (!oOptions.bConsole && oOptions.bConsole !== undefined) this.oConfig.bConsole = false;
@@ -116,6 +93,7 @@ Logger.prototype.setOptions = function (oOptions) { // eslint-disable-line
     if (!oOptions.bLogtyp && oOptions.bLogtyp !== undefined) this.oConfig.bLogtyp = false;
     if (!oOptions.bAutodel && oOptions.bAutodel !== undefined) this.oConfig.bAutodel = false;
     /* eslint-enable curly */
+    this.setupCron();
 };
 
 /**
