@@ -45,7 +45,7 @@ var promiseWhile = bluebird.method(function (condition, action) {
  * @param {boolean} [oOptions.sFilemode] to enable hourly/minutely files: ["day", "hour", "min"]
  * @param {string} [oOptions.sFilename]
  * @param {string} [oOptions.sExtension]
- * @param {string} [oOptions.sPath] Depend from root. MUST exists
+ * @param {string} [oOptions.sPath] Depend from root
  * @param {number} [oOptions.iSaveDays]
  * @param {boolean} [oOptions.bLogdate]
  * @param {boolean} [oOptions.bLogtyp]
@@ -86,7 +86,7 @@ var Logger = function (oOptions) {
  * @param {boolean} [oOptions.sFilemode] to enable hourly/minutely files: ["day", "hour", "min"]
  * @param {string} [oOptions.sFilename]
  * @param {string} [oOptions.sExtension]
- * @param {string} [oOptions.sPath] Depend from root. MUST exists
+ * @param {string} [oOptions.sPath] Depend from root
  * @param {number} [oOptions.iSaveDays]
  * @param {boolean} [oOptions.bLogdate]
  * @param {boolean} [oOptions.bLogtyp]
@@ -173,7 +173,10 @@ Logger.prototype.log = function (sMessage, sType) {
             }
         }
         sFile += "." + that.oConfig.sExtension;
-        fs.appendFile(path.join(that.oConfig.sPath, sFile), sMessage + "\n")
+        fs.ensureDir(that.oConfig.sPath)
+            .then(function () {
+                return fs.appendFile(path.join(that.oConfig.sPath, sFile), sMessage + "\n");
+            })
             .then(function () {
                 // console.log("The " + sFile + ".log file was saved!");
             })

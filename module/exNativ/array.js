@@ -61,34 +61,44 @@ exports.sortBy = function (aArr, aProps) {
         }
 
         return function (a, b) {
+
+            var isset = function (oItem) {
+                return oItem !== null && oItem !== undefined;
+            };
+
             var result = 0;
-            if (a[attr] < b[attr]) {
+            if (a[attr] === b[attr]) {
+                result = 0;
+            } else if (!isset(a[attr])) {
+                result = 1;
+            } else if (!isset(b[attr])) {
                 result = -1;
-            }
-            if (a[attr] > b[attr]) {
+            } else if (a[attr] < b[attr]) {
+                result = -1;
+            } else if (a[attr] > b[attr]) {
                 result = 1;
             }
             return result * sortOrder;
         };
     };
 
-    var _getSortFunc = function (props) {
-        if (props.length === 0) {
+    var _getSortFunc = function () {
+        if (aProps.length === 0) {
             throw new TypeError("Array.sortBy() MUST have at least 1 argument");
         }
 
         return function (a, b) {
             var result = 0;
             var i = 0;
-            while (result === 0 && i < props.length) {
-                result = _sortByAttr(props[i])(a, b);
+            while (result === 0 && i < aProps.length) {
+                result = _sortByAttr(aProps[i])(a, b);
                 i += 1;
             }
             return result;
         };
     };
 
-    return aArr.sort(_getSortFunc(aProps));
+    return aArr.sort(_getSortFunc());
 };
 
 /**

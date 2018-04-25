@@ -39,8 +39,7 @@ Run `npm run doc` to compile both documentations.
 
 ## On Deck
 
- - [ ] Recreate the `jsonSQL.js` modul.
- - [ ] `module/logger.js` need a function to automaticly create the logging folder if it doesen't exists.
+ - [ ] ...
 
 ## Backlog
 
@@ -48,6 +47,9 @@ Run `npm run doc` to compile both documentations.
 
 ## Finished
 
+ - [x] `module/logger.js` need a function to automaticly create the logging folder if it doesen't exists.
+ - [x] Add `delete()` to the `jsonSQL.js`
+ - [x] Recreate the `jsonSQL.js` modul.
  - [x] Extend the errorhandling in `dbhandler.js`. Must be include some type for httpErrorHandler that the client has information Code 500 internal server error.
  - [x] Extend `exNativ/date.js` with `.normalizeDate()`. A function wich will generate a `new Date()` with given input like unix, iso or something else date format.
  - [x] Create JSDoc Information for `prohelper.js`
