@@ -1,3 +1,5 @@
 {
-    "FetchMemberLogin": "SELECT * FROM `member` WHERE `sUsername` = @0 OR `sEmail` = @0"
+    "FetchMemberLogin": "SELECT * FROM `member` WHERE `idGroup` = @0 AND (`sUsername` = @1 OR `sEmail` = @1)",
+
+    "FetchContactID": "SELECT * FROM `contact` WHERE `contactID` = @0"
 }

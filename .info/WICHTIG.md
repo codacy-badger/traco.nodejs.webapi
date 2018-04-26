@@ -8,13 +8,13 @@ In dieser Datei werden einige wichtige Hinweise hinterlegt, die für mich späte
 Um ein Kommentar für JSDoc in einer DBClass Datei anzulegen muss ich folgendermaßen vorgehen, damit es in der Doku anständig gerendert wird:
 
 ```js
-    /**
-     * Beschreibung der funktion
-     * @alias module:classes.DBClassName.FunctionName
-     * @param {string} Parameter1
-     * @param {number} Parameter2
-     * @returns {string}
-     */
+/**
+ * Beschreibung der funktion
+ * @alias module:classes.DBClassName.FunctionName
+ * @param {string} Parameter1
+ * @param {number} Parameter2
+ * @returns {string}
+ */
 ```
 
 Wenn nach diesem Pattern ein JSDoc kommentar geschrieben wird, so wird dieser in der gerenderten Dokumentation auch bei der dementsprechenden DBClass angezeigt.

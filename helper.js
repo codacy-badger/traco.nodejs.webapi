@@ -10,17 +10,17 @@ var errorcode = require("./static/errorcodes.json");
 var fs = require("fs-extra");
 var path = require("path");
 var exNativ = require("./module/exNativ");
-var logger = require("./module/logger");
-var Logger = new logger.Logger({
+var Logger = require("./module/logger").Logger;
+var logger = new Logger({
     bConsole: config.debug,
-    sFilename: "helper",
+    sFilename: "logMain",
     iSaveDays: config.logger.iSaveDays
 });
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Exports
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-exports.log = Logger.log;
+exports.log = logger.log;
 
 /**
  * Returns all enums from `static/enums.json` and add the oAdditionalEnums.

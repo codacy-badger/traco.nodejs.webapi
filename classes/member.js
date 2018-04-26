@@ -4,6 +4,7 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var helper = require("../helper");
 var dbhandler = require("../dbhandler")(require("../static/config.json").mysql, require("../static/dbcursor.json"));
+var classes = require("../classes");
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DATABASE CLASSES
@@ -105,6 +106,7 @@ exports.class = function (fields) {
 
     /**
      * Creates a JSON-Object to ready to return Data to client.
+     * @alias module:classes.Member.toJson
      * @returns {JSON}
      */
     this.toJson = function () {
@@ -124,10 +126,19 @@ exports.class = function (fields) {
 
     /**
      * Updates the current users dtAccess value in the Database.
+     * @alias module:classes.Member.updateAccess
      * @returns {Promise}
      */
     this.updateAccess = function () {
+        var oContact = new classes.Contact();
         this.set.dtAccess(helper.currentTimestamp());
-        return dbhandler.insertOrUpdate(this);
+        return dbhandler.insertOrUpdate(this)
+            .then(function () {
+                return dbhandler.fetch("FetchContactID", [that.get.idContact()]);
+            })
+            .then(function (aData) {
+                oContact = new classes.Contact(aData[0]);
+                return oContact.updateAccess();
+            });
     };
 };

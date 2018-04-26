@@ -4,17 +4,11 @@
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // var classes = require("./classes");
-var config = require("./static/config.json");
+// var config = require("./static/config.json");
 var helper = require("./helper");
 // var dbhandler = require("./dbhandler")(config.mysql, require("./static/dbcursor.json"));
 // var enums = helper.getEnums();
 var errorcode = helper.getErrorcodes();
-var logger = require("./module/logger");
-var Logger = new logger.Logger({
-    bConsole: config.debug,
-    sFilename: "logProhelper",
-    iSaveDays: config.logger.iSaveDays
-});
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Function
@@ -47,6 +41,7 @@ exports.httpErrorHandler = function (oResponse, oError) {
             "error": oError
         };
     }
+    helper.log(helper.convertJSONToString(oError), 3);
     switch (oError.type) {
         case errorcode.ERR_invalidCommand:
             oResponse.statusCode = HttpStatusCodes.NotFound;
@@ -75,7 +70,6 @@ exports.httpErrorHandler = function (oResponse, oError) {
             break;
         case errorcode.ERR_internal:
         default:
-            Logger.log(helper.convertJSONToString(oError), 3);
             oResponse.statusCode = 500; // Internal Server Error
             oResponse.json({
                 "SERR": "UnknownError"

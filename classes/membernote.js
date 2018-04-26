@@ -9,11 +9,11 @@ var helper = require("../helper");
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 exports.class = function (fields) {
     // Class properties
-    this.classname = "note";
+    this.classname = "membernote";
 
     // Database fields
     this.fields = fields || {
-        "noteID": "               ",
+        "membernoteID": "               ",
         "idMember": "        ",
         "dtCreate": helper.currentTimestamp(),
         "sText": ""
@@ -22,8 +22,8 @@ exports.class = function (fields) {
     const that = this;
     // Getter und Setter
     this.get = {
-        noteID: function () {
-            return that.fields.noteID;
+        membernoteID: function () {
+            return that.fields.membernoteID;
         },
         idMember: function () {
             return that.fields.idMember;
@@ -37,8 +37,8 @@ exports.class = function (fields) {
     };
 
     this.set = {
-        noteID: function (sID) {
-            that.fields.noteID = sID;
+        membernoteID: function (sID) {
+            that.fields.membernoteID = sID;
         },
         idMember: function (sID) {
             that.fields.idMember = sID;

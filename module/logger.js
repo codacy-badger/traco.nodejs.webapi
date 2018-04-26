@@ -113,10 +113,8 @@ Logger.prototype.log = function (sMessage, sType) {
         if (that.oConfig.bLogtyp) {
             sMess += " [ " + sType + " ]  ";
         }
-        sMess += sMessage;
-        sMessage = sMess;
-        sMessage = sMessage.replace(/\r/g, "	"); // eslint-disable-line
-        sMessage = sMessage.replace(/\n/g, "	"); // eslint-disable-line
+        sMessage = sMess + sMessage;
+        sMessage = sMessage.replace(/(?:\r\n|\r|\n)/g, "	"); // eslint-disable-line
     };
 
     var _logConsole = function () {

@@ -25,9 +25,18 @@ var Cookie = require("cookies");
  *
  * @apiDescription Login a member. This request will set a cookie <code>MSESSION</code> which has stored the session ID in it. To do request with permission like <code>Member.Permission</code>, the cookie data needs to be transmitted.
  *
+ * @apiParam  {String}      group       ID of the members group
  * @apiParam  {String}      username    The members username or email
  * @apiParam  {String}      password    The members password
  * @apiParam  {Boolean}     cookie      Flag if the cookie should be stored longer than the current session
+ *
+ * @apiParamExample  {json} Request-Example:
+ *  {
+ *      "group": "0A1B",
+ *      "username": "iammember",
+ *      "password": "myverysavepassword",
+ *      "cookie": true
+ *  }
  */
 exports.post = function (req, res) {
     var oMember = new classes.Member();
@@ -36,7 +45,7 @@ exports.post = function (req, res) {
         ["password", req.body.password]
     ])
         .then(function () {
-            return dbhandler.fetch("FetchMemberLogin", [req.body.username]);
+            return dbhandler.fetch("FetchMemberLogin", [req.body.group, req.body.username]);
         })
         .then(function (aData) {
             if (aData.length === 0) {

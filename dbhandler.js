@@ -198,7 +198,7 @@ var _buildSQLCurserObject = function (sCursor, aParams) {
 
 var _buildInsert = function (oDBClass) {
     var aDBFields = Object.keys(oDBClass.fields);
-    var sSQL = "INSERT INTO`" + oDBClass.classname + "` (";
+    var sSQL = "INSERT INTO `" + oDBClass.classname + "` (";
     var n = 0;
     while (n < aDBFields.length) {
         sSQL += "`" + aDBFields[n] + "`, ";

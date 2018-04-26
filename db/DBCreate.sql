@@ -115,11 +115,11 @@ CREATE TABLE `taskchange` (
 );
 
 -- TABLE: note
-DROP TABLE IF EXISTS `note`;
-CREATE TABLE `note` (
-    `noteID` CHAR(15) NOT NULL,         -- durschnittlich max. ca. 3.521.600.000.000 Notizen pro Member
+DROP TABLE IF EXISTS `membernote`;
+CREATE TABLE `membernote` (
+    `membernoteID` CHAR(15) NOT NULL,         -- durschnittlich max. ca. 3.521.600.000.000 Notizen pro Member
     `idMember` CHAR(8) NOT NULL,
     `dtCreate` BIGINT NOT NULL,
     `sText` TEXT NOT NULL,
-    PRIMARY KEY (`noteID`)
+    PRIMARY KEY (`membernoteID`)
 );

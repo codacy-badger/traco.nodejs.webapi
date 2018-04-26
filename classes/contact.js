@@ -3,13 +3,14 @@
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var helper = require("../helper");
+var dbhandler = require("../dbhandler")(require("../static/config.json").mysql, require("../static/dbcursor.json"));
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DATABASE CLASSES
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 exports.class = function (fields) {
     // Class properties
-    this.classname = "conatct";
+    this.classname = "contact";
 
     // Database fields
     this.fields = fields || {
@@ -88,4 +89,13 @@ exports.class = function (fields) {
 
     // Functions
 
+    /**
+     * Updates the current users dtAccess value in the Database.
+     * @alias module:classes.Contact.updateAccess
+     * @returns {Promise}
+     */
+    this.updateAccess = function () {
+        this.set.dtAccess(helper.currentTimestamp());
+        return dbhandler.insertOrUpdate(this);
+    };
 };

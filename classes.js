@@ -107,4 +107,4 @@ exports.Taskchange = require("./classes/taskchange").class;
  * @param {number} fields.dtCreate
  * @param {string} fields.sText
  */
-exports.Note = require("./classes/note").class;
+exports.Membernote = require("./classes/membernote").class;
