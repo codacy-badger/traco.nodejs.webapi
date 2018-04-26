@@ -42,7 +42,7 @@ echo --- START: %time:~0,2%:%time:~3,2%:%time:~6,2% ---
 echo.
 REM Erstellen der Datenbank mit User
 echo creating Database...
-mysql -h %MySQL_SERV% -P %MySQL_PORT%  -u %MySQL_ADMIN% --password=%MySQL_ADMINPASSWD% -e "SET @usr = '"%MySQL_USER%"', @passwd = '"%MySQL_PASSWD%"', @serv = '"%MySQL_SERV%"'; SOURCE createdb.sql;"
+mysql --show-warnings -h %MySQL_SERV% -P %MySQL_PORT%  -u %MySQL_ADMIN% --password=%MySQL_ADMINPASSWD% -e "SET @usr = '"%MySQL_USER%"', @passwd = '"%MySQL_PASSWD%"', @serv = '"%MySQL_SERV%"'; SOURCE createdb.sql;"
 echo.
 echo --- ENDE:  %time:~0,2%:%time:~3,2%:%time:~6,2% ---
 echo. && echo.

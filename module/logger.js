@@ -83,8 +83,8 @@ var Logger = function (oOptions) { // eslint-disable-line
     if (oOptions.sExtension) this.oConfig.sExtension = oOptions.sExtension;
     if (oOptions.sPath) this.oConfig.sPath = path.join(__dirname, "..", oOptions.sPath);
     if (oOptions.iSaveDays) {
-        if (oOptions.iSaveDays * enums.Day < enums.Minute - 1) {
-            this.oConfig.iSaveDays = 1 / 24 / 60;
+        if (oOptions.iSaveDays * enums.Day < enums.Minute) {
+            this.oConfig.iSaveDays = (1 + 0.000000000000001) / 24 / 60;
         } else {
             this.oConfig.iSaveDays = oOptions.iSaveDays;
         }
@@ -189,6 +189,7 @@ Logger.prototype.log = function (sMessage, sType) {
 Logger.prototype.delOldFiles = function () {
     var that = this;
     var i = 0;
+    console.log("Start LOG-deletion..."); // eslint-disable-line
     fs.readdir(that.oConfig.sPath)
         .then(function (aFiles) {
             return promiseWhile(function () {
@@ -198,6 +199,7 @@ Logger.prototype.delOldFiles = function () {
                     return fs.stat(path.join(that.oConfig.sPath, aFiles[i]))
                         .then(function (oStats) {
                             if (oStats.mtimeMs + enums.Day * that.oConfig.iSaveDays * 1000 <= Date.now()) {
+                                console.log(" -- deleting file: " + path.join(that.oConfig.sPath, aFiles[i])); // eslint-disable-line
                                 return fs.unlink(path.join(that.oConfig.sPath, aFiles[i]));
                             }
                         })
@@ -221,15 +223,21 @@ Logger.prototype.delOldFiles = function () {
 
 /**
  * Creates the cronjob for the spezific Logger and the iSaveTime. For spezific time there are spezific Cronjobs.
+ * @param {string} [sPattern] "\* \* \* \* \* \*" is pattern for "SEC MIN HOUR DAY MONTH YEAR" and can have values like [0-59, 0-59, 0-24, 0-6, 0-11, DATE]
  * @returns {void}
  */
-Logger.prototype.setupCron = function () {
+Logger.prototype.setupCron = function (sPattern) {
     if (!this.oConfig.bAutodel) {
         return;
     }
     var that = this;
     if (that.fCron !== undefined) {
         that.fCron.stop();
+    }
+    if (sPattern) {
+        that.fCron = new CronJob(sPattern, function () {
+            that.delOldFiles();
+        }, null, true);
     }
     if (that.oConfig.iSaveDays * enums.Day >= enums.Day) {
         that.fCron = new CronJob("0 0 0 * * *", function () {

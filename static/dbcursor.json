@@ -1,2 +1,3 @@
 {
+    "FetchMemberLogin": "SELECT * FROM `member` WHERE `sUsername` = @0 OR `sEmail` = @0"
 }

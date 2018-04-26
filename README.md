@@ -18,7 +18,7 @@
 
 Run `npm install` to install the dependencies.
 
-In the `./db` directory are script to create and import a MySQL Database. The Scriptnames are self-explanatory
+In the `./db` directory are script to create and import a MySQL Database. The Scriptnames are self-explanatory. You can manually create group and add a user in the database with passwordhash `$2a$10$dehcdLxBydqPl/TJ.nOD7OqG3IVMQnQEBW/tbg4GIgdDrTo5xVTfu` to set `master` as password.
 
 Create a `config.json` in the `./static` folder wich has a structure like `config.default.json`.
 
@@ -39,7 +39,10 @@ Run `npm run doc` to compile both documentations.
 
 ## On Deck
 
- - [ ] ...
+ - [ ] Rebuild the `importdb.bat` with `mysqlimport` instead of `mysql` because it should be faster as just load the complete file as SQL-Statements.
+ - [ ] Create new DBClass-Files for all DB-Tables
+ - [ ] Creates the JSDoc for new DBClasses
+ - [ ] Create secound version of the `JsonTable.join()` function with set all same at the same time and dont insert one row after the last ant search every time for the joining element.
 
 ## Backlog
 
@@ -47,6 +50,7 @@ Run `npm run doc` to compile both documentations.
 
 ## Finished
 
+ - [x] Rebuild of the `leer.tar.xz` Database file
  - [x] `module/logger.js` need a function to automaticly create the logging folder if it doesen't exists.
  - [x] Add `delete()` to the `jsonSQL.js`
  - [x] Recreate the `jsonSQL.js` modul.

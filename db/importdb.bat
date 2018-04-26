@@ -69,7 +69,8 @@ echo start IMPORT Database...
 SET tbl_count=0
 FOR /F "tokens=*" %%F IN ('dir /A /B %tmpfolder%.sql') DO (
     echo  -- IMPORT TABLE-File: %%F
-    mysql -h %MySQL_SERV% -P %MySQL_PORT% -u %MySQL_USER% --password=%MySQL_PASSWD% -D %MySQL_DB% < %tmpfolder%.sql\%%F
+    mysql --show-warnings -h %MySQL_SERV% -P %MySQL_PORT% -u %MySQL_USER% --password=%MySQL_PASSWD% -D %MySQL_DB% < %tmpfolder%.sql\%%F
+    REM mysqlimport -v -C --local -h %MySQL_SERV% -P %MySQL_PORT% -u %MySQL_USER% --password=%MySQL_PASSWD% %MySQL_DB% %tmpfolder%.sql\%%F
     SET /a tbl_count += 1
 )
 echo %tbl_count% table[s] restored into database '%MySQL_DB%'

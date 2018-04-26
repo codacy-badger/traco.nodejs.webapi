@@ -8,7 +8,7 @@
     "debug": true,
     "mysql": {
         "enabled": true,
-        "main": {
+        "conn": {
             "connectionLimit": 50,
             "host": "127.0.0.1",
             "user": "traco",
@@ -18,16 +18,17 @@
         },
         "debug": {
             "enabled": true,
+            "console": false,
             "iSaveDays": 14
         }
     },
     "session": {
-        "user": {
+        "member": {
             "redis": {
                 "enabled": true,
                 "socket": "."
             },
-            "cookie": "login"
+            "cookie": "MSESSION"
         }
     },
     "logger": {

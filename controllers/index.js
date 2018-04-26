@@ -22,7 +22,7 @@ var fLoadModules = function (callback) {
 
         var i = 0;
         while (i < data.length) {
-            if (data[i].match(".js")) {
+            if (data[i].indexOf(".js") !== -1) {
                 sPath = data[i].replace(sMaindir, "");
                 sPath = sPath.replace(".js", "");
                 sPath = sPath.replace(/\\/g, "/");

@@ -22,7 +22,7 @@ var redis;
 module.exports = function (oConf) {
     oConfig = oConf;
     if (oConf.redis.enabled) {
-        if (oConfig.redis.socket === undefined || oConfig.redis === ".") {
+        if (oConfig.redis.socket === undefined || oConfig.redis.socket === ".") {
             redis = new IORedis();
         } else {
             redis = new IORedis(oConfig.redis.socket);
@@ -38,6 +38,7 @@ module.exports = function (oConf) {
  * Start a new session and set a cookie in the browser.
  * @param {Object} oCookie
  * @param {Object} oParam
+ * @param {string} oParam.session MUST BE TRUE FOR COOKIE OR REDIS
  * @param {string} oParam.prefix
  * @param {string} oParam.suffix
  * @param {boolean} oParam.cookie

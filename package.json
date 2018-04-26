@@ -1,6 +1,6 @@
 {
     "name": "traco.nodejs.webapi",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Die WebAPI für das TraCo TicketSystem in NodeJS",
     "author": "Felix Herold",
     "main": "app.js",
@@ -11,7 +11,7 @@
         "test": "node test/test.js",
         "explorer": "node ./static/onlineExplorer",
         "jsdoc": "./node_modules/.bin/jsdoc -c ./.info/jsdoc.conf.json",
-        "apidocbuild": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -c ./.info/apidoc.conf.json -v",
+        "apidoc": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -v",
         "doc": "npm run jsdoc && npm run apidoc"
     },
     "dependencies": {

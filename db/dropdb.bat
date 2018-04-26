@@ -43,7 +43,7 @@ echo --- START: %time:~0,2%:%time:~3,2%:%time:~6,2% ---
 echo.
 REM Löschung der Datenbenk mit User
 echo dropping Database...
-mysql -h %MySQL_SERV% -P %MySQL_PORT%  -u %MySQL_ADMIN% --password=%MySQL_ADMINPASSWD% -e "SET @usr = '"%MySQL_USER%"', @db = '"%MySQL_DB%"', @serv = '"%MySQL_SERV%"'; SOURCE dropdb.sql;"
+mysql --show-warnings -h %MySQL_SERV% -P %MySQL_PORT%  -u %MySQL_ADMIN% --password=%MySQL_ADMINPASSWD% -e "SET @usr = '"%MySQL_USER%"', @db = '"%MySQL_DB%"', @serv = '"%MySQL_SERV%"'; SOURCE dropdb.sql;"
 echo.
 echo --- ENDE:  %time:~0,2%:%time:~3,2%:%time:~6,2% ---
 echo. && echo.

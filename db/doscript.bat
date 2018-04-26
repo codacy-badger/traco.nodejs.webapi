@@ -58,7 +58,7 @@ echo --- START: %time:~0,2%:%time:~3,2%:%time:~6,2% ---
 echo.
 REM Importierung einer *.sql Datei in die Datenbank
 echo importing Script...
-mysql -h %MySQL_SERV% -P %MySQL_PORT% -u %MySQL_USER% --password=%MySQL_PASSWD% -D %MySQL_DB% < %importf%
+mysql --show-warnings -h %MySQL_SERV% -P %MySQL_PORT% -u %MySQL_USER% --password=%MySQL_PASSWD% -D %MySQL_DB% < %importf%
 echo.
 echo --- ENDE:  %time:~0,2%:%time:~3,2%:%time:~6,2% ---
 echo. && echo.

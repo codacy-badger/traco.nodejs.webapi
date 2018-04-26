@@ -226,8 +226,8 @@ exports.xor = function (conditionA, conditionB) {
 /**
  * Check the given Values to be set.
  * @param {Array[]} aValues
- * @param {any} aValues.0 Value to check
- * @param {any} aValues.1 Valuename
+ * @param {any} aValues.0 Valuename
+ * @param {any} aValues.1 Value to check
  * @returns {Promise}
  */
 exports.checkRequiredValues = function (aValues) {
@@ -235,8 +235,8 @@ exports.checkRequiredValues = function (aValues) {
         var n = 0;
         var aMissingValues = [];
         while (n < aValues.length) {
-            if (aValues[n][0] === undefined || Object.keys(aValues[n][0]).length <= 0) {
-                aMissingValues.push(aValues[n][1]);
+            if (aValues[n][1] === undefined || Object.keys(aValues[n][1]).length <= 0) {
+                aMissingValues.push(aValues[n][0]);
             }
             n += 1;
         }

@@ -19,7 +19,7 @@ Dazu zählen alle Module, die auch abhängigkeiten nach außerhalb haben. Zum Be
  - exNativ/object
  - exNativ/string
  - logger
- - jsonSQL [BUILD]
+ - jsonSQL
 
 ## Abhängig
 

@@ -72,7 +72,7 @@ echo start EXPORT Database...
 SET tbl_count=0
 for /F %%T in (%exportf%.tables.txt) do (
     echo  -- EXPORT TABLE: %%T
-    mysqldump -i -c --dump-date -n -h %MySQL_SERV% -P %MySQL_PORT% -u %MySQL_USER% --password=%MySQL_PASSWD% %MySQL_DB% %%T > %exportf%\%%T.sql
+    mysqldump -i -c -C --dump-date -n -h %MySQL_SERV% -P %MySQL_PORT% -u %MySQL_USER% --password=%MySQL_PASSWD% %MySQL_DB% %%T > %exportf%\%%T.sql
     SET /a tbl_count += 1
 )
 echo %tbl_count% table[s] dumped from database '%MySQL_DB%'

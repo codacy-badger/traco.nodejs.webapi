@@ -13,8 +13,7 @@ var logger = require("./module/logger");
 var Logger = new logger.Logger({
     bConsole: config.debug,
     sFilename: "logProhelper",
-    iSaveDays: config.logger.iSaveDays,
-    sFilemode: "min"
+    iSaveDays: config.logger.iSaveDays
 });
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

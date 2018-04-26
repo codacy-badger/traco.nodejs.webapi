@@ -5,6 +5,7 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var mysql = require("mysql");
 var helper = require("./helper");
+var exNativ = require("./module/exNativ");
 var errorcode = helper.getErrorcodes();
 var logger = require("./module/logger");
 var dbLogger;
@@ -12,37 +13,9 @@ var config;
 var connection;
 var dbcursor;
 
-/**
- * Setup for the dbhandler individual for every require
- * @param {Object} oConfig
- * @param {boolean} oConfig.enabled MUST be true
- * @param {Object} oConfig.main
- * @param {number} oConfig.main.connectionLimit
- * @param {string} oConfig.main.host
- * @param {string} oConfig.main.user
- * @param {string} oConfig.main.password
- * @param {string} oConfig.main.database
- * @param {string} oConfig.main.charset
- * @param {boolean} oConfig.debug
- * @param {Object} oCursor
- */
-module.exports = function (oConfig, oCursor) {
-    config = oConfig;
-    dbcursor = oCursor;
-    dbLogger = new logger.Logger({
-        bConsole: config.debug.enabled,
-        sFilename: "logSQL",
-        iSaveDays: config.debug.iSaveDays
-    });
-    return exports;
-};
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Functions
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var handleDisconnect = function () {
     // Create connection pool
-    connection = mysql.createPool(config.main);
+    connection = mysql.createPool(config.conn);
 
     // If you are also serving http, display a 503 error.
     connection.on("error", function (err) {
@@ -57,15 +30,42 @@ var handleDisconnect = function () {
     });
 };
 
-if (config.enabled) {
-    handleDisconnect();
-}
+/**
+ * Setup for the dbhandler individual for every require
+ * @param {Object} oConfig
+ * @param {boolean} oConfig.enabled MUST be true
+ * @param {Object} oConfig.conn
+ * @param {number} oConfig.conn.connectionLimit
+ * @param {string} oConfig.conn.host
+ * @param {string} oConfig.conn.user
+ * @param {string} oConfig.conn.password
+ * @param {string} oConfig.conn.database
+ * @param {string} oConfig.conn.charset
+ * @param {boolean} oConfig.debug
+ * @param {Object} oCursor
+ */
+module.exports = function (oConfig, oCursor) {
+    config = oConfig;
+    dbcursor = oCursor;
+    dbLogger = new logger.Logger({
+        bConsole: config.debug.console,
+        sFilename: "logSQL",
+        iSaveDays: config.debug.iSaveDays
+    });
+    if (config.enabled) {
+        handleDisconnect();
+    }
+    return exports;
+};
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Functions
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var fileLog = function (sType, sSQL) {
     if (sType === undefined) {
         sType = "UNDEFINED";
     }
-    if (config.debug) {
+    if (config.debug.enabled) {
         dbLogger.log(sType + " >-< " + sSQL, 0);
     }
 };
@@ -117,7 +117,7 @@ var _generateKey = function (oDBClass, oOptions) {
     oOptions = oOptions || {};
     oOptions.prefix = oOptions.prefix || "";
     oOptions.suffix = oOptions.suffix || "";
-    oOptions.chars = oOptions.chars || "#A";
+    oOptions.chars = oOptions.chars || "aA#";
 
     var sKey = Object.keys(oDBClass.fields)[0];
     if (helper.isInt(oDBClass.fields[sKey]) ||
@@ -168,7 +168,7 @@ var _buildSQLCurserObject = function (sCursor, aParams) {
     };
     // Find and sort all parameters for the cursor
     while (i < aParams.length) {
-        aIndices = helper.exNativ.Array.allIndexOf(oCursor.query, "@" + i);
+        aIndices = exNativ.Array.allIndexOf(oCursor.query, "@" + i);
         x = 0;
         while (x < aIndices.length) {
             aObjectParams.push({
