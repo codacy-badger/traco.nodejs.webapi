@@ -12,7 +12,7 @@ var path = require("path");
 var exNativ = require("./module/exNativ");
 var Logger = require("./module/logger").Logger;
 var logger = new Logger({
-    bConsole: config.debug,
+    bConsole: config.logger.bConsole,
     sFilename: "logMain",
     iSaveDays: config.logger.iSaveDays
 });
@@ -20,7 +20,16 @@ var logger = new Logger({
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Exports
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-exports.log = logger.log;
+
+/**
+ * Logging a spezific Message in log-File named "logMain_*DATE*.log".
+ * @param {string} sMessage
+ * @param {string|number} sType Pre defined numeric Values are ["DEBUG", "INFO", "WARN", "ERROR"] with number 0-3
+ * @returns {void}
+ */
+exports.log = function (sMessage, sType) {
+    logger.log(sMessage, sType);
+};
 
 /**
  * Returns all enums from `static/enums.json` and add the oAdditionalEnums.

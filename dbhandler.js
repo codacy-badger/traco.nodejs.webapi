@@ -52,9 +52,11 @@ module.exports = function (oConfig, oCursor) {
         sFilename: "logSQL",
         iSaveDays: config.debug.iSaveDays
     });
+
     if (config.enabled) {
         handleDisconnect();
     }
+
     return exports;
 };
 

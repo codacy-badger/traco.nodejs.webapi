@@ -63,7 +63,7 @@ var Logger = function (oOptions) { // eslint-disable-line
         sFilename: "log",
         sExtension: "log",
         sPath: path.join(__dirname, "..", ".tmp"),
-        iSaveDays: 7,
+        iSaveDays: 14,
         bLogdate: true,
         bLogtyp: true,
         bAutodel: true

@@ -40,8 +40,6 @@ Run `npm run doc` to compile both documentations.
 ## On Deck
 
  - [ ] Rebuild the `importdb.bat` with `mysqlimport` instead of `mysql` because it should be faster as just load the complete file as SQL-Statements.
- - [ ] Create new DBClass-Files for all DB-Tables
- - [ ] Creates the JSDoc for new DBClasses
  - [ ] Create secound version of the `JsonTable.join()` function with set all same at the same time and dont insert one row after the last ant search every time for the joining element.
 
 ## Backlog
@@ -50,6 +48,8 @@ Run `npm run doc` to compile both documentations.
 
 ## Finished
 
+ - [x] Creates the JSDoc for new DBClasses
+ - [x] Create new DBClass-Files for all DB-Tables
  - [x] Rebuild of the `leer.tar.xz` Database file
  - [x] `module/logger.js` need a function to automaticly create the logging folder if it doesen't exists.
  - [x] Add `delete()` to the `jsonSQL.js`

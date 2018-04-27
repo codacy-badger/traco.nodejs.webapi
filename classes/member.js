@@ -3,8 +3,14 @@
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var helper = require("../helper");
-var dbhandler = require("../dbhandler")(require("../static/config.json").mysql, require("../static/dbcursor.json"));
 var classes = require("../classes");
+var enums = helper.getEnums();
+
+// Aufzählung aller Permissions in Reihnfolge im cPermission String
+var aPermissions = [
+    "Admin",
+    "Note"
+];
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DATABASE CLASSES
@@ -20,7 +26,7 @@ exports.class = function (fields) {
         "idGroup": "    ",
         "sUsername": "",
         "sPassword": "",
-        "cPermission": "0",
+        "cPermission": "00",
         "dtSince": helper.currentTimestamp(),
         "dtAccess": undefined,
         "sEmail": "",
@@ -131,10 +137,13 @@ exports.class = function (fields) {
      */
     this.updateAccess = function () {
         var oContact = new classes.Contact();
+        if (this.get.dtAccess() + enums.Minute > helper.currentTimestamp()) {
+            return helper.startPromiseChain();
+        }
         this.set.dtAccess(helper.currentTimestamp());
-        return dbhandler.insertOrUpdate(this)
+        return __dbhandler.insertOrUpdate(this)
             .then(function () {
-                return dbhandler.fetch("FetchContactID", [that.get.idContact()]);
+                return __dbhandler.fetch("FetchContactID", [that.get.idContact()]);
             })
             .then(function (aData) {
                 oContact = new classes.Contact(aData[0]);

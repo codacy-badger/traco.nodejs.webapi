@@ -8,7 +8,7 @@ var prohelper = require("../../../prohelper");
 var classes = require("../../../classes");
 var config = require("../../../static/config.json");
 var Session = require("../../../module/session").Session;
-var session = new Session(config.session.member);
+var session = new Session(config.session.contact);
 var bcrypt = require("bcryptjs");
 var Cookie = require("cookies");
 
@@ -17,23 +17,23 @@ var Cookie = require("cookies");
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 /**
- * @api {post} /member/login Login
+ * @api {post} /contact/login Login
  * @apiVersion  1.0.0
- * @apiName LoginMember
- * @apiGroup MemberAuthorization
+ * @apiName LoginContact
+ * @apiGroup ContactAuthorization
  * @apiPermission none
  *
- * @apiDescription Login a member. This request will set a cookie <code>MSESSION</code> which has stored the session ID in it. To do request with permission like <code>Member.Permission</code>, the cookie data needs to be transmitted.
+ * @apiDescription Login a contact. This request will set a cookie <code>CSESSION</code> which has stored the session ID in it. To do request with permission like <code>Contact.Permission</code>, the cookie data needs to be transmitted.
  *
- * @apiParam  {String}      group       ID of the members group
- * @apiParam  {String}      username    The members username or email
- * @apiParam  {String}      password    The members password
+ * @apiParam  {String}      group       ID of the contact group
+ * @apiParam  {String}      username    The contact username or email
+ * @apiParam  {String}      password    The contact password
  * @apiParam  {Boolean}     cookie      Flag if the cookie should be stored longer than the current session
  *
  * @apiExample {json} Request Example:
  *  {
  *      "group": "0A1B",
- *      "username": "iammember",
+ *      "username": "iamcontact",
  *      "password": "myverysavepassword",
  *      "cookie": true
  *  }
@@ -42,16 +42,14 @@ var Cookie = require("cookies");
  *  HTTP/1.1 200 OK
  *  Content-Type: application/json; charset=utf-8
  *  {
- *      "id": "AB12fg91",
- *      "idContact": "HS2k4Sq26",
+ *      "id": "AB12fg911",
  *      "idGroup": "0A1B",
- *      "username": "iammember",
- *      "permission": "1",
+ *      "username": "iamcontact",
  *      "since": 1424810726,
  *      "access": 1524810726,
- *      "email": "iammember@email.com",
+ *      "email": "iamcontact@email.com",
  *      "firstname": "Liam",
- *      "lastname": "Member"
+ *      "lastname": "Contact"
  *  }
  *
  * @apiExample {json} Error-Response Example:
@@ -65,14 +63,14 @@ var Cookie = require("cookies");
  * @apiError    WrongNameOrPass             Username/Email or password is incorrect.
  */
 exports.post = function (req, res) {
-    var oMember = new classes.Member();
+    var oContact = new classes.Contact();
     helper.checkRequiredValues([
         ["group", req.body.group],
         ["username", req.body.username],
         ["password", req.body.password]
     ])
         .then(function () {
-            return __dbhandler.fetch("FetchMemberLogin", [req.body.group, req.body.username]);
+            return __dbhandler.fetch("FetchContactLogin", [req.body.group, req.body.username]);
         })
         .then(function (aData) {
             if (aData.length === 0) {
@@ -81,8 +79,8 @@ exports.post = function (req, res) {
                     "SERR": "WrongNameOrPass"
                 };
             }
-            oMember = new classes.Member(aData[0]);
-            return bcrypt.compare(req.body.password, oMember.get.sPassword());
+            oContact = new classes.Contact(aData[0]);
+            return bcrypt.compare(req.body.password, oContact.get.sPassword());
         })
         .then(function (bPassw) {
             if (!bPassw) {
@@ -94,14 +92,14 @@ exports.post = function (req, res) {
             return session.startSession(new Cookie(req, res), {
                 "session": true,
                 "cookie": req.body.cookie,
-                "redis": oMember.get.memberID()
+                "redis": oContact.get.contactID()
             });
         })
         .then(function () {
-            return oMember.updateAccess();
+            return oContact.updateAccess();
         })
         .then(function () {
-            res.json(oMember.toJson());
+            res.json(oContact.toJson());
         })
         .catch(function (oErr) {
             prohelper.httpErrorHandler(res, oErr);

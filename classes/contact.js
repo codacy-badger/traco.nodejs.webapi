@@ -3,7 +3,7 @@
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var helper = require("../helper");
-var dbhandler = require("../dbhandler")(require("../static/config.json").mysql, require("../static/dbcursor.json"));
+var enums = helper.getEnums();
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DATABASE CLASSES
@@ -90,12 +90,33 @@ exports.class = function (fields) {
     // Functions
 
     /**
+     * Creates a JSON-Object to ready to return Data to client.
+     * @alias module:classes.Member.toJson
+     * @returns {JSON}
+     */
+    this.toJson = function () {
+        return {
+            "id": this.get.contactID(),
+            "idGroup": this.get.idGroup(),
+            "username": this.get.sUsername(),
+            "since": this.get.dtSince(),
+            "access": this.get.dtAccess(),
+            "email": this.get.sEmail(),
+            "firstname": this.get.sFirstname(),
+            "lastname": this.get.sLastname()
+        };
+    };
+
+    /**
      * Updates the current users dtAccess value in the Database.
      * @alias module:classes.Contact.updateAccess
      * @returns {Promise}
      */
     this.updateAccess = function () {
+        if (this.get.dtAccess() + enums.Minute > helper.currentTimestamp()) {
+            return helper.startPromiseChain();
+        }
         this.set.dtAccess(helper.currentTimestamp());
-        return dbhandler.insertOrUpdate(this);
+        return __dbhandler.insertOrUpdate(this);
     };
 };

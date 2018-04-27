@@ -8,31 +8,30 @@ var enums = helper.getEnums();
 var errorcode = helper.getErrorcodes();
 var IORedis = require("ioredis");
 var Cookie = require("cookies");
-var oConfig;
-var redis;
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Exports
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 /**
  * Setup Options for the session
+ * @class
  * @param {Object} oConf
  * @param {Object} oConf.redis
  * @param {boolean} oConf.redis.enabled
  * @param {string} oConf.redis.socket
  * @param {string} oConf.cookie
  */
-module.exports = function (oConf) {
-    oConfig = oConf;
-    if (oConf.redis.enabled) {
-        if (oConfig.redis.socket === undefined || oConfig.redis.socket === ".") {
-            redis = new IORedis();
+var Session = function (oConf) {
+    this.oConfig = oConf;
+    if (this.oConfig.redis.enabled) {
+        if (this.oConfig.redis.socket === undefined || this.oConfig.redis.socket === ".") {
+            this.redis = new IORedis();
         } else {
-            redis = new IORedis(oConfig.redis.socket);
+            this.redis = new IORedis(this.oConfig.redis.socket);
         }
     }
-    return exports;
 };
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Exports
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 /**
  * Start a new session and set a cookie in the browser.
@@ -45,7 +44,8 @@ module.exports = function (oConf) {
  * @param {string} oParam.redis
  * @returns {Promise}
  */
-exports.startSession = function (oCookie, oParam) {
+Session.prototype.startSession = function (oCookie, oParam) {
+    var that = this;
     return new Promise(function (fFulfill) {
         if (oParam.session) {
             var sSessionid = helper.randomString(32, "aA#", {
@@ -53,19 +53,19 @@ exports.startSession = function (oCookie, oParam) {
                 "suffix": oParam.suffix
             });
             if (oParam.cookie) {
-                oCookie.set(oConfig.cookie, sSessionid, {
+                oCookie.set(that.oConfig.cookie, sSessionid, {
                     "overwrite": true,
                     "httpOnly": true,
                     "expires": new Date((helper.currentTimestamp() + enums.Year * 5) * 1000)
                 });
             } else {
-                oCookie.set(oConfig.cookie, sSessionid, {
+                oCookie.set(that.oConfig.cookie, sSessionid, {
                     "overwrite": true,
                     "httpOnly": true
                 });
             }
-            if (oConfig.redis.enabled) {
-                redis.set(sSessionid, oParam.redis);
+            if (that.oConfig.redis.enabled) {
+                that.redis.set(sSessionid, oParam.redis);
             }
         }
         fFulfill();
@@ -79,17 +79,18 @@ exports.startSession = function (oCookie, oParam) {
  * @param {string} oParam.sessionid
  * @returns {Promise}
  */
-exports.endSession = function (oCookie, oParam) {
+Session.prototype.endSession = function (oCookie, oParam) {
+    var that = this;
     return new Promise(function (fFulfill) {
         if (oParam.sessionid === undefined) {
             fFulfill();
-        } else if (oConfig.redis.enabled) {
-            redis.del(oParam.sessionid, function () {
-                oCookie.set(oConfig.cookie);
+        } else if (that.oConfig.redis.enabled) {
+            that.redis.del(oParam.sessionid, function () {
+                oCookie.set(that.oConfig.cookie);
                 fFulfill();
             });
         } else {
-            oCookie.set(oConfig.cookie);
+            oCookie.set(that.oConfig.cookie);
             fFulfill();
         }
     });
@@ -102,16 +103,17 @@ exports.endSession = function (oCookie, oParam) {
  * @param {function} fLoadData Can be Promise. Response -> req.oSessiondata
  * @returns {Promise}
  */
-exports.loadSessionData = function (req, res, fLoadData) {
+Session.prototype.loadSessionData = function (req, res, fLoadData) {
+    var that = this;
     var oCookie = new Cookie(req, res);
-    var sSessionid = oCookie.get(oConfig.cookie);
+    var sSessionid = oCookie.get(this.oConfig.cookie);
     req.clientdata = {
         "sessionid": "                                "
     };
     return new Promise(function (fFulfill, fReject) {
             if (sSessionid !== undefined && sSessionid.length > 0) {
-                if (oConfig.redis.enabled) {
-                    redis.get(sSessionid, function (oError, result) {
+                if (that.oConfig.redis.enabled) {
+                    that.redis.get(sSessionid, function (oError, result) {
                         if (oError) {
                             fReject({
                                 "type": errorcode.ERR_invalidUserPermission,
@@ -119,9 +121,10 @@ exports.loadSessionData = function (req, res, fLoadData) {
                             });
                         }
                         if (result) {
-                            req.clientdata.session = sSessionid;
+                            req.clientdata.sessionid = sSessionid;
                             fFulfill(result);
                         }
+                        fFulfill();
                     });
                 } else {
                     fReject({
@@ -129,6 +132,8 @@ exports.loadSessionData = function (req, res, fLoadData) {
                         "SERR": "RedisDisabled"
                     });
                 }
+            } else {
+                fFulfill();
             }
         })
         .then(function (result) {
@@ -139,3 +144,5 @@ exports.loadSessionData = function (req, res, fLoadData) {
             return;
         });
 };
+
+exports.Session = Session;

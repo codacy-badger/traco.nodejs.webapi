@@ -1,5 +1,8 @@
 {
     "root": true,
+    "globals": {
+        "__dbhandler": false
+    },
     "parserOptions": {
         "ecmaVersion": 6,
         "sourceType": "module",

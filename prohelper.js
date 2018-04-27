@@ -3,10 +3,9 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// var classes = require("./classes");
+var classes = require("./classes");
 // var config = require("./static/config.json");
 var helper = require("./helper");
-// var dbhandler = require("./dbhandler")(config.mysql, require("./static/dbcursor.json"));
 // var enums = helper.getEnums();
 var errorcode = helper.getErrorcodes();
 
@@ -88,4 +87,56 @@ exports.invalid = function (req, res) {
         "type": errorcode.ERR_invalidCommand,
         "SERR": "WrongAPICommand"
     });
+};
+
+/**
+ * Loading the member for Session
+ * @param {string} sID
+ * @returns {Member}
+ */
+exports.loadMemberSessionData = function (sID) {
+    var oMember = new classes.Member();
+    return __dbhandler.fetch("FetchMemberID", [sID])
+        .then(function (aData) {
+            if (aData.length === 0) {
+                throw "No Member";
+            }
+            oMember = new classes.Member(aData[0]);
+            return oMember.updateAccess();
+        })
+        .then(function () {
+            return oMember;
+        })
+        .catch(function () {
+            throw {
+                "type": errorcode.ERR_invalidUserPermission,
+                "SERR": "NoCurrentMember"
+            };
+        });
+};
+
+/**
+ * Loading the contact for Session
+ * @param {string} sID
+ * @returns {Member}
+ */
+exports.loadContactSessionData = function (sID) {
+    var oContact = new classes.Contact();
+    return __dbhandler.fetch("FetchContactID", [sID])
+        .then(function (aData) {
+            if (aData.length === 0) {
+                throw "No Member";
+            }
+            oContact = new classes.Contact(aData[0]);
+            return oContact.updateAccess();
+        })
+        .then(function () {
+            return oContact;
+        })
+        .catch(function () {
+            throw {
+                "type": errorcode.ERR_invalidUserPermission,
+                "SERR": "NoCurrentContact"
+            };
+        });
 };
