@@ -52,4 +52,17 @@ exports.class = function (fields) {
 
     // Functions
 
+    /**
+     * Creates a JSON-Object to ready to return Data to client.
+     * @alias module:classes.Taskstatus.toJson
+     * @returns {JSON}
+     */
+    this.toJson = function () {
+        return {
+            "id": this.get.taskstatusID(),
+            "name": this.get.sText(),
+            "iOrder": this.get.iOrder()
+        };
+    };
+
 };

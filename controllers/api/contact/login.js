@@ -23,41 +23,41 @@ var Cookie = require("cookies");
  * @apiGroup ContactAuthorization
  * @apiPermission none
  *
- * @apiDescription Login a contact. This request will set a cookie <code>CSESSION</code> which has stored the session ID in it. To do request with permission like <code>Contact.Permission</code>, the cookie data needs to be transmitted.
+ * @apiDescription Login a contact. This request will set a cookie <code>C-SESSION</code> which has stored the session ID in it. To do request with permission like <code>Contact.Permission</code>, the cookie data needs to be transmitted.
  *
  * @apiParam  {String}      group       ID of the contact group
  * @apiParam  {String}      username    The contact username or email
  * @apiParam  {String}      password    The contact password
- * @apiParam  {Boolean}     cookie      Flag if the cookie should be stored longer than the current session
+ * @apiParam  {Boolean}     [cookie]    Flag if the cookie should be stored longer than the current session
  *
  * @apiExample {json} Request Example:
- *  {
- *      "group": "0A1B",
- *      "username": "iamcontact",
- *      "password": "myverysavepassword",
- *      "cookie": true
- *  }
+ *      {
+ *          "group": "0A1B",
+ *          "username": "iamcontact",
+ *          "password": "myverysavepassword",
+ *          "cookie": true
+ *      }
  *
  * @apiExample {json} Response Example:
- *  HTTP/1.1 200 OK
- *  Content-Type: application/json; charset=utf-8
- *  {
- *      "id": "AB12fg911",
- *      "idGroup": "0A1B",
- *      "username": "iamcontact",
- *      "since": 1424810726,
- *      "access": 1524810726,
- *      "email": "iamcontact@email.com",
- *      "firstname": "Liam",
- *      "lastname": "Contact"
- *  }
+ *      HTTP/1.1 200 OK
+ *      Content-Type: application/json; charset=utf-8
+ *      {
+ *          "id": "AB12fg911",
+ *          "idGroup": "0A1B",
+ *          "username": "iamcontact",
+ *          "dtSince": 1424810726,
+ *          "dtAccess": 1524810726,
+ *          "email": "iamcontact@email.com",
+ *          "firstname": "Liam",
+ *          "lastname": "Contact"
+ *      }
  *
  * @apiExample {json} Error-Response Example:
- *  HTTP/1.1 400 Bad Request
- *  Content-Type: application/json; charset=utf-8
- *  {
- *      "SERR": "WrongNameOrPass"
- *  }
+ *      HTTP/1.1 400 Bad Request
+ *      Content-Type: application/json; charset=utf-8
+ *      {
+ *          "SERR": "WrongNameOrPass"
+ *      }
  *
  * @apiError    MissingRequiredValues       Required parameters are not set. See respnse for mission values.
  * @apiError    WrongNameOrPass             Username/Email or password is incorrect.

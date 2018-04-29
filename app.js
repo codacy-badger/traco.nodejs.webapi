@@ -19,6 +19,11 @@ var Logger = new logger.Logger({
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // GLOBALS
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/**
+ * @global
+ * @see module:dbhandler
+ */
 global.__dbhandler = require("./dbhandler")(require("./static/config.json").mysql, require("./static/dbcursor.json"));
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

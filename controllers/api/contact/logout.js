@@ -22,15 +22,15 @@ var Cookie = require("cookies");
  * @apiDescription Logout the current contact.
  *
  * @apiExample Response Example:
- *  HTTP/1.1 200 OK
- *  Content-Type: text/plain; charset=utf-8
+ *      HTTP/1.1 200 OK
+ *      Content-Type: text/plain; charset=utf-8
  *
  * @apiExample {json} Error-Response Example:
- *  HTTP/1.1 401 Unauthorized
- *  Content-Type: application/json; charset=utf-8
- *  {
- *      "SERR": "NoCurrentContact"
- *  }
+ *      HTTP/1.1 403 Forbidden
+ *      Content-Type: application/json; charset=utf-8
+ *      {
+ *          "SERR": "NoCurrentContact"
+ *      }
  *
  * @apiError    NoCurrentContact        Currently there is no contact logged in.
  */

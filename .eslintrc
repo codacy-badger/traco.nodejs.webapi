@@ -77,7 +77,35 @@
         "no-negated-condition": "warn",
         "no-implicit-coercion": "error",
         "operator-assignment": "warn",
-        "space-before-blocks": "warn"
+        "space-before-blocks": "warn",
+        "no-case-declarations": "error",
+        "no-confusing-arrow": "error",
+        "no-empty-character-class": "error",
+        "no-extra-label": "error",
+        "no-restricted-imports": "error",
+        "no-unmodified-loop-condition": "error",
+        "no-unsafe-finally": "error",
+        "no-unsafe-negation": "error",
+        "lines-around-comment": "off",
+        "func-names": ["error", "never"],
+        "max-lines": "off",
+        "max-len": "off",
+        "newline-after-var": "off",
+        "newline-before-return": "off",
+        "no-catch-shadow": "error",
+        "no-extend-native": "error",
+        "comma-spacing": ["warn", {
+            "before": false,
+            "after": true
+        }],
+        "brace-style": ["warn", "1tbs"],
+        "max-depth": ["error", 5],
+        "max-nested-callbacks": ["error", 4],
+        "max-params": ["error", 5],
+        "max-statements-per-line": ["error", {
+            "max": 1
+        }],
+        "array-callback-return": "error"
     },
     "settings": {}
 }

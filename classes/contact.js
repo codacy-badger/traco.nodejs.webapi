@@ -91,7 +91,7 @@ exports.class = function (fields) {
 
     /**
      * Creates a JSON-Object to ready to return Data to client.
-     * @alias module:classes.Member.toJson
+     * @alias module:classes.Contact.toJson
      * @returns {JSON}
      */
     this.toJson = function () {
@@ -99,8 +99,8 @@ exports.class = function (fields) {
             "id": this.get.contactID(),
             "idGroup": this.get.idGroup(),
             "username": this.get.sUsername(),
-            "since": this.get.dtSince(),
-            "access": this.get.dtAccess(),
+            "dtSince": this.get.dtSince(),
+            "dtAccess": this.get.dtAccess(),
             "email": this.get.sEmail(),
             "firstname": this.get.sFirstname(),
             "lastname": this.get.sLastname()
@@ -119,4 +119,5 @@ exports.class = function (fields) {
         this.set.dtAccess(helper.currentTimestamp());
         return __dbhandler.insertOrUpdate(this);
     };
+
 };

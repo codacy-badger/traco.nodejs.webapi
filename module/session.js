@@ -56,7 +56,7 @@ Session.prototype.startSession = function (oCookie, oParam) {
                 oCookie.set(that.oConfig.cookie, sSessionid, {
                     "overwrite": true,
                     "httpOnly": true,
-                    "expires": new Date((helper.currentTimestamp() + enums.Year * 5) * 1000)
+                    "expires": new Date((helper.currentTimestamp() + enums.Year * 20) * 1000)
                 });
             } else {
                 oCookie.set(that.oConfig.cookie, sSessionid, {
@@ -116,7 +116,7 @@ Session.prototype.loadSessionData = function (req, res, fLoadData) {
                     that.redis.get(sSessionid, function (oError, result) {
                         if (oError) {
                             fReject({
-                                "type": errorcode.ERR_invalidUserPermission,
+                                "type": errorcode.ERR_invalidPermission,
                                 "SERR": "NoSessionRedisError"
                             });
                         }

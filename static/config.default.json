@@ -28,7 +28,14 @@
                 "enabled": true,
                 "socket": "."
             },
-            "cookie": "MSESSION"
+            "cookie": "M-SESSION"
+        },
+        "contact": {
+            "redis": {
+                "enabled": true,
+                "socket": "."
+            },
+            "cookie": "C-SESSION"
         }
     },
     "logger": {

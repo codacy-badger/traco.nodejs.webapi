@@ -22,15 +22,15 @@ var Cookie = require("cookies");
  * @apiDescription Logout the current member.
  *
  * @apiExample Response Example:
- *  HTTP/1.1 200 OK
- *  Content-Type: text/plain; charset=utf-8
+ *      HTTP/1.1 200 OK
+ *      Content-Type: text/plain; charset=utf-8
  *
  * @apiExample {json} Error-Response Example:
- *  HTTP/1.1 401 Unauthorized
- *  Content-Type: application/json; charset=utf-8
- *  {
- *      "SERR": "NoCurrentMember"
- *  }
+ *      HTTP/1.1 403 Forbidden
+ *      Content-Type: application/json; charset=utf-8
+ *      {
+ *          "SERR": "NoCurrentMember"
+ *      }
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  */

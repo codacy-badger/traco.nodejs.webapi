@@ -5,6 +5,7 @@
 var helper = require("../helper");
 var classes = require("../classes");
 var enums = helper.getEnums();
+var errorcode = helper.getErrorcodes();
 
 // Aufzählung aller Permissions in Reihnfolge im cPermission String
 var aPermissions = [
@@ -122,8 +123,8 @@ exports.class = function (fields) {
             "idGroup": this.get.idGroup(),
             "username": this.get.sUsername(),
             "permission": this.get.cPermission(),
-            "since": this.get.dtSince(),
-            "access": this.get.dtAccess(),
+            "dtSince": this.get.dtSince(),
+            "dtAccess": this.get.dtAccess(),
             "email": this.get.sEmail(),
             "firstname": this.get.sFirstname(),
             "lastname": this.get.sLastname()
@@ -149,5 +150,32 @@ exports.class = function (fields) {
                 oContact = new classes.Contact(aData[0]);
                 return oContact.updateAccess();
             });
+    };
+
+    /**
+     * Check the permission of the user.
+     * @alias module:classes.Member.hasPermission
+     * @param {string} sPermission
+     * @param {boolean} [bAsbool]
+     * @returns {Promise|boolean}
+     */
+    this.hasPermission = function (sPermission, bAsbool) {
+        var bReturn = false;
+        if (helper.isTrue(this.fields.cPermission[aPermissions.indexOf(sPermission)])) {
+            bReturn = true;
+        }
+        if (bAsbool) {
+            return bReturn;
+        }
+        return new Promise(function (fFulfill, fReject) {
+            if (bReturn === true) {
+                fFulfill();
+            } else {
+                fReject({
+                    "type": errorcode.ERR_invalidPermission,
+                    "SERR": "NotEnoughPermission"
+                });
+            }
+        });
     };
 };

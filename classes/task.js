@@ -123,4 +123,26 @@ exports.class = function (fields) {
 
     // Functions
 
+    /**
+     * Creates a JSON-Object to ready to return Data to client.
+     * @alias module:classes.Task.toJson
+     * @returns {JSON}
+     */
+    this.toJson = function () {
+        return {
+            "id": this.get.iTask(), // Damit ist die numerische Task-ID der Gruppe gemeint nicht die generelle ID
+            "prio": this.get.iPrio(),
+            "idProjekt": this.get.idProjekt(),
+            "idTaskstatus": this.get.idTaskstatus(),
+            "idTasktype": this.get.idTasktype(),
+            "idContact": this.get.idContact(),
+            "idMember": this.get.idMember(),
+            "dtCreate": this.get.dtCreate(),
+            "dtFinish": this.get.dtFinish(),
+            "title": this.get.sTitle(),
+            "text": this.get.sText(),
+            "dtClose": this.get.dtClose()
+        };
+    };
+
 };

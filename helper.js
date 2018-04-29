@@ -84,17 +84,17 @@ exports.sqlsafe = function (req, res, next) {
     };
 
     try {
-        if (req.method === "GET") {
-            req.body = req.query;
-        }
         req.body = _safeObject(req.body);
         return next();
     } catch (oErr) {
-        console.log(oErr);
-        // prohelper.httpErrorHandler(res, {
-        //     "type": errorcode.ERR_individualError,
-        //     "SERR": "FailedRequestValidation"
-        // });
+        exports.log({
+            "message": "Error in request validation!",
+            "error": oErr
+        }, 3);
+        res.statusCode = 400;
+        res.json({
+            "SERR": "FailedRequestValidation"
+        });
     }
 };
 

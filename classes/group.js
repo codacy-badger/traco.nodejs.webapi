@@ -53,4 +53,18 @@ exports.class = function (fields) {
 
     // Functions
 
+    /**
+     * Creates a JSON-Object to ready to return Data to client.
+     * @alias module:classes.Group.toJson
+     * @returns {JSON}
+     */
+    this.toJson = function () {
+        return {
+            "id": this.get.groupID(),
+            "name": this.get.idGroup(),
+            "dtSince": this.get.dtSince(),
+            "tasks": this.get.iTasks()
+        };
+    };
+
 };

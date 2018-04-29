@@ -52,4 +52,16 @@ exports.class = function (fields) {
 
     // Functions
 
+    /**
+     * Creates a JSON-Object to ready to return Data to client.
+     * @alias module:classes.Taskchange.toJson
+     * @returns {JSON}
+     */
+    this.toJson = function () {
+        return {
+            "idMember": this.get.idMember(),
+            "text": this.get.sText()
+        };
+    };
+
 };

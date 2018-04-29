@@ -60,4 +60,18 @@ exports.class = function (fields) {
 
     // Functions
 
+    /**
+     * Creates a JSON-Object to ready to return Data to client.
+     * @alias module:classes.Project.toJson
+     * @returns {JSON}
+     */
+    this.toJson = function () {
+        return {
+            "id": this.get.projektID(),
+            "name": this.get.sName(),
+            "dtSince": this.get.dtSince(),
+            "text": this.get.sText()
+        };
+    };
+
 };

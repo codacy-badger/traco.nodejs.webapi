@@ -54,8 +54,8 @@ exports.httpErrorHandler = function (oResponse, oError) {
                 "SERR": oError.SERR
             });
             break;
-        case errorcode.ERR_invalidUserPermission:
-            oResponse.statusCode = HttpStatusCodes.Unauthorized;
+        case errorcode.ERR_invalidPermission:
+            oResponse.statusCode = HttpStatusCodes.Forbidden;
             oResponse.json({
                 "SERR": oError.SERR
             });
@@ -109,7 +109,7 @@ exports.loadMemberSessionData = function (sID) {
         })
         .catch(function () {
             throw {
-                "type": errorcode.ERR_invalidUserPermission,
+                "type": errorcode.ERR_invalidPermission,
                 "SERR": "NoCurrentMember"
             };
         });
@@ -135,7 +135,7 @@ exports.loadContactSessionData = function (sID) {
         })
         .catch(function () {
             throw {
-                "type": errorcode.ERR_invalidUserPermission,
+                "type": errorcode.ERR_invalidPermission,
                 "SERR": "NoCurrentContact"
             };
         });

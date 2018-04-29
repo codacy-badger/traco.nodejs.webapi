@@ -1,5 +1,4 @@
 "use strict";
-/** @module */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,6 +31,7 @@ var handleDisconnect = function () {
 
 /**
  * Setup for the dbhandler individual for every require
+ * @module
  * @param {Object} oConfig
  * @param {boolean} oConfig.enabled MUST be true
  * @param {Object} oConfig.conn
@@ -138,7 +138,7 @@ var _generateKey = function (oDBClass, oOptions) {
         "prefix": oOptions.prefix,
         "suffix": oOptions.suffix
     });
-    var sSQL = "SELECT * FROM `" + oDBClass.classname + "` WHERE '" + sKey + "' = @0 LIMIT 1;";
+    var sSQL = "SELECT * FROM `" + oDBClass.classname + "` WHERE `" + sKey + "` = @0 LIMIT 1;";
     return helper.promiseWhile(function () {
         return oDBClass.fields[sKey].trim().length === 0;
     }, function () {

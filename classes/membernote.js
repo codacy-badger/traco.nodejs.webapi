@@ -53,4 +53,17 @@ exports.class = function (fields) {
 
     // Functions
 
+    /**
+     * Creates a JSON-Object to ready to return Data to client.
+     * @alias module:classes.Membernote.toJson
+     * @returns {JSON}
+     */
+    this.toJson = function () {
+        return {
+            "id": this.get.membernoteID(),
+            "dtCreate": this.get.dtCreate(),
+            "text": this.get.sText()
+        };
+    };
+
 };
