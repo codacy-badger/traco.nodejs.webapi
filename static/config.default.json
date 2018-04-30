@@ -39,6 +39,7 @@
         }
     },
     "logger": {
+        "bConsole": false,
         "iSaveDays": 14
     }
 }

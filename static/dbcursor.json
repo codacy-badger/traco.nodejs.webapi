@@ -1,10 +1,18 @@
 {
+    "FetchContactID": "SELECT * FROM `contact` WHERE `contactID` = @0",
+    "FetchContactLogin": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND (`sUsername` = @1 OR `sEmail` = @1)",
+    "FetchContactUsername": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND `sUsername` = @1",
+    "FetchContactEmail": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND `sEmail` = @1",
+
+    "FetchGroupID": "SELECT * FROM `group` WHERE `groupID` = @0",
+    "FetchGroupNameLike": "SELECT * FROM `group` WHERE LOWER(`sName`) LIKE LOWER(CONCAT('%', @0, '%'))",
+
     "FetchMemberID": "SELECT * FROM `member` WHERE `memberID` = @0",
     "FetchMemberLogin": "SELECT * FROM `member` WHERE `idGroup` = @0 AND (`sUsername` = @1 OR `sEmail` = @1)",
 
-    "FetchContactID": "SELECT * FROM `contact` WHERE `contactID` = @0",
-    "FetchContactLogin": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND (`sUsername` = @1 OR `sEmail` = @1)",
-
     "FetchMembernoteMemberID": "SELECT * FROM `membernote` WHERE `idMember` = @0 AND `membernoteID` = @1",
-    "FetchMembernoteMember": "SELECT * FROM `membernote` WHERE `idMember` = @0"
+    "FetchMembernoteMember": "SELECT * FROM `membernote` WHERE `idMember` = @0",
+
+    "FetchProjectName": "SELECT * FROM `project` WHERE `idGroup` = @0 AND `sName` = @1",
+    "FetchProjectGroupID": "SELECT * FROM `project` WHERE `idGroup` = @0 AND `projectID` = @1"
 }

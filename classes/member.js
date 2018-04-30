@@ -10,7 +10,9 @@ var errorcode = helper.getErrorcodes();
 // Aufzählung aller Permissions in Reihnfolge im cPermission String
 var aPermissions = [
     "Admin",
-    "Note"
+    "Note",
+    "Project.Add",
+    "Project.View"
 ];
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -27,7 +29,7 @@ exports.class = function (fields) {
         "idGroup": "    ",
         "sUsername": "",
         "sPassword": "",
-        "cPermission": "00",
+        "cPermission": "0000",
         "dtSince": helper.currentTimestamp(),
         "dtAccess": undefined,
         "sEmail": "",

@@ -61,9 +61,21 @@ exports.class = function (fields) {
     this.toJson = function () {
         return {
             "id": this.get.groupID(),
-            "name": this.get.idGroup(),
+            "name": this.get.sName(),
             "dtSince": this.get.dtSince(),
             "tasks": this.get.iTasks()
+        };
+    };
+
+    /**
+     * Creates a JSON-Object to ready to return Data to client without any permissions.
+     * @alias module:classes.Group.toSafeJson
+     * @returns {JSON}
+     */
+    this.toSafeJson = function () {
+        return {
+            "id": this.get.groupID(),
+            "name": this.get.sName()
         };
     };
 

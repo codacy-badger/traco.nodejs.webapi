@@ -41,7 +41,6 @@ Run `npm run doc` to compile both documentations.
 
  - [ ] Rebuild the `importdb.bat` with `mysqlimport` instead of `mysql` because it should be faster as just load the complete file as SQL-Statements.
  - [ ] Create secound version of the `JsonTable.join()` function with set all same at the same time and dont insert one row after the last ant search every time for the joining element.
- - [ ] correction and finish of `/contact/notes` API-Command with apiDocs
 
 ## Backlog
 
@@ -49,6 +48,9 @@ Run `npm run doc` to compile both documentations.
 
 ## Finished
 
+ - [x] API for requesting groups with filter. Mximum return of 25 groups.
+ - [x] register formular for contacts
+ - [x] correction and finish of `/contact/notes` API-Command with apiDocs
  - [x] Creates the JSDoc for new DBClasses
  - [x] Create new DBClass-Files for all DB-Tables
  - [x] Rebuild of the `leer.tar.xz` Database file

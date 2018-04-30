@@ -13,11 +13,12 @@ exports.class = function (fields) {
 
     // Database fields
     this.fields = fields || {
-        "projektID": "       ",
+        "projectID": "       ",
         "idGroup": "    ",
         "sName": "",
         "dtSince": helper.currentTimestamp(),
-        "sText": ""
+        "sText": "",
+        "bIntern": 0
     };
 
     const that = this;
@@ -37,6 +38,9 @@ exports.class = function (fields) {
         },
         sText: function () {
             return that.fields.sText;
+        },
+        bIntern: function () {
+            return that.fields.bIntern;
         }
     };
 
@@ -55,6 +59,9 @@ exports.class = function (fields) {
         },
         sText: function (sValue) {
             that.fields.sText = sValue;
+        },
+        bIntern: function (iValue) {
+            that.fields.bIntern = iValue;
         }
     };
 
@@ -67,10 +74,11 @@ exports.class = function (fields) {
      */
     this.toJson = function () {
         return {
-            "id": this.get.projektID(),
+            "id": this.get.projectID(),
             "name": this.get.sName(),
             "dtSince": this.get.dtSince(),
-            "text": this.get.sText()
+            "text": this.get.sText(),
+            "intern": helper.isTrue(this.get.bIntern())
         };
     };
 

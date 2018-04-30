@@ -21,7 +21,7 @@ CREATE TABLE `member` (
     `idGroup` CHAR(4) NOT NULL,
     `sUsername` VARCHAR(191) NOT NULL,
     `sPassword` TEXT NOT NULL,
-    `cPermission` CHAR(2) NOT NULL,
+    `cPermission` CHAR(3) NOT NULL,
     `dtSince` BIGINT NOT NULL,
     `dtAccess` BIGINT NULL,
     `sEmail` VARCHAR(191) NOT NULL,
@@ -57,6 +57,7 @@ CREATE TABLE `project` (
     `sName` VARCHAR(191) NOT NULL,
     `dtSince` BIGINT NOT NULL,          -- Entweder Erstellungsdatum des Projektes im System oder alternative Zeitangabe
     `sText` TEXT NOT NULL,              -- Informationen zum Projekt
+    `bInten` BOOLEAN NOT NULL,          -- store 0/1 for false/true  Ob das Projekt NUR intern oder auch für Kontakte sichtbar ist
     PRIMARY KEY (`projectID`),
     UNIQUE KEY (`idGroup`, `sName`)
 );

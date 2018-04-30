@@ -66,7 +66,7 @@ exports.get = function (req, res) {
  * @apiGroup MemberAuthorization
  * @apiPermission Member
  *
- * @apiDescription Change the data of the current Member.
+ * @apiDescription Change the data of the current member and the data of the contact asigned to the member.
  *
  * @apiParam  {String}      password        The passsword for the current member.
  * @apiParam  {String}      [newUsername]   A new username for the current member.
@@ -111,6 +111,7 @@ exports.get = function (req, res) {
  */
 exports.put = function (req, res) {
     var oMember = new classes.Member();
+    var oContact = new classes.Contact();
     session.loadSessionData(req, res, prohelper.loadMemberSessionData)
         .then(function () {
             return helper.checkRequiredValues([
@@ -128,28 +129,38 @@ exports.put = function (req, res) {
                 };
             }
             oMember = new classes.Member(req.oSessiondata.fields);
-            return;
+            return __dbhandler.fetch("FetchContactID", [oMember.get.memberID()]);
         })
-        .then(function () {
-            if (req.body.newUsername) {
-                oMember.set.sUsername(req.body.newUsername);
-            }
-            if (req.body.email) {
-                oMember.set.sEmail(req.body.email);
-            }
+        .then(function (aData) {
+            oContact = new classes.Contact(aData[0]);
             if (req.body.firstname) {
                 oMember.set.sFirstname(req.body.firstname);
+                oContact.set.sFirstname(req.body.firstname);
             }
             if (req.body.lastname) {
                 oMember.set.sLastname(req.body.lastname);
+                oContact.set.sLastname(req.body.lastname);
+            }
+
+            if (req.body.newUsername) { // Prüfung ob schon existiert hinzufügen?
+                oMember.set.sUsername(req.body.newUsername);
+                oContact.set.sUsername(req.body.newUsername);
+            }
+            if (req.body.email) { // Prüfung ob schon existiert hinzufügen?
+                oMember.set.sEmail(req.body.email);
+                oContact.set.sEmail(req.body.email);
             }
             if (req.body.newPassword) {
                 return bcrypt.hash(req.body.newPassword, 10)
                     .then(function (sPassword) {
                         oMember.set.sPassword(sPassword);
+                        oContact.set.sPassword(sPassword);
                     });
             }
             return;
+        })
+        .then(function () {
+            return __dbhandler.insertOrUpdate(oContact);
         })
         .then(function () {
             return __dbhandler.insertOrUpdate(oMember);

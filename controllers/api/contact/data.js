@@ -128,17 +128,18 @@ exports.put = function (req, res) {
             return;
         })
         .then(function () {
-            if (req.body.newUsername) {
-                oContact.set.sUsername(req.body.newUsername);
-            }
-            if (req.body.email) {
-                oContact.set.sEmail(req.body.email);
-            }
             if (req.body.firstname) {
                 oContact.set.sFirstname(req.body.firstname);
             }
             if (req.body.lastname) {
                 oContact.set.sLastname(req.body.lastname);
+            }
+            if (req.body.newUsername) { // Prüfung ob schon existiert hinzufügen?
+                oContact.set.sUsername(req.body.newUsername);
+            }
+
+            if (req.body.email) { // Prüfung ob schon existiert hinzufügen?
+                oContact.set.sEmail(req.body.email);
             }
             if (req.body.newPassword) {
                 return bcrypt.hash(req.body.newPassword, 10)

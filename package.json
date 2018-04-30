@@ -11,7 +11,7 @@
         "test": "node test/test.js",
         "explorer": "node ./static/onlineExplorer",
         "jsdoc": "./node_modules/.bin/jsdoc -c ./.info/jsdoc.conf.json",
-        "apidoc": "./node_modules/.bin/apidoc -i controllers/api -o apidoc/ -v",
+        "apidoc": "./node_modules/.bin/apidoc -v -i controllers/api -o apidoc/",
         "doc": "npm run jsdoc && npm run apidoc"
     },
     "dependencies": {
@@ -31,6 +31,7 @@
     },
     "devDependencies": {
         "apidoc": "^0.17.6",
+        "apidoc-template": "0.0.2",
         "eslint": "^4.19.1",
         "jsdoc": "^3.5.5",
         "tui-jsdoc-template": "^1.2.2"

@@ -82,7 +82,7 @@ exports.post = function (req, res) {
  *
  * @apiParam  {String}      id      The id of the spezific note.
  *
- * @apiExample {json} Example usage:
+ * @apiExample {json} Request Example:
  *      {
  *          "id": "0N0gTY39busdOzw"
  *      }
@@ -148,7 +148,7 @@ exports.get = function (req, res) {
  * @apiParam  {String}      id      The id of the spezific note.
  * @apiParam  {String}      text    The old text changed to some new text.
  *
- * @apiExample {json} Example usage:
+ * @apiExample {json} Request Example:
  *      {
  *          "id": "0N0gTY39busdOzw",
  *          "text": "I need to note me some very long text... and here i change the note."
@@ -214,7 +214,7 @@ exports.put = function (req, res) {
  *
  * @apiParam  {String}      id      The id of the spezific note.
  *
- * @apiExample {json} Example usage:
+ * @apiExample {json} Request Example:
  *      {
  *          "id": "0N0gTY39busdOzw",
  *      }
