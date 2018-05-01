@@ -4,25 +4,25 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var helper = require("../../../helper");
 var prohelper = require("../../../prohelper");
-var classes = require("../../../classes");
 var config = require("../../../static/config.json");
 var Session = require("../../../module/session").Session;
 var session = new Session(config.session.member);
+var classes = require("../../../classes");
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // API
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 /**
- * @api {get} /member/notes Load Notes
+ * @api {get} /member/projects Load Projects
  * @apiVersion  1.0.0
- * @apiName LoadMemberNotes
- * @apiGroup Membernote
- * @apiPermission Member Note
+ * @apiName LoadProjects
+ * @apiGroup Project
+ * @apiPermission Member Project.View
  *
- * @apiDescription Load notes for the current member.
+ * @apiDescription Load projects for the current members group.
  *
- * @apiParam  {Number}      [pageitems]         The number of notes per pageload. Default is 10.
+ * @apiParam  {Number}      [pageitems]         The number of projects per pageload. Default is 10.
  * @apiParam  {Number}      [page]              The page loading count up from 1 - *.
  *
  * @apiExample {json} Request Example:
@@ -36,13 +36,23 @@ var session = new Session(config.session.member);
  *      Content-Type: application/json; charset=utf-8
  *      [
  *          {
- *              "id": "gbIpLfP8KfOi7F3",
- *              "dtCreate": 1524852513,
- *              "text": "I need to note me some very long text... and it can also held some linebreaks like \n or \n\r or just &#060;br&#062;"
+ *              "id": "MXt7l0T",
+ *              "name": "My Next Proj",
+ *              "dtSince": 1525094797,
+ *              "text": "This is some descripting Text for this project and some more for spezify it",
+ *              "intern": true
  *          },{
- *              "id": "SJF5qemup8AwGHt",
- *              "dtCreate": 1524852375,
- *              "text": "Here are some older notes."
+ *              "id": "9PbTWp8",
+ *              "name": "My Oldest Proj",
+ *              "dtSince": 1325095165,
+ *              "text": "This is some descripting Text for this project wich is very very old.",
+ *              "intern": false
+ *          },{
+ *              "id": "fbz5sgL",
+ *              "name": "Myproj",
+ *              "dtSince": 1525094741,
+ *              "text": "This is some descripting Text for this project",
+ *              "intern": false
  *          }
  *      ]
  *
@@ -57,11 +67,11 @@ var session = new Session(config.session.member);
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
  */
 exports.get = function (req, res) {
-    var oNote = new classes.Membernote();
-    var aNotes = [];
+    var oProject = new classes.Project();
+    var aProjects = [];
     session.loadSessionData(req, res, prohelper.loadMemberSessionData)
         .then(function () {
-            return req.oSessiondata.hasPermission("Note");
+            return req.oSessiondata.hasPermission("Project.View");
         })
         .then(function () {
             if (req.query.page) {
@@ -76,10 +86,10 @@ exports.get = function (req, res) {
             if (!helper.isset(req.query.pageitems) || req.query.pageitems < 1) {
                 req.query.pageitems = 10;
             }
-            return __dbhandler.fetch("FetchMembernoteMember", [req.oSessiondata.get.memberID()], {
+            return __dbhandler.fetch("FetchProjectGroup", [req.oSessiondata.get.idGroup()], {
                 orderby: [{
-                    col: "dtCreate",
-                    order: "DESC"
+                    col: "sName",
+                    order: "ASC"
                 }],
                 limit: req.query.pageitems,
                 offset: req.query.page * req.query.pageitems
@@ -88,14 +98,14 @@ exports.get = function (req, res) {
         .then(function (aData) {
             var i = 0;
             while (i < aData.length) {
-                oNote = new classes.Membernote(aData[i]);
-                aNotes.push(oNote.toJson());
+                oProject = new classes.Project(aData[i]);
+                aProjects.push(oProject.toJson());
                 i += 1;
             }
             return;
         })
         .then(function () {
-            res.json(aNotes);
+            res.json(aProjects);
         })
         .catch(function (oErr) {
             prohelper.httpErrorHandler(res, oErr);

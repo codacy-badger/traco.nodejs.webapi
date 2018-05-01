@@ -57,11 +57,11 @@ var bcrypt = require("bcryptjs");
 exports.post = function (req, res) {
     var oContact = new classes.Contact();
     helper.checkRequiredValues([
-        ["group", req.body.group],
-        ["username", req.body.username],
-        ["password", req.body.password],
-        ["email", req.body.email]
-    ])
+            ["group", req.body.group],
+            ["username", req.body.username],
+            ["password", req.body.password],
+            ["email", req.body.email]
+        ])
         .then(function () {
             return __dbhandler.fetch("FetchGroupID", [req.body.group]);
         })
@@ -78,7 +78,7 @@ exports.post = function (req, res) {
                     "SERR": "InvalidEmail"
                 };
             }
-            return __dbhandler.fetch("FetchContactUsername", [req.body.group, req.body.username]);
+            return __dbhandler.fetch("FetchContactGroupUsername", [req.body.group, req.body.username]);
 
         })
         .then(function (aData) {
@@ -88,7 +88,7 @@ exports.post = function (req, res) {
                     "SERR": "UsernameAlreadyUsed"
                 };
             }
-            return __dbhandler.fetch("FetchContactEmail", [req.body.group, req.body.email]);
+            return __dbhandler.fetch("FetchContactGroupEmail", [req.body.group, req.body.email]);
         })
         .then(function (aData) {
             if (aData.length > 0) {

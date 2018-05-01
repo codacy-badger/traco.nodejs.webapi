@@ -65,10 +65,10 @@ var Cookie = require("cookies");
 exports.post = function (req, res) {
     var oContact = new classes.Contact();
     helper.checkRequiredValues([
-        ["group", req.body.group],
-        ["username", req.body.username],
-        ["password", req.body.password]
-    ])
+            ["group", req.body.group],
+            ["username", req.body.username],
+            ["password", req.body.password]
+        ])
         .then(function () {
             return __dbhandler.fetch("FetchContactLogin", [req.body.group, req.body.username]);
         })

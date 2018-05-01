@@ -21,7 +21,7 @@ CREATE TABLE `member` (
     `idGroup` CHAR(4) NOT NULL,
     `sUsername` VARCHAR(191) NOT NULL,
     `sPassword` TEXT NOT NULL,
-    `cPermission` CHAR(3) NOT NULL,
+    `cPermission` TEXT NOT NULL,
     `dtSince` BIGINT NOT NULL,
     `dtAccess` BIGINT NULL,
     `sEmail` VARCHAR(191) NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE `tasktype` (
     `tasktypeID` CHAR(7) NOT NULL,      -- durschnittlich max. 3.844 Tasktyen pro Gruppe
     `idGroup` CHAR(4) NOT NULL,
     `sName` VARCHAR(191) NOT NULL,
-    `bInten` BOOLEAN NOT NULL,          -- store 0/1 for false/true  Ob der Typ NUR intern oder auch für Kontakte sichtbar ist
+    `bIntern` BOOLEAN NOT NULL,          -- store 0/1 for false/true  Ob der Typ NUR intern oder auch für Kontakte sichtbar ist
     PRIMARY KEY (`tasktypeID`),
     UNIQUE KEY (`idGroup`, `sName`)
 );

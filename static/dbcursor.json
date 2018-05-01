@@ -1,8 +1,8 @@
 {
     "FetchContactID": "SELECT * FROM `contact` WHERE `contactID` = @0",
     "FetchContactLogin": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND (`sUsername` = @1 OR `sEmail` = @1)",
-    "FetchContactUsername": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND `sUsername` = @1",
-    "FetchContactEmail": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND `sEmail` = @1",
+    "FetchContactGroupUsername": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND `sUsername` = @1",
+    "FetchContactGroupEmail": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND `sEmail` = @1",
 
     "FetchGroupID": "SELECT * FROM `group` WHERE `groupID` = @0",
     "FetchGroupNameLike": "SELECT * FROM `group` WHERE LOWER(`sName`) LIKE LOWER(CONCAT('%', @0, '%'))",
@@ -13,6 +13,14 @@
     "FetchMembernoteMemberID": "SELECT * FROM `membernote` WHERE `idMember` = @0 AND `membernoteID` = @1",
     "FetchMembernoteMember": "SELECT * FROM `membernote` WHERE `idMember` = @0",
 
-    "FetchProjectName": "SELECT * FROM `project` WHERE `idGroup` = @0 AND `sName` = @1",
-    "FetchProjectGroupID": "SELECT * FROM `project` WHERE `idGroup` = @0 AND `projectID` = @1"
+    "FetchProjectGroupName": "SELECT * FROM `project` WHERE `idGroup` = @0 AND `sName` = @1",
+    "FetchProjectGroupID": "SELECT * FROM `project` WHERE `idGroup` = @0 AND `projectID` = @1",
+    "FetchProjectGroup": "SELECT * FROM `project` WHERE `idGroup` = @0",
+
+    "FetchTasktypeGroupName": "SELECT * FROM `tasktype` WHERE `idGroup` = @0 AND `sName` = @1",
+    "FetchTasktypeGroupID": "SELECT * FROM `tasktype` WHERE `idGroup` = @0 AND `tasktypeID` = @1",
+
+    "FetchTaskstatusGroupName": "SELECT * FROM `taskstatus` WHERE `idGroup` = @0 AND `sName` = @1",
+    "FetchTaskstatusGroupNextorder": "SELECT * FROM `taskstatus` WHERE `idGroup` = @0 ORDER BY `iOrder` DESC LIMIT 1",
+    "FetchTaskstatusGroupID": "SELECT * FROM `taskstatus` WHERE `idGroup` = @0 AND `taskstatusID` = @1"
 }

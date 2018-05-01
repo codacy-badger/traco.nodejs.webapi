@@ -85,16 +85,7 @@ exports.get = function (req, res) {
  *
  * @apiExample {json} Response Example:
  *      HTTP/1.1 200 OK
- *      Content-Type: application/json; charset=utf-8
- *      {
- *          "idGroup": "0A1B",
- *          "username": "mynewusername",
- *          "dtSince": 1424810726,
- *          "dtAccess": 1524810726,
- *          "email": "mymail@adresse.com",
- *          "firstname": "Myname",
- *          "lastname": "Hasmore"
- *      }
+ *      Content-Type: text/plain; charset=utf-8
  *
  * @apiExample {json} Error-Response Example:
  *      HTTP/1.1 403 Forbidden
@@ -153,7 +144,7 @@ exports.put = function (req, res) {
             return __dbhandler.insertOrUpdate(oContact);
         })
         .then(function () {
-            res.json(oContact.toJson());
+            res.sendStatus(200);
         })
         .catch(function (oErr) {
             prohelper.httpErrorHandler(res, oErr);

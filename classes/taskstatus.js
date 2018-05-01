@@ -60,8 +60,8 @@ exports.class = function (fields) {
     this.toJson = function () {
         return {
             "id": this.get.taskstatusID(),
-            "name": this.get.sText(),
-            "iOrder": this.get.iOrder()
+            "name": this.get.sName(),
+            "order": this.get.iOrder()
         };
     };
 

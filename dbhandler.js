@@ -168,6 +168,9 @@ var _buildSQLCurserObject = function (sCursor, aParams) {
         "query": sCursor,
         "params": []
     };
+    if (!aParams) {
+        aParams = [];
+    }
     // Find and sort all parameters for the cursor
     while (i < aParams.length) {
         aIndices = exNativ.Array.allIndexOf(oCursor.query, "@" + i);

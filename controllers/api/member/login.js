@@ -67,10 +67,10 @@ var Cookie = require("cookies");
 exports.post = function (req, res) {
     var oMember = new classes.Member();
     helper.checkRequiredValues([
-        ["group", req.body.group],
-        ["username", req.body.username],
-        ["password", req.body.password]
-    ])
+            ["group", req.body.group],
+            ["username", req.body.username],
+            ["password", req.body.password]
+        ])
         .then(function () {
             return __dbhandler.fetch("FetchMemberLogin", [req.body.group, req.body.username]);
         })

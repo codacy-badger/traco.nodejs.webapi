@@ -2,6 +2,7 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+var helper = require("../helper");
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DATABASE CLASSES
@@ -60,8 +61,8 @@ exports.class = function (fields) {
     this.toJson = function () {
         return {
             "id": this.get.tasktypeID(),
-            "name": this.get.sText(),
-            "bIntern": this.get.bIntern()
+            "name": this.get.sName(),
+            "intern": helper.isTrue(this.get.bIntern())
         };
     };
 

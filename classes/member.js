@@ -12,7 +12,17 @@ var aPermissions = [
     "Admin",
     "Note",
     "Project.Add",
-    "Project.View"
+    "Project.View",
+    "Project.Change",
+    "Project.Delete",
+    "Tasktype.Add",
+    "Tasktype.View",
+    "Tasktype.Change",
+    "Tasktype.Delete",
+    "Taskstatus.Add",
+    "Taskstatus.View",
+    "Taskstatus.Change",
+    "Taskstatus.Delete"
 ];
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,7 +39,7 @@ exports.class = function (fields) {
         "idGroup": "    ",
         "sUsername": "",
         "sPassword": "",
-        "cPermission": "0000",
+        "cPermission": "00000000000000",
         "dtSince": helper.currentTimestamp(),
         "dtAccess": undefined,
         "sEmail": "",
@@ -163,7 +173,8 @@ exports.class = function (fields) {
      */
     this.hasPermission = function (sPermission, bAsbool) {
         var bReturn = false;
-        if (helper.isTrue(this.fields.cPermission[aPermissions.indexOf(sPermission)])) {
+        if (helper.isTrue(this.fields.cPermission[aPermissions.indexOf("Admin")]) ||
+            helper.isTrue(this.fields.cPermission[aPermissions.indexOf(sPermission)])) {
             bReturn = true;
         }
         if (bAsbool) {

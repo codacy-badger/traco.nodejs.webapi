@@ -39,6 +39,7 @@ exports.httpErrorHandler = function (oResponse, oError) {
             "type": "unknown",
             "error": oError
         };
+        console.log(oError); // eslint-disable-line
     }
     helper.log(helper.convertJSONToString(oError), 3);
     switch (oError.type) {

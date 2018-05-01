@@ -19,7 +19,7 @@ var errorcode = helper.getErrorcodes();
  * @apiVersion  1.0.0
  * @apiName AddMemberNote
  * @apiGroup Membernote
- * @apiPermission Member.Note
+ * @apiPermission Member Note
  *
  * @apiDescription Add a new note for the current member.
  *
@@ -76,7 +76,7 @@ exports.post = function (req, res) {
  * @apiVersion  1.0.0
  * @apiName LoadMemberNote
  * @apiGroup Membernote
- * @apiPermission Member.Note
+ * @apiPermission Member Note
  *
  * @apiDescription Load a specific note for the current member.
  *
@@ -141,7 +141,7 @@ exports.get = function (req, res) {
  * @apiVersion  1.0.0
  * @apiName ChangeMemberNote
  * @apiGroup Membernote
- * @apiPermission Member.Note
+ * @apiPermission Member Note
  *
  * @apiDescription Change a specific note for the current member.
  *
@@ -157,6 +157,9 @@ exports.get = function (req, res) {
  * @apiExample {json} Response Example:
  *      HTTP/1.1 200 OK
  *      Content-Type: application/json; charset=utf-8
+ *      {
+ *          "id": "0N0gTY39busdOzw"
+ *      }
  *
  * @apiExample {json} Error-Response Example:
  *      HTTP/1.1 400 Bad Request
@@ -208,7 +211,7 @@ exports.put = function (req, res) {
  * @apiVersion  1.0.0
  * @apiName DeleteMemberNote
  * @apiGroup Membernote
- * @apiPermission Member.Note
+ * @apiPermission Member Note
  *
  * @apiDescription Delete a specific note for the current member.
  *
@@ -219,7 +222,7 @@ exports.put = function (req, res) {
  *          "id": "0N0gTY39busdOzw",
  *      }
  *
- * @apiExample Response Example:
+ * @apiExample {json} Response Example:
  *      HTTP/1.1 200 OK
  *      Content-Type: text/plain; charset=utf-8
  *
