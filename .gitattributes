@@ -4,6 +4,7 @@
 
 
 # linguist-language= Sprachnamen
+db/*.sql linguist-language=SQL
 db/*.tar.xz linguist-language=SQL
 
 

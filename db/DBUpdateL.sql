@@ -1,3 +1,11 @@
+/********************************\
+|                                |
+|   Dokument every update since  |
+|   last leer.tar.xz and         |
+|   last demo.tar.xz update      |
+|                                |
+\********************************/
+
 
 -- add one char to permissions
 ALTER TABLE `member` MODIFY COLUMN `cPermission` CHAR(2) NOT NULL;
