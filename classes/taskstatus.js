@@ -2,6 +2,7 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+var helper = require("../helper");
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DATABASE CLASSES
@@ -17,6 +18,8 @@ exports.class = function (fields) {
         "sName": "",
         "iOrder": 0
     };
+
+    this.mirror = helper.clone(this.fields);
 
     const that = this;
     // Getter und Setter

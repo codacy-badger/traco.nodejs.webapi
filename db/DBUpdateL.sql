@@ -63,3 +63,21 @@ ALTER TABLE `member` MODIFY COLUMN `cPermission` TEXT NOT NULL;
 
 -- 180501: Change type of member permission to text because of length
 UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
+
+-- 180502: Change type of member permission to text because of length
+UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
+
+-- 180502: Change type of member permission to text because of length
+UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
+
+-- 180502: Change type of member permission to text because of length
+UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
+
+-- 180502: Change type of member permission to text because of length
+UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
+
+-- 180502: Change type of member permission to text because of length
+UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
+
+-- 180502: Change type of member permission to text because of length
+UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");

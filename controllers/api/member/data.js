@@ -32,7 +32,14 @@ var classes = require("../../../classes");
  *          "idContact": "HS2k4Sq26",
  *          "idGroup": "0A1B",
  *          "username": "iammember",
- *          "permission": "11",
+ *          "permission": [
+ *              "Note",
+ *              "Contact.Add",
+ *              "Contact.View",
+ *              "Contact.Change",
+ *              "Contact.Change.Login",
+ *              "Contact.Delete"
+ *          ],
  *          "dtSince": 1424810726,
  *          "dtAccess": 1524810726,
  *          "email": "iammember@email.com",
@@ -150,10 +157,10 @@ exports.put = function (req, res) {
             return;
         })
         .then(function () {
-            return __dbhandler.insertOrUpdate(oContact);
+            return __dbhandler.update(oContact);
         })
         .then(function () {
-            return __dbhandler.insertOrUpdate(oMember);
+            return __dbhandler.update(oMember);
         })
         .then(function () {
             res.sendStatus(200);

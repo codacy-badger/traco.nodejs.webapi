@@ -196,7 +196,7 @@ exports.put = function (req, res) {
             }
             oNote = new classes.Membernote(aData[0]);
             oNote.set.sText(req.body.text);
-            return __dbhandler.insertOrUpdate(oNote);
+            return __dbhandler.update(oNote);
         })
         .then(function () {
             res.sendStatus(200);

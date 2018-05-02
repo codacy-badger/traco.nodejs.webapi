@@ -21,6 +21,8 @@ exports.class = function (fields) {
         "bIntern": 0
     };
 
+    this.mirror = helper.clone(this.fields);
+
     const that = this;
     // Getter und Setter
     this.get = {

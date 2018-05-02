@@ -29,6 +29,8 @@ exports.class = function (fields) {
         "dtClose": undefined
     };
 
+    this.mirror = helper.clone(this.fields);
+
     const that = this;
     // Getter und Setter
     this.get = {

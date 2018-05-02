@@ -11,7 +11,7 @@
         "test": "node test/test.js",
         "explorer": "node ./static/onlineExplorer",
         "jsdoc": "./node_modules/.bin/jsdoc -c ./.info/jsdoc.conf.json",
-        "apidoc": "./node_modules/.bin/apidoc -v -i controllers/api -o apidoc/",
+        "apidoc": "./node_modules/.bin/apidoc -v -i controllers/api -o apidoc/ -c .info/",
         "doc": "npm run jsdoc && npm run apidoc"
     },
     "dependencies": {
@@ -23,7 +23,7 @@
         "cookies": "^0.7.1",
         "cron": "^1.3.0",
         "express": "^4.16.3",
-        "fs-extra": "^5.0.0",
+        "fs-extra": "^6.0.0",
         "ioredis": "^3.2.2",
         "morgan": "^1.9.0",
         "mysql": "^2.15.0",

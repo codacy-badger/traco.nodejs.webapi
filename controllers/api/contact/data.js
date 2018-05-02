@@ -141,7 +141,7 @@ exports.put = function (req, res) {
             return;
         })
         .then(function () {
-            return __dbhandler.insertOrUpdate(oContact);
+            return __dbhandler.update(oContact);
         })
         .then(function () {
             res.sendStatus(200);

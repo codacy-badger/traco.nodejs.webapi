@@ -86,3 +86,22 @@ exports.merge = function (oObj1, oObj2) {
     });
     return oObj3;
 };
+
+/**
+ * Returns a NEW object with same data as the inserted Object.
+ * @param {Object} oObject
+ * @returns {Object}
+ */
+exports.clone = function (oObject) {
+    if (oObject === null || typeof oObject !== "object") {
+        return oObject;
+    }
+    var oCopy = {};
+    var aKeys = Object.keys(oObject);
+    for (var i = 0; i < aKeys.length; i += 1) {
+        if (oObject.hasOwnProperty(aKeys[i])) {
+            oCopy[aKeys[i]] = oObject[aKeys[i]];
+        }
+    }
+    return oCopy;
+};

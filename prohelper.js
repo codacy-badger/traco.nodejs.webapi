@@ -69,6 +69,12 @@ exports.httpErrorHandler = function (oResponse, oError) {
             });
             break;
         case errorcode.ERR_internal:
+        case errorcode.ERR_sqlerror:
+            oResponse.statusCode = 500; // Internal Server Error
+            oResponse.json({
+                "SERR": oError.SERR
+            });
+            break;
         default:
             oResponse.statusCode = 500; // Internal Server Error
             oResponse.json({

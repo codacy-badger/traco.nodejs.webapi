@@ -245,7 +245,7 @@ exports.put = function (req, res) {
             if (helper.isset(req.body.order)) {
                 oStatus.set.iOrder(req.body.order);
             }
-            return __dbhandler.insertOrUpdate(oStatus);
+            return __dbhandler.update(oStatus);
         })
         .then(function () {
             res.json({

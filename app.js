@@ -24,7 +24,14 @@ var Logger = new logger.Logger({
  * @global
  * @see module:dbhandler
  */
-global.__dbhandler = require("./dbhandler")(require("./static/config.json").mysql, require("./static/dbcursor.json"));
+global.__dbhandler = require("./dbhandler")(
+    require("./static/config.json").mysql,
+    require("./static/dbcursor.json"),
+    require("./helper"),
+    require("./classes"),
+    require("./module/logger").Logger
+);
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Configuration

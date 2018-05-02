@@ -46,13 +46,13 @@ var bcrypt = require("bcryptjs");
  *      HTTP/1.1 400 Bad Request
  *      Content-Type: application/json; charset=utf-8
  *      {
- *          "SERR": "UsernameAlreadyUsed"
+ *          "SERR": "UsernameAlreadyExist"
  *      }
  *
  * @apiError        GroupNotExist           The groupID doesn't exist.
  * @apiError        InvalidEmail            The email adress is not valid.
- * @apiError        UsernameAlreadyUsed     The username is already in use.
- * @apiError        EmailAlreadyUsed        The email adress is already in use.
+ * @apiError        UsernameAlreadyExist    The username is already in use.
+ * @apiError        EmailAlreadyExist       The email adress is already in use.
  */
 exports.post = function (req, res) {
     var oContact = new classes.Contact();
@@ -85,7 +85,7 @@ exports.post = function (req, res) {
             if (aData.length > 0) {
                 throw {
                     "type": errorcode.ERR_individualError,
-                    "SERR": "UsernameAlreadyUsed"
+                    "SERR": "UsernameAlreadyExist"
                 };
             }
             return __dbhandler.fetch("FetchContactGroupEmail", [req.body.group, req.body.email]);
@@ -94,7 +94,7 @@ exports.post = function (req, res) {
             if (aData.length > 0) {
                 throw {
                     "type": errorcode.ERR_individualError,
-                    "SERR": "EmailAlreadyUsed"
+                    "SERR": "EmailAlreadyExist"
                 };
             }
             return bcrypt.hash(req.body.password, 10);
@@ -104,10 +104,10 @@ exports.post = function (req, res) {
             oContact.set.sUsername(req.body.username);
             oContact.set.sPassword(sHash);
             oContact.set.sEmail(req.body.email);
-            if (req.body.firstname) {
+            if (helper.isset(req.body.firstname)) {
                 oContact.set.sFirstname(req.body.firstname);
             }
-            if (req.body.lastname) {
+            if (helper.isset(req.body.lastname)) {
                 oContact.set.sLastname(req.body.lastname);
             }
             return __dbhandler.insert(oContact);

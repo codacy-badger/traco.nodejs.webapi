@@ -3,12 +3,17 @@
     "FetchContactLogin": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND (`sUsername` = @1 OR `sEmail` = @1)",
     "FetchContactGroupUsername": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND `sUsername` = @1",
     "FetchContactGroupEmail": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND `sEmail` = @1",
+    "FetchContactGroupID": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND `contactID` = @1",
+    "FetchContactGroupOnlycontact": "SELECT * FROM `contact` WHERE `idGroup` = @0 AND `contactID` NOT IN( SELECT `idContact` FROM `member` where `idGroup` = @0 )",
 
     "FetchGroupID": "SELECT * FROM `group` WHERE `groupID` = @0",
     "FetchGroupNameLike": "SELECT * FROM `group` WHERE LOWER(`sName`) LIKE LOWER(CONCAT('%', @0, '%'))",
 
     "FetchMemberID": "SELECT * FROM `member` WHERE `memberID` = @0",
     "FetchMemberLogin": "SELECT * FROM `member` WHERE `idGroup` = @0 AND (`sUsername` = @1 OR `sEmail` = @1)",
+    "FetchMemberGroupContact": "SELECT * FROM `member` WHERE `idGroup` = @0 AND `idContact` = @1",
+    "FetchMemberGroupUsername": "SELECT * FROM `member` WHERE `idGroup` = @0 AND `sUsername` = @1",
+    "FetchMemberGroupEmail": "SELECT * FROM `member` WHERE `idGroup` = @0 AND `sEmail` = @1",
 
     "FetchMembernoteMemberID": "SELECT * FROM `membernote` WHERE `idMember` = @0 AND `membernoteID` = @1",
     "FetchMembernoteMember": "SELECT * FROM `membernote` WHERE `idMember` = @0",

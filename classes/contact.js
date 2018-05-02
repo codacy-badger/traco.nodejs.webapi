@@ -25,6 +25,8 @@ exports.class = function (fields) {
         "sLastname": ""
     };
 
+    this.mirror = helper.clone(this.fields);
+
     const that = this;
     // Getter und Setter
     this.get = {
@@ -97,7 +99,6 @@ exports.class = function (fields) {
     this.toJson = function () {
         return {
             "id": this.get.contactID(),
-            "idGroup": this.get.idGroup(),
             "username": this.get.sUsername(),
             "dtSince": this.get.dtSince(),
             "dtAccess": this.get.dtAccess(),
@@ -117,7 +118,7 @@ exports.class = function (fields) {
             return helper.startPromiseChain();
         }
         this.set.dtAccess(helper.currentTimestamp());
-        return __dbhandler.insertOrUpdate(this);
+        return __dbhandler.update(this);
     };
 
 };

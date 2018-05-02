@@ -242,7 +242,7 @@ exports.put = function (req, res) {
             if (helper.isset(req.body.intern)) {
                 oType.set.bIntern(helper.isTrue(req.body.intern, true));
             }
-            return __dbhandler.insertOrUpdate(oType);
+            return __dbhandler.update(oType);
         })
         .then(function () {
             res.json({

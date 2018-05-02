@@ -490,3 +490,24 @@ exports.convertJSONToString = function (oObject) {
     }
     return sJSON;
 };
+
+/**
+ * Returns a NEW object with same data as the inserted Object.
+ * @param {Object} oObject
+ * @returns {Object}
+ * @see module:module/exNativ/object.clone
+ */
+exports.clone = function (oObject) {
+    return exNativ.Object.clone(oObject);
+};
+
+/**
+ * Searchs every index of the searched value.
+ * @param {string[]} aArray
+ * @param {string} sSearch
+ * @returns {number[]}
+ * @see module:module/exNativ/array.allIndexOf
+ */
+exports.arrayIndexOfAll = function (aArray, sSearch) {
+    return exNativ.Array.allIndexOf(aArray, sSearch);
+};

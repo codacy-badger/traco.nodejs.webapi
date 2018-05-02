@@ -19,6 +19,8 @@ exports.class = function (fields) {
         "sText": ""
     };
 
+    this.mirror = helper.clone(this.fields);
+
     const that = this;
     // Getter und Setter
     this.get = {

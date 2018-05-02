@@ -46,7 +46,14 @@ var Cookie = require("cookies");
  *          "idContact": "HS2k4Sq26",
  *          "idGroup": "0A1B",
  *          "username": "iammember",
- *          "permission": "1",
+ *          "permission": [
+ *              "Note",
+ *              "Contact.Add",
+ *              "Contact.View",
+ *              "Contact.Change",
+ *              "Contact.Change.Login",
+ *              "Contact.Delete"
+ *          ],
  *          "dtSince": 1424810726,
  *          "dtAccess": 1524810726,
  *          "email": "iammember@email.com",

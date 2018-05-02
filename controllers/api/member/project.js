@@ -153,6 +153,7 @@ exports.get = function (req, res) {
                 };
             }
             oProject = new classes.Project(aData[0]);
+            return;
         })
         .then(function () {
             res.json(oProject.toJson());
@@ -252,7 +253,7 @@ exports.put = function (req, res) {
             if (helper.isset(req.body.intern)) {
                 oProject.set.bIntern(helper.isTrue(req.body.intern, true));
             }
-            return __dbhandler.insertOrUpdate(oProject);
+            return __dbhandler.update(oProject);
         })
         .then(function () {
             res.json({

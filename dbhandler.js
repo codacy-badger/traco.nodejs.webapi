@@ -3,10 +3,10 @@
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var mysql = require("mysql");
-var helper = require("./helper");
-var exNativ = require("./module/exNativ");
-var errorcode = helper.getErrorcodes();
-var logger = require("./module/logger");
+var Logger;
+var helper;
+var classes;
+var errorcode;
 var dbLogger;
 var config;
 var connection;
@@ -43,20 +43,25 @@ var handleDisconnect = function () {
  * @param {string} oConfig.conn.charset
  * @param {boolean} oConfig.debug
  * @param {Object} oCursor
+ * @param {Object} oHelper
+ * @param {Object} oClasses
+ * @param {Object} oLogger
  */
-module.exports = function (oConfig, oCursor) {
+module.exports = function (oConfig, oCursor, oHelper, oClasses, oLogger) {
     config = oConfig;
     dbcursor = oCursor;
-    dbLogger = new logger.Logger({
+    helper = oHelper;
+    errorcode = helper.getErrorcodes();
+    classes = oClasses;
+    Logger = oLogger;
+    dbLogger = new Logger({
         bConsole: config.debug.console,
         sFilename: "logSQL",
         iSaveDays: config.debug.iSaveDays
     });
-
     if (config.enabled) {
         handleDisconnect();
     }
-
     return exports;
 };
 
@@ -72,9 +77,12 @@ var fileLog = function (sType, sSQL) {
     }
 };
 
-var _errorHandler = function (err, sType) {
+var _errorHandler = function (err, sType, oData) {
     if (!err) {
         err = {};
+    }
+    if (!oData) {
+        oData = {};
     }
     console.log(err); // eslint-disable-line
     var oErr = {
@@ -88,11 +96,16 @@ var _errorHandler = function (err, sType) {
         default:
             oErr.SERR = "DB_QEURY_" + sType;
     }
-    dbLogger.log(helper.convertJSONToString({
-        "Code": err.code,
-        "Query": err.sql,
-        "fatal": err.fatal
-    }), 3);
+    var oLogErr = {
+        "type": sType,
+        "MySQL": {
+            "code": err.code,
+            "query": err.sql,
+            "fatal": err.fatal
+        },
+        "data": oData
+    };
+    dbLogger.log(helper.convertJSONToString(oLogErr), 3);
     return oErr;
 };
 
@@ -173,7 +186,7 @@ var _buildSQLCurserObject = function (sCursor, aParams) {
     }
     // Find and sort all parameters for the cursor
     while (i < aParams.length) {
-        aIndices = exNativ.Array.allIndexOf(oCursor.query, "@" + i);
+        aIndices = helper.arrayIndexOfAll(oCursor.query, "@" + i);
         x = 0;
         while (x < aIndices.length) {
             aObjectParams.push({
@@ -303,7 +316,11 @@ exports.fetch = function (sCursor, aData, oOptions) { // eslint-disable-line
         if (config.enabled) {
             connection.query(oCursor.query, oCursor.params, function (err, data) {
                 if (err) {
-                    fReject(_errorHandler(err, "fetch"));
+                    fReject(_errorHandler(err, "fetch", {
+                        "cursor": sCursor,
+                        "oCursor": oCursor,
+                        "param": aData
+                    }));
                 } else {
                     fFulfill(data);
                 }
@@ -332,7 +349,10 @@ exports.insert = function (oDBClass, oOptions) {
 
     var _generateInsert = function () {
         var sSQL = _buildInsert(oDBClass);
-        return _doQuery(sSQL, "insert");
+        return _doQuery(sSQL, "insert")
+            .then(function (aData) {
+                oDBClass = new classes[helper.firstLetterUpperCase(oDBClass.classname)](aData[0]);
+            });
     };
 
     return _generateKey(oDBClass, oOptions)
@@ -366,12 +386,49 @@ exports.insertOrUpdate = function (oDBClass, oOptions) {
             n += 1;
         }
         sSQL = sSQL.substring(0, sSQL.length - 2);
-        return _doQuery(sSQL, "insertOrUpdate");
+        return _doQuery(sSQL, "insertOrUpdate")
+            .then(function (aData) {
+                oDBClass = new classes[helper.firstLetterUpperCase(oDBClass.classname)](aData[0]);
+            });
     };
 
     return _generateKey(oDBClass, oOptions)
         .then(function () {
             return _generateInsert();
+        });
+};
+
+/**
+ * Updates only the changed values.
+ * @param {Object} oDBClass
+ * @returns {Promise}
+ */
+exports.update = function (oDBClass) {
+    if (!helper.isset(oDBClass) || !helper.isset(oDBClass.fields || oDBClass.fields[Object.keys(oDBClass.fields)[0]].trim().length === 0)) {
+        throw new TypeError("No oDBClass given for insert");
+    }
+
+    var n = 0;
+    var iChanges = 0;
+    var aDBFields = Object.keys(oDBClass.fields);
+    var aDBValues = Object.values(oDBClass.fields);
+    var aDBMirror = Object.values(oDBClass.mirror);
+    var sSQL = "UPDATE `" + oDBClass.classname + "` SET ";
+    while (n < aDBFields.length) {
+        if (aDBValues[n] !== aDBMirror[n]) {
+            sSQL += "`" + aDBFields[n] + "` = " + connection.escape(aDBValues[n]) + ", ";
+            iChanges += 1;
+        }
+        n += 1;
+    }
+    sSQL = sSQL.substring(0, sSQL.length - 2);
+    sSQL += " WHERE `" + aDBFields[0] + "` = " + connection.escape(aDBValues[0]);
+    if (iChanges === 0) {
+        return;
+    }
+    return _doQuery(sSQL, "update")
+        .then(function (aData) {
+            oDBClass = new classes[helper.firstLetterUpperCase(oDBClass.classname)](aData[0]);
         });
 };
 
@@ -387,5 +444,8 @@ exports.delete = function (oDBClass) {
 
     var sSQL = "DELETE FROM `" + oDBClass.classname + "` WHERE ";
     sSQL += "`" + Object.keys(oDBClass.fields)[0] + "` = " + connection.escape(Object.values(oDBClass.fields)[0]);
-    return _doQuery(sSQL, "delete");
+    return _doQuery(sSQL, "delete")
+        .then(function (aData) {
+            oDBClass = new classes[helper.firstLetterUpperCase(oDBClass.classname)](aData[0]);
+        });
 };

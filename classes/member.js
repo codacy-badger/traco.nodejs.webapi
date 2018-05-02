@@ -22,7 +22,13 @@ var aPermissions = [
     "Taskstatus.Add",
     "Taskstatus.View",
     "Taskstatus.Change",
-    "Taskstatus.Delete"
+    "Taskstatus.Delete",
+    "Contact.Add",
+    "Contact.View",
+    "Contact.Change",
+    "Contact.Change.Login",
+    "Contact.Delete",
+    "Member.Add"
 ];
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,13 +45,15 @@ exports.class = function (fields) {
         "idGroup": "    ",
         "sUsername": "",
         "sPassword": "",
-        "cPermission": "00000000000000",
+        "cPermission": "0000000000000000000",
         "dtSince": helper.currentTimestamp(),
         "dtAccess": undefined,
         "sEmail": "",
         "sFirstname": "",
         "sLastname": ""
     };
+
+    this.mirror = helper.clone(this.fields);
 
     const that = this;
     // Getter und Setter
@@ -129,12 +137,23 @@ exports.class = function (fields) {
      * @returns {JSON}
      */
     this.toJson = function () {
+        var fPermissionGen = function () {
+            var aPerm = [];
+            var i = 0;
+            while (i < aPermissions.length) {
+                if (that.hasPermission(aPermissions[i], true)) {
+                    aPerm.push(aPermissions[i]);
+                }
+                i += 1;
+            }
+            return aPerm;
+        };
         return {
             "id": this.get.memberID(),
             "idContact": this.get.idContact(),
             "idGroup": this.get.idGroup(),
             "username": this.get.sUsername(),
-            "permission": this.get.cPermission(),
+            "permission": fPermissionGen(),
             "dtSince": this.get.dtSince(),
             "dtAccess": this.get.dtAccess(),
             "email": this.get.sEmail(),
@@ -154,7 +173,7 @@ exports.class = function (fields) {
             return helper.startPromiseChain();
         }
         this.set.dtAccess(helper.currentTimestamp());
-        return __dbhandler.insertOrUpdate(this)
+        return __dbhandler.update(this)
             .then(function () {
                 return __dbhandler.fetch("FetchContactID", [that.get.idContact()]);
             })
@@ -173,8 +192,8 @@ exports.class = function (fields) {
      */
     this.hasPermission = function (sPermission, bAsbool) {
         var bReturn = false;
-        if (helper.isTrue(this.fields.cPermission[aPermissions.indexOf("Admin")]) ||
-            helper.isTrue(this.fields.cPermission[aPermissions.indexOf(sPermission)])) {
+        if (helper.isTrue(this.fields.cPermission[aPermissions.indexOf(sPermission)]) ||
+            helper.isTrue(this.fields.cPermission[aPermissions.indexOf("Admin")])) {
             bReturn = true;
         }
         if (bAsbool) {
