@@ -6,30 +6,7 @@ var helper = require("../helper");
 var classes = require("../classes");
 var enums = helper.getEnums();
 var errorcode = helper.getErrorcodes();
-
-// Aufzählung aller Permissions in Reihnfolge im cPermission String
-var aPermissions = [
-    "Admin",
-    "Note",
-    "Project.Add",
-    "Project.View",
-    "Project.Change",
-    "Project.Delete",
-    "Tasktype.Add",
-    "Tasktype.View",
-    "Tasktype.Change",
-    "Tasktype.Delete",
-    "Taskstatus.Add",
-    "Taskstatus.View",
-    "Taskstatus.Change",
-    "Taskstatus.Delete",
-    "Contact.Add",
-    "Contact.View",
-    "Contact.Change",
-    "Contact.Change.Login",
-    "Contact.Delete",
-    "Member.Add"
-];
+var classEnums = require("./_classEnums");
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DATABASE CLASSES
@@ -45,7 +22,7 @@ exports.class = function (fields) {
         "idGroup": "    ",
         "sUsername": "",
         "sPassword": "",
-        "cPermission": "0000000000000000000",
+        "cPermission": "0000000000000000000000",
         "dtSince": helper.currentTimestamp(),
         "dtAccess": undefined,
         "sEmail": "",
@@ -140,9 +117,9 @@ exports.class = function (fields) {
         var fPermissionGen = function () {
             var aPerm = [];
             var i = 0;
-            while (i < aPermissions.length) {
-                if (that.hasPermission(aPermissions[i], true)) {
-                    aPerm.push(aPermissions[i]);
+            while (i < classEnums.MemberPermissions.length) {
+                if (that.hasPermission(classEnums.MemberPermissions[i], true)) {
+                    aPerm.push(classEnums.MemberPermissions[i]);
                 }
                 i += 1;
             }
@@ -169,7 +146,7 @@ exports.class = function (fields) {
      */
     this.updateAccess = function () {
         var oContact = new classes.Contact();
-        if (this.get.dtAccess() + enums.Minute > helper.currentTimestamp()) {
+        if (this.get.dtAccess() + enums.unixTime.Minute > helper.currentTimestamp()) {
             return helper.startPromiseChain();
         }
         this.set.dtAccess(helper.currentTimestamp());
@@ -192,8 +169,8 @@ exports.class = function (fields) {
      */
     this.hasPermission = function (sPermission, bAsbool) {
         var bReturn = false;
-        if (helper.isTrue(this.fields.cPermission[aPermissions.indexOf(sPermission)]) ||
-            helper.isTrue(this.fields.cPermission[aPermissions.indexOf("Admin")])) {
+        if (helper.isTrue(this.fields.cPermission[classEnums.MemberPermissions.indexOf(sPermission)]) ||
+            helper.isTrue(this.fields.cPermission[classEnums.MemberPermissions.indexOf("Admin")])) {
             bReturn = true;
         }
         if (bAsbool) {

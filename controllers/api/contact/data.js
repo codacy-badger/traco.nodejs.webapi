@@ -96,6 +96,10 @@ exports.get = function (req, res) {
  *
  * @apiError    NoCurrentContact        Currently there is no contact logged in.
  * @apiError    WrongPass               Wrong password for the current contact.
+ * @apiError    InvalidEmail            The email adress is not valid.
+ * @apiError    UsernameAlreadyExist    The username is already in use.
+ * @apiError    EmailAlreadyExist       The email adress is already in use.
+ * @apiError    ContactIsMember         The contact cant change here because it's a Member.
  */
 exports.put = function (req, res) {
     var oContact = new classes.Contact();
@@ -115,24 +119,63 @@ exports.put = function (req, res) {
                     "SERR": "WrongPass"
                 };
             }
+            if (helper.isset(req.body.email) && !helper.validateEmail(req.body.email)) {
+                throw {
+                    "type": errorcode.ERR_individualError,
+                    "SERR": "InvalidEmail"
+                };
+            }
             oContact = new classes.Contact(req.oSessiondata.fields);
+            return __dbhandler.fetch("FetchMemberGroupContact", [req.oSessiondata.get.idGroup(), oContact.get.contactID()]);
+        })
+        .then(function (aData) {
+            if (aData.length !== 0) {
+                throw {
+                    "type": errorcode.ERR_individualError,
+                    "SERR": "ContactIsMember"
+                };
+            }
+            if (helper.isset(req.body.newUsername) && req.body.newUsername !== oContact.get.sUsername()) {
+                return __dbhandler.fetch("FetchContactGroupUsername", [req.oSessiondata.get.idGroup(), req.body.newUsername]);
+            }
+            return;
+        })
+        .then(function (aData) {
+            if (helper.isset(aData) && aData.length !== 0) {
+                throw {
+                    "type": errorcode.ERR_individualError,
+                    "SERR": "UsernameAlreadyExist"
+                };
+            }
+            if (helper.isset(req.body.email) && req.body.email !== oContact.get.sEmail()) {
+                return __dbhandler.fetch("FetchContactGroupEmail", (req.oSessiondata.get.idGroup(), req.body.email));
+            }
+            return;
+        })
+        .then(function (aData) {
+            if (helper.isset(aData) && aData.length !== 0) {
+                throw {
+                    "type": errorcode.ERR_individualError,
+                    "SERR": "EmailAlreadyExist"
+                };
+            }
             return;
         })
         .then(function () {
-            if (req.body.firstname) {
+            if (helper.isset(req.body.firstname)) {
                 oContact.set.sFirstname(req.body.firstname);
             }
-            if (req.body.lastname) {
+            if (helper.isset(req.body.lastname)) {
                 oContact.set.sLastname(req.body.lastname);
             }
-            if (req.body.newUsername) { // Prüfung ob schon existiert hinzufügen?
+            if (helper.isset(req.body.newUsername)) { // Prüfung ob schon existiert hinzufügen?
                 oContact.set.sUsername(req.body.newUsername);
             }
 
-            if (req.body.email) { // Prüfung ob schon existiert hinzufügen?
+            if (helper.isset(req.body.email)) { // Prüfung ob schon existiert hinzufügen?
                 oContact.set.sEmail(req.body.email);
             }
-            if (req.body.newPassword) {
+            if (helper.isset(req.body.newPassword)) {
                 return bcrypt.hash(req.body.newPassword, 10)
                     .then(function (sPassword) {
                         oContact.set.sPassword(sPassword);

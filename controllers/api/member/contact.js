@@ -53,9 +53,11 @@ var classes = require("../../../classes");
  *          "SERR": "UsernameAlreadyExist"
  *      }
  *
- * @apiError        InvalidEmail            The email adress is not valid.
- * @apiError        UsernameAlreadyExist    The username is already in use.
- * @apiError        EmailAlreadyExist       The email adress is already in use.
+ * @apiError    NoCurrentMember         Currently there is no member logged in.
+ * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    InvalidEmail            The email adress is not valid.
+ * @apiError    UsernameAlreadyExist    The username is already in use.
+ * @apiError    EmailAlreadyExist       The email adress is already in use.
  */
 exports.post = function (req, res) {
     var oContact = new classes.Contact();
@@ -196,7 +198,7 @@ exports.get = function (req, res) {
  * @apiVersion  1.0.0
  * @apiName ChangeContact
  * @apiGroup Contact
- * @apiPermission Member Contact.Change (Contact.Change.Login)
+ * @apiPermission Member Contact.Change | Contact.Change.Login
  *
  * @apiDescription Change a existing contact.
  *
@@ -234,6 +236,7 @@ exports.get = function (req, res) {
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
  * @apiError    ContactNotExist         A contact with the current id doesn't exist.
+ * @apiError    ContactIsMember         The selected contact is a member and can't deleted here.
  * @apiError    InvalidEmail            The email adress is not valid.
  * @apiError    UsernameAlreadyExist    The username is already in use.
  * @apiError    EmailAlreadyExist       The email adress is already in use.
@@ -260,7 +263,15 @@ exports.put = function (req, res) {
                 };
             }
             oContact = new classes.Contact(aData[0]);
-            return;
+            return __dbhandler.fetch("FetchMemberGroupContact", [req.oSessiondata.get.idGroup(), oContact.get.contactID()]);
+        })
+        .then(function (aData) {
+            if (aData.length !== 0) {
+                throw {
+                    "type": errorcode.ERR_individualError,
+                    "SERR": "ContactIsMember"
+                };
+            }
         })
         .then(function () {
             if (helper.isset(req.body.username) &&

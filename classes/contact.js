@@ -114,7 +114,7 @@ exports.class = function (fields) {
      * @returns {Promise}
      */
     this.updateAccess = function () {
-        if (this.get.dtAccess() + enums.Minute > helper.currentTimestamp()) {
+        if (this.get.dtAccess() + enums.unixTime.Minute > helper.currentTimestamp()) {
             return helper.startPromiseChain();
         }
         this.set.dtAccess(helper.currentTimestamp());

@@ -56,7 +56,7 @@ Session.prototype.startSession = function (oCookie, oParam) {
                 oCookie.set(that.oConfig.cookie, sSessionid, {
                     "overwrite": true,
                     "httpOnly": true,
-                    "expires": new Date((helper.currentTimestamp() + enums.Year * 20) * 1000)
+                    "expires": new Date((helper.currentTimestamp() + enums.unixTime.Year * 20) * 1000)
                 });
             } else {
                 oCookie.set(that.oConfig.cookie, sSessionid, {

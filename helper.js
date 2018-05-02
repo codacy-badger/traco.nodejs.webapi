@@ -5,7 +5,7 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var bluebird = require("bluebird");
 var config = require("./static/config.json");
-var enums = require("./static/enums.json");
+var enums = require("./static/enums");
 var errorcode = require("./static/errorcodes.json");
 var fs = require("fs-extra");
 var path = require("path");
@@ -38,7 +38,8 @@ exports.log = function (sMessage, sType) {
  */
 exports.getEnums = function (oAdditionalEnums) {
     oAdditionalEnums = oAdditionalEnums || {};
-    return exNativ.Object.merge(enums, oAdditionalEnums);
+    enums.additional = oAdditionalEnums;
+    return enums;
 };
 
 /**
@@ -60,26 +61,46 @@ exports.getErrorcodes = function (oAdditionalError) {
  */
 exports.sqlsafe = function (req, res, next) {
 
-    var _safeObject = function (oArray) {
-        var oData = {};
-        Object.keys(oArray).forEach(function (key) {
-            if (exports.isObject(oArray[key])) {
-                oData[key] = _safeObject(oArray[key]);
-            } else if (exports.isArray(oArray[key])) {
-                oData[key] = [];
-                var i = 0;
-                while (i < oArray[key].length) {
-                    if (exports.isObject(oArray[key][i]) || exports.isArray(oArray[key][i])) {
-                        oData[key].push(_safeObject(oArray[key][i]));
-                    } else {
-                        oData[key].push(exports.htmlspecialchars(oArray[key][i]));
+    var _safeObject = function (oArray) { // eslint-disable-line
+        var oData;
+        if (exports.isArray(oArray)) {
+            oData = [];
+            for (let n = 0; n < oArray.length; n += 1) {
+                if (exports.isObject(oArray[n])) {
+                    oData.push(_safeObject(oArray[n]));
+                } else if (exports.isArray(oArray[n])) {
+                    oData.push([]);
+                    for (let i = 0; i < oArray[n].length; i += 1) {
+                        if (exports.isObject(oArray[n][i]) || exports.isArray(oArray[n][i])) {
+                            oData[n].push(_safeObject(oArray[n][i]));
+                        } else {
+                            oData[n].push(exports.htmlspecialchars(oArray[n][i]));
+                        }
                     }
-                    i += 1;
+                } else {
+                    oData.push(exports.htmlspecialchars(oArray[n]));
                 }
-            } else {
-                oData[key] = exports.htmlspecialchars(oArray[key]);
             }
-        });
+        } else {
+            oData = {};
+            var aKeys = Object.keys(oArray);
+            for (let n = 0; n < aKeys.length; n += 1) {
+                if (exports.isObject(oArray[aKeys[n]])) {
+                    oData[aKeys[n]] = _safeObject(oArray[aKeys[n]]);
+                } else if (exports.isArray(oArray[aKeys[n]])) {
+                    oData[aKeys[n]] = [];
+                    for (let i = 0; i < oArray[aKeys[n]].length; i += 1) {
+                        if (exports.isObject(oArray[aKeys[n]][i]) || exports.isArray(oArray[aKeys[n]][i])) {
+                            oData[aKeys[n]].push(_safeObject(oArray[aKeys[n]][i]));
+                        } else {
+                            oData[aKeys[n]].push(exports.htmlspecialchars(oArray[aKeys[n]][i]));
+                        }
+                    }
+                } else {
+                    oData[aKeys[n]] = exports.htmlspecialchars(oArray[aKeys[n]]);
+                }
+            }
+        }
         return oData;
     };
 
