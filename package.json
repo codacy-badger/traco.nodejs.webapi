@@ -1,6 +1,6 @@
 {
     "name": "traco.nodejs.webapi",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Die WebAPI für das TraCo TicketSystem in NodeJS",
     "author": "Felix Herold",
     "main": "app.js",

@@ -41,7 +41,6 @@ Run `npm run doc` to compile both documentations.
 
  - [ ] Rebuild the `importdb.bat` with `mysqlimport` instead of `mysql` because it should be faster as just load the complete file as SQL-Statements.
  - [ ] Create secound version of the `JsonTable.join()` function with set all same at the same time and dont insert one row after the last ant search every time for the joining element.
- - [ ] at member username or email change must check if it exists in contact table because of same update there.
 
 ## Backlog
 
@@ -49,6 +48,7 @@ Run `npm run doc` to compile both documentations.
 
 ## Finished
 
+ - [x] at member username or email change must check if it exists in contact table because of same update there.
  - [x] API for requesting groups with filter. Mximum return of 25 groups.
  - [x] register formular for contacts
  - [x] correction and finish of `/contact/notes` API-Command with apiDocs

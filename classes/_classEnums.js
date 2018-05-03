@@ -25,5 +25,9 @@ exports.MemberPermissions = [
     "Contact.Delete",
     "Member.Add",
     "Member.Add.Permission",
-    "Member.View"
+    "Member.View",
+    "Member.Change",
+    "Member.Change.Login",
+    "Member.Change.Permission",
+    "Member.Delete"
 ];
