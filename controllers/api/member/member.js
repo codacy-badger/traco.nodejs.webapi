@@ -60,6 +60,7 @@ var classEnums = require("../../../classes/_classEnums");
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    InvalidEmail            The email adress is not valid.
  * @apiError    UsernameAlreadyExist    The username is already in use.
  * @apiError    EmailAlreadyExist       The email adress is already in use.
@@ -200,6 +201,7 @@ exports.post = function (req, res) {
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    MemberNotExist          A member with the current id doesn't exist.
  */
 exports.get = function (req, res) {
@@ -286,6 +288,7 @@ exports.get = function (req, res) {
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    MemberNotExist          A member with the current id doesn't exist.
  * @apiError    NoMemberContact         The selected member has no contact. Contact admin for fix.
  * @apiError    InvalidEmail            The email adress is not valid.
@@ -459,6 +462,7 @@ exports.put = function (req, res) {
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    MemberNotExist          A member with the current id doesn't exist.
  */
 exports.delete = function (req, res) {

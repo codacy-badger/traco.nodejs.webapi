@@ -48,6 +48,7 @@ var errorcode = helper.getErrorcodes();
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    TasktypeAlreadyExist    A tasktype with this name already exist.
  */
 exports.post = function (req, res) {
@@ -122,6 +123,7 @@ exports.post = function (req, res) {
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    TasktypeNotExist        A tasktype with the current requested id doesn't exist.
  */
 exports.get = function (req, res) {
@@ -192,6 +194,7 @@ exports.get = function (req, res) {
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    TasktypeNotExist        A tasktype with the current requested id doesn't exist.
  * @apiError    TasktypeAlreadyExist    A tasktype with this name already exist.
  */
@@ -283,6 +286,7 @@ exports.put = function (req, res) {
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    TasktypeNotExist        A tasktype with the current requested id doesn't exist.
  */
 exports.delete = function (req, res) {

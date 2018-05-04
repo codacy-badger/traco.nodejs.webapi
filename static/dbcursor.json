@@ -21,6 +21,8 @@
     "FetchProjectGroupID": "SELECT * FROM `project` WHERE `idGroup` = @0 AND `projectID` = @1",
     "FetchProjectGroup": "SELECT * FROM `project` WHERE `idGroup` = @0",
 
+    "FetchTaskGroupTask": "SELECT * FROM `task` WHERE `idGroup` = @0 AND `iTask` = @1",
+
     "FetchTasktypeGroupName": "SELECT * FROM `tasktype` WHERE `idGroup` = @0 AND `sName` = @1",
     "FetchTasktypeGroupID": "SELECT * FROM `tasktype` WHERE `idGroup` = @0 AND `tasktypeID` = @1",
 

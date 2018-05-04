@@ -96,3 +96,9 @@ UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
 
 -- 180503: Change type of member permission to text because of length
 UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
+
+-- 180504: Change type of member permission to text because of length
+UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
+
+-- 180504: dtFinish in task can be null
+ALTER TABLE `task` MODIFY COLUMN `dtFinish` BIGINT NULL;

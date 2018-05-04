@@ -13,7 +13,7 @@ var bcrypt = require("bcryptjs");
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 /**
- * @api {post} /contact/register Register Contact
+ * @api {post} /contact/register Register
  * @apiVersion  1.0.0
  * @apiName RegisterContact
  * @apiGroup ContactAuthorization
@@ -49,6 +49,7 @@ var bcrypt = require("bcryptjs");
  *          "SERR": "UsernameAlreadyExist"
  *      }
  *
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError        GroupNotExist           The groupID doesn't exist.
  * @apiError        InvalidEmail            The email adress is not valid.
  * @apiError        UsernameAlreadyExist    The username is already in use.

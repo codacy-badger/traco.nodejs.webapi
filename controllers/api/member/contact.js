@@ -67,10 +67,10 @@ exports.post = function (req, res) {
         })
         .then(function () {
             return helper.checkRequiredValues([
-            ["username", req.body.username],
-            ["password", req.body.password],
-            ["email", req.body.email]
-        ]);
+                ["username", req.body.username],
+                ["password", req.body.password],
+                ["email", req.body.email]
+            ]);
         })
         .then(function () {
             if (!helper.validateEmail(req.body.email)) {
@@ -159,6 +159,7 @@ exports.post = function (req, res) {
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    ContactNotExist         A contact with the current id doesn't exist.
  */
 exports.get = function (req, res) {

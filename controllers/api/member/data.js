@@ -104,6 +104,7 @@ exports.get = function (req, res) {
  *      }
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    WrongPass               Wrong password for the current member.
  */
 exports.put = function (req, res) {

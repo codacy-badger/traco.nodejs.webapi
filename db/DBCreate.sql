@@ -97,7 +97,7 @@ CREATE TABLE `task` (
     `idContact` CHAR(9) NOT NULL,
     `idMember` CHAR(8) NOT NULL,
     `dtCreate` BIGINT NOT NULL,         -- Erstellungsdatum des Tickets
-    `dtFinish` BIGINT NOT NULL,         -- Erledigt bis Datum NICHT WANN ES FERTIG IST
+    `dtFinish` BIGINT NULL,             -- Erledigt bis Datum NICHT WANN ES FERTIG IST
     `sTitle` VARCHAR(255) NOT NULL,
     `sText` TEXT NOT NULL,
     `dtClose` BIGINT NULL,              -- Wenn dieses Feld gesetzt wird ist das Ticket geschlossen.

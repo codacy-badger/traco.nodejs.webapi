@@ -17,7 +17,7 @@ exports.class = function (fields) {
         "idGroup": "    ",
         "iTask": 0,
         "iPrio": 0,
-        "idProjekt": "       ",
+        "idProject": "       ",
         "idTaskstatus": "       ",
         "idTasktype": "       ",
         "idContact": "         ",
@@ -46,8 +46,8 @@ exports.class = function (fields) {
         iPrio: function () {
             return that.fields.iPrio;
         },
-        idProjekt: function () {
-            return that.fields.idProjekt;
+        idProject: function () {
+            return that.fields.idProject;
         },
         idTaskstatus: function () {
             return that.fields.idTaskstatus;
@@ -91,8 +91,8 @@ exports.class = function (fields) {
         iPrio: function (iValues) {
             that.fields.iPrio = iValues;
         },
-        idProjekt: function (sID) {
-            that.fields.idProjekt = sID;
+        idProject: function (sID) {
+            that.fields.idProject = sID;
         },
         idTaskstatus: function (sID) {
             that.fields.idTaskstatus = sID;
@@ -134,7 +134,7 @@ exports.class = function (fields) {
         return {
             "id": this.get.iTask(), // Damit ist die numerische Task-ID der Gruppe gemeint nicht die generelle ID
             "prio": this.get.iPrio(),
-            "idProjekt": this.get.idProjekt(),
+            "idProject": this.get.idProject(),
             "idTaskstatus": this.get.idTaskstatus(),
             "idTasktype": this.get.idTasktype(),
             "idContact": this.get.idContact(),

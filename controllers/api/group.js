@@ -42,13 +42,14 @@ var errorcode = helper.getErrorcodes();
  *          "SERR": "GroupNotExist"
  *      }
  *
- * @apiError        GroupNotExist       The requested ID is not a existing group.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
+ * @apiError    GroupNotExist           The requested ID is not a existing group.
  */
 exports.get = function (req, res) {
     var oGroup = new classes.Group();
     helper.checkRequiredValues([
-        ["id", req.query.id]
-    ])
+            ["id", req.query.id]
+        ])
         .then(function () {
             return __dbhandler.fetch("FetchGroupID", [req.query.id]);
         })

@@ -43,6 +43,7 @@ var errorcode = helper.getErrorcodes();
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  */
 exports.post = function (req, res) {
     var oNote = new classes.Membernote();
@@ -105,6 +106,7 @@ exports.post = function (req, res) {
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    NoMembernoteData        The id doesn't exist.
  */
 exports.get = function (req, res) {
@@ -170,6 +172,7 @@ exports.get = function (req, res) {
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    NoMembernoteData        The id doesn't exist.
  */
 exports.put = function (req, res) {
@@ -235,6 +238,7 @@ exports.put = function (req, res) {
  *
  * @apiError    NoCurrentMember         Currently there is no member logged in.
  * @apiError    NotEnoughPermission     Current member has no permission for that action.
+ * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError    NoMembernoteData        The id doesn't exist.
  */
 exports.delete = function (req, res) {
