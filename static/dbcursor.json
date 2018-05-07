@@ -8,6 +8,7 @@
 
     "FetchGroupID": "SELECT * FROM `group` WHERE `groupID` = @0",
     "FetchGroupNameLike": "SELECT * FROM `group` WHERE LOWER(`sName`) LIKE LOWER(CONCAT('%', @0, '%'))",
+    "FetchGroupName": "SELECT * FROM `group` WHERE `sName` = @0",
 
     "FetchMemberID": "SELECT * FROM `member` WHERE `memberID` = @0",
     "FetchMemberLogin": "SELECT * FROM `member` WHERE `idGroup` = @0 AND (`sUsername` = @1 OR `sEmail` = @1)",
@@ -22,6 +23,8 @@
     "FetchProjectGroup": "SELECT * FROM `project` WHERE `idGroup` = @0",
 
     "FetchTaskGroupTask": "SELECT * FROM `task` WHERE `idGroup` = @0 AND `iTask` = @1",
+
+    "DeleteTaskchangeTask": "DELETE FROM `taskchange` WHERE `idTask` = @0",
 
     "FetchTasktypeGroupName": "SELECT * FROM `tasktype` WHERE `idGroup` = @0 AND `sName` = @1",
     "FetchTasktypeGroupID": "SELECT * FROM `tasktype` WHERE `idGroup` = @0 AND `tasktypeID` = @1",

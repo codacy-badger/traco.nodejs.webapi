@@ -3,6 +3,7 @@
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var helper = require("../helper");
+var sResetID = "                    ";
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DATABASE CLASSES
@@ -13,10 +14,12 @@ exports.class = function (fields) {
 
     // Database fields
     this.fields = fields || {
-        "taskchangeID": "                    ",
+        "taskchangeID": sResetID,
         "idTask": "                ",
         "idMember": "        ",
-        "sText": ""
+        "sColumn": "",
+        "sNewData": "",
+        "dtCreate": helper.currentTimestamp()
     };
 
     this.mirror = helper.clone(this.fields);
@@ -33,8 +36,14 @@ exports.class = function (fields) {
         idMember: function () {
             return that.fields.idMember;
         },
-        sText: function () {
-            return that.fields.sText;
+        sColumn: function () {
+            return that.fields.sColumn;
+        },
+        sNewData: function () {
+            return that.fields.sNewData;
+        },
+        dtCreate: function () {
+            return that.fields.dtCreate;
         }
     };
 
@@ -48,8 +57,14 @@ exports.class = function (fields) {
         idMember: function (sID) {
             that.fields.idMember = sID;
         },
-        sText: function (sValue) {
-            that.fields.sText = sValue;
+        sColumn: function (sValue) {
+            that.fields.sColumn = sValue;
+        },
+        sNewData: function (sValue) {
+            that.fields.sNewData = sValue;
+        },
+        dtCreate: function (iValue) {
+            that.fields.dtCreate = iValue;
         }
     };
 
@@ -63,8 +78,22 @@ exports.class = function (fields) {
     this.toJson = function () {
         return {
             "idMember": this.get.idMember(),
-            "text": this.get.sText()
+            "column": this.get.sColumn(),
+            "new": this.get.sNewData(),
+            "dtCreate": this.get.dtCreate()
         };
+    };
+
+    /**
+     * Resets the id of the Taskchange for insert new change with old data.
+     * @alias module:classes.Taskchange.resetID
+     * @returns {void}
+     */
+    this.resetID = function () {
+        this.set.taskchangeID(sResetID);
+        this.set.sColumn("");
+        this.set.sNewData("");
+        return;
     };
 
 };

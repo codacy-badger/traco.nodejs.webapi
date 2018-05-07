@@ -39,8 +39,10 @@ Run `npm run doc` to compile both documentations.
 
 ## On Deck
 
- - [ ] Rebuild the `importdb.bat` with `mysqlimport` instead of `mysql` because it should be faster as just load the complete file as SQL-Statements.
  - [ ] Create secound version of the `JsonTable.join()` function with set all same at the same time and dont insert one row after the last ant search every time for the joining element.
+ - [ ] change `logger.js` that files only deleted by filename NOT by fileextention. Or both must be true. Filename AND fileextention. because default name for files is log and default extention is .log so if just one logger is on standart that will  try to delete ALL files that have default extention files with .log extention have log in their name and would be deleted.
+ - [ ] think about holding original data type iin a new column in the taskchange table to convert it eqser in code if required.
+ - [ ] think about add a new db table for taskcomments. holds added comment to a specific task. structured data like: member/contact | text | dtCreate | bIntern. the member/contact should be the contact ID because the contacts can also write some addidional comments for requests to the contact. the bIntern should be a flag if the contact can be seen by contacts or only by intern members. can only added by member.
 
 ## Backlog
 
@@ -48,6 +50,7 @@ Run `npm run doc` to compile both documentations.
 
 ## Finished
 
+ - [x] Changing taskchange table. from one table for text into 3: ChangedRow | OldData | NewData. ChangeRow is text for frontend replacement. Datarows are the NAMED data from the other tables.
  - [x] at member username or email change must check if it exists in contact table because of same update there.
  - [x] API for requesting groups with filter. Mximum return of 25 groups.
  - [x] register formular for contacts

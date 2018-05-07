@@ -102,3 +102,26 @@ UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
 
 -- 180504: dtFinish in task can be null
 ALTER TABLE `task` MODIFY COLUMN `dtFinish` BIGINT NULL;
+
+-- 180505: Add more defined data in taskchanges
+ALTER TABLE `taskchange` Change `sText` `sColumn` VARCHAR(255) NOT NULL;
+ALTER TABLE `taskchange` ADD `sOldData` VARCHAR(255) NOT NULL;
+ALTER TABLE `taskchange` ADD `sNewData` VARCHAR(255) NOT NULL;
+
+-- 180505: Drop olddata column in taskchange
+ALTER TABLE `taskchange` DROP COLUMN `sOldData`;
+
+-- 180505:Add full task Change permissions
+UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0000000");
+
+-- 180505: add changedate to taskchange
+ALTER TABLE `taskchange` ADD `dtCreate` BIGINT NOT NULL;
+
+-- 180506: Add char in permissions of member for Task.Delete
+UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
+
+-- 180506: Add char in permissions of member
+UPDATE `member` SET `cPermission` = CONCAT(`cPermission`, "0");
+
+-- 180506: Add a deactivate group date
+ALTER TABLE `group` ADD `dtDeactivate` BIGINT NULL;

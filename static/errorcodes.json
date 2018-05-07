@@ -4,5 +4,6 @@
     "ERR_sqlerror": 2,
     "ERR_individualError": 3,
     "ERR_invalidPermission": 4,
-    "ERR_checkRequiredValues": 5
+    "ERR_checkRequiredValues": 5,
+    "ERR_ressourceLocked": 6
 }

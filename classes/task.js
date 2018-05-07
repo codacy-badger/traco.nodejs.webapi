@@ -89,6 +89,12 @@ exports.class = function (fields) {
             that.fields.iTask = iValues;
         },
         iPrio: function (iValues) {
+            if (iValues < 1) {
+                iValues = 1;
+            }
+            if (iValues > 9) {
+                iValues = 9;
+            }
             that.fields.iPrio = iValues;
         },
         idProject: function (sID) {

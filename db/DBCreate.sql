@@ -111,7 +111,9 @@ CREATE TABLE `taskchange` (
     `taskchangeID` CHAR(20) NOT NULL,   -- durschnittlich max. 14.776.336 Änderungen pro Task
     `idTask` CHAR(16) NOT NULL,
     `idMember` CHAR(8) NOT NULL,
-    `sText` VARCHAR(255) NOT NULL,
+    `sColumn` VARCHAR(255) NOT NULL,
+    `sNewData` VARCHAR(255) NOT NULL,
+    `dtCreate` BIGINT NOT NULL,
     PRIMARY KEY (`taskchangeID`)
 );
 

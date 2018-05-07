@@ -31,5 +31,15 @@ exports.MemberPermissions = [
     "Member.Change.Permission",
     "Member.Delete",
     "Task.Add",
-    "Task.View"
+    "Task.View",
+    "Task.Change",
+    "Task.Change.Project",
+    "Task.Change.Type",
+    "Task.Change.Contact",
+    "Task.Change.Finish",
+    "Task.Change.Prio",
+    "Task.Change.Content",
+    "Task.Delete",
+    "Group.View",
+    "Group.Change"
 ];

@@ -16,7 +16,8 @@ exports.class = function (fields) {
         "groupID": "    ",
         "sName": "",
         "dtSince": helper.currentTimestamp(),
-        "iTasks": 0
+        "iTasks": 0,
+        "dtDeactivate": undefined
     };
 
     this.mirror = helper.clone(this.fields);
@@ -35,6 +36,9 @@ exports.class = function (fields) {
         },
         iTasks: function () {
             return that.fields.iTasks;
+        },
+        dtDeactivate: function () {
+            return that.fields.dtDeactivate;
         }
     };
 
@@ -50,35 +54,43 @@ exports.class = function (fields) {
         },
         iTasks: function (iValue) {
             that.fields.iTasks = iValue;
+        },
+        dtDeactivate: function (iValue) {
+            that.fields.dtDeactivate = iValue;
         }
     };
 
     // Functions
 
     /**
-     * Creates a JSON-Object to ready to return Data to client.
+     * Creates a JSON-Object to ready to return Data to client. Differend modes for unauthorized|session|(master)
      * @alias module:classes.Group.toJson
+     * @param {string} sType
      * @returns {JSON}
      */
-    this.toJson = function () {
-        return {
-            "id": this.get.groupID(),
-            "name": this.get.sName(),
-            "dtSince": this.get.dtSince(),
-            "tasks": this.get.iTasks()
-        };
-    };
-
-    /**
-     * Creates a JSON-Object to ready to return Data to client without any permissions.
-     * @alias module:classes.Group.toSafeJson
-     * @returns {JSON}
-     */
-    this.toSafeJson = function () {
-        return {
-            "id": this.get.groupID(),
-            "name": this.get.sName()
-        };
+    this.toJson = function (sType) {
+        switch (sType) {
+            case "safe":
+                return {
+                    "id": this.get.groupID(),
+                    "name": this.get.sName()
+                };
+            case "session":
+                return {
+                    "name": this.get.sName(),
+                    "dtSince": this.get.dtSince(),
+                    "tasks": this.get.iTasks(),
+                    "dtDeactivate": this.get.dtDeactivate()
+                };
+            default:
+                return {
+                    "id": this.get.groupID(),
+                    "name": this.get.sName(),
+                    "dtSince": this.get.dtSince(),
+                    "tasks": this.get.iTasks(),
+                    "dtDeactivate": this.get.dtDeactivate()
+                };
+        }
     };
 
 };

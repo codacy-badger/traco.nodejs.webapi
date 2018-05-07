@@ -5,6 +5,7 @@
 var path = require("path");
 var helper = require("../helper");
 var prohelper = require("../prohelper");
+var pack = require("../package.json");
 
 //************************************************
 // Functions
@@ -45,34 +46,51 @@ var fLoadModules = function (callback) {
 // Routes
 //************************************************
 module.exports = function (router) {
+    // Routing Request
+    var oRouting = {
+        "version": pack.version,
+        "routes": {}
+    };
+
     // Modules
     var sRoute = "";
     fLoadModules(function (oRoutes) {
         Object.keys(oRoutes).forEach(function (sFolder) {
             Object.keys(oRoutes[sFolder]).forEach(function (sFile) {
-                sRoute = sFolder + "/";
+                sRoute = "/" + sFolder + "/" + sFile;
+
+                oRouting.routes[sRoute] = [];
 
                 // GET methods
                 if (oRoutes[sFolder][sFile].get !== undefined) {
-                    router.get("/" + sRoute + sFile, helper.sqlsafe, oRoutes[sFolder][sFile].get);
-                    router.get("/" + sRoute + sFile + "/*", helper.sqlsafe, oRoutes[sFolder][sFile].get);
+                    oRouting.routes[sRoute].push("get");
+                    router.get(sRoute, oRoutes[sFolder][sFile].get);
+                    router.get(sRoute + "/*", oRoutes[sFolder][sFile].get);
                 }
                 // POST methods
                 if (oRoutes[sFolder][sFile].post !== undefined) {
-                    router.post("/" + sRoute + sFile, helper.sqlsafe, oRoutes[sFolder][sFile].post);
-                    router.post("/" + sRoute + sFile + "/*", helper.sqlsafe, oRoutes[sFolder][sFile].post);
+                    oRouting.routes[sRoute].push("post");
+                    router.post(sRoute, helper.sqlsafe, oRoutes[sFolder][sFile].post);
+                    router.post(sRoute + "/*", helper.sqlsafe, oRoutes[sFolder][sFile].post);
                 }
                 // PUT methods
                 if (oRoutes[sFolder][sFile].put !== undefined) {
-                    router.put("/" + sRoute + sFile, helper.sqlsafe, oRoutes[sFolder][sFile].put);
-                    router.put("/" + sRoute + sFile + "/*", helper.sqlsafe, oRoutes[sFolder][sFile].put);
+                    oRouting.routes[sRoute].push("put");
+                    router.put(sRoute, helper.sqlsafe, oRoutes[sFolder][sFile].put);
+                    router.put(sRoute + "/*", helper.sqlsafe, oRoutes[sFolder][sFile].put);
                 }
                 // DELETE methods
                 if (oRoutes[sFolder][sFile].delete !== undefined) {
-                    router.delete("/" + sRoute + sFile, helper.sqlsafe, oRoutes[sFolder][sFile].delete);
-                    router.delete("/" + sRoute + sFile + "/*", helper.sqlsafe, oRoutes[sFolder][sFile].delete);
+                    oRouting.routes[sRoute].push("delete");
+                    router.delete(sRoute, helper.sqlsafe, oRoutes[sFolder][sFile].delete);
+                    router.delete(sRoute + "/*", helper.sqlsafe, oRoutes[sFolder][sFile].delete);
                 }
             });
+        });
+
+        // Request for complete routes pack
+        router.get("/routing", function (req, res) {
+            res.json(oRouting);
         });
 
         // Fall-back for non existing other jobs

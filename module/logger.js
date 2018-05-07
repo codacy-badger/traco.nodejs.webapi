@@ -187,7 +187,7 @@ Logger.prototype.log = function (sMessage, sType) {
 Logger.prototype.delOldFiles = function () {
     var that = this;
     var i = 0;
-    console.log("Start LOG-deletion..."); // eslint-disable-line
+    console.log("Start LOG-deletion for filename '" + that.oConfig.sFilename + "'..."); // eslint-disable-line
     fs.readdir(that.oConfig.sPath)
         .then(function (aFiles) {
             return promiseWhile(function () {

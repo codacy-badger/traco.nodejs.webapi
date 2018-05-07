@@ -63,7 +63,7 @@ exports.get = function (req, res) {
             oGroup = new classes.Group(aData[0]);
         })
         .then(function () {
-            res.json(oGroup.toSafeJson());
+            res.json(oGroup.toJson("safe"));
         })
         .catch(function (oErr) {
             prohelper.httpErrorHandler(res, oErr);

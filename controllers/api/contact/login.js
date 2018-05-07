@@ -64,11 +64,23 @@ var Cookie = require("cookies");
  */
 exports.post = function (req, res) {
     var oContact = new classes.Contact();
-    helper.checkRequiredValues([
-            ["group", req.body.group],
-            ["username", req.body.username],
-            ["password", req.body.password]
-        ])
+    helper.startPromiseChain()
+        .then(function () {
+            if (!config.session.contact.enabled) {
+                throw {
+                    "type": errorcode.ERR_ressourceLocked,
+                    "SERR": "ServerContactSectionDisabled"
+                };
+            }
+            return;
+        })
+        .then(function () {
+            return helper.checkRequiredValues([
+                ["group", req.body.group],
+                ["username", req.body.username],
+                ["password", req.body.password]
+            ]);
+        })
         .then(function () {
             return __dbhandler.fetch("FetchContactLogin", [req.body.group, req.body.username]);
         })

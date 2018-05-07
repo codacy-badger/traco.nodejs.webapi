@@ -22,7 +22,7 @@ exports.class = function (fields) {
         "idGroup": "    ",
         "sUsername": "",
         "sPassword": "",
-        "cPermission": "000000000000000000000000000",
+        "cPermission": "00000000000000000000000000000000000000",
         "dtSince": helper.currentTimestamp(),
         "dtAccess": undefined,
         "sEmail": "",

@@ -1,14 +1,7 @@
 
-var exNativ = require("../module/exNativ");
+var classes = require("../classes");
 
-var oDate = {
-    "year": "2018",
-    "month": "4",
-    "day": "4",
-    "hour": "12",
-    "minute": "10",
-    "secound": "0",
-    "ms": "0"
-};
+var oChange = new classes.Taskchange();
 
-console.log(exNativ.Date.normalize(oDate));
+console.log(oChange)
+console.log(oChange.get.taskchangeID().length);

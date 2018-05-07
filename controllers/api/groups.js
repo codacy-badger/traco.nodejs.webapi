@@ -77,7 +77,7 @@ exports.get = function (req, res) {
             var i = 0;
             while (i < aData.length) {
                 oGroup = new classes.Group(aData[i]);
-                aGroups.push(oGroup.toSafeJson());
+                aGroups.push(oGroup.toJson("safe"));
                 i += 1;
             }
             exArray.sortBy(aGroups, ["name"]);

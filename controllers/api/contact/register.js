@@ -7,6 +7,7 @@ var errorcode = helper.getErrorcodes();
 var prohelper = require("../../../prohelper");
 var classes = require("../../../classes");
 var bcrypt = require("bcryptjs");
+var config = require("../../../static/config.json");
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // API
@@ -49,7 +50,7 @@ var bcrypt = require("bcryptjs");
  *          "SERR": "UsernameAlreadyExist"
  *      }
  *
- * @apiError    MissingRequiredValues   Required parameters are not set. See respnse for mission values.
+ * @apiError        MissingRequiredValues   Required parameters are not set. See respnse for mission values.
  * @apiError        GroupNotExist           The groupID doesn't exist.
  * @apiError        InvalidEmail            The email adress is not valid.
  * @apiError        UsernameAlreadyExist    The username is already in use.
@@ -57,12 +58,24 @@ var bcrypt = require("bcryptjs");
  */
 exports.post = function (req, res) {
     var oContact = new classes.Contact();
-    helper.checkRequiredValues([
-            ["group", req.body.group],
-            ["username", req.body.username],
-            ["password", req.body.password],
-            ["email", req.body.email]
-        ])
+    helper.startPromiseChain()
+        .then(function () {
+            if (!config.session.contact.enabled) {
+                throw {
+                    "type": errorcode.ERR_ressourceLocked,
+                    "SERR": "ServerContactSectionDisabled"
+                };
+            }
+            return;
+        })
+        .then(function () {
+            helper.checkRequiredValues([
+                ["group", req.body.group],
+                ["username", req.body.username],
+                ["password", req.body.password],
+                ["email", req.body.email]
+            ]);
+        })
         .then(function () {
             return __dbhandler.fetch("FetchGroupID", [req.body.group]);
         })

@@ -4,7 +4,7 @@
 // Dependencies
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 var classes = require("./classes");
-// var config = require("./static/config.json");
+var config = require("./static/config.json");
 var helper = require("./helper");
 // var enums = helper.getEnums();
 var errorcode = helper.getErrorcodes();
@@ -68,15 +68,21 @@ exports.httpErrorHandler = function (oResponse, oError) {
                 "values": oError.arguments.aMissingValues
             });
             break;
+        case errorcode.ERR_ressourceLocked:
+            oResponse.statusCode = HttpStatusCodes.Locked;
+            oResponse.json({
+                "SERR": oError.SERR
+            });
+            break;
         case errorcode.ERR_internal:
         case errorcode.ERR_sqlerror:
-            oResponse.statusCode = 500; // Internal Server Error
+            oResponse.statusCode = HttpStatusCodes.InternalServerError;
             oResponse.json({
                 "SERR": oError.SERR
             });
             break;
         default:
-            oResponse.statusCode = 500; // Internal Server Error
+            oResponse.statusCode = HttpStatusCodes.InternalServerError;
             oResponse.json({
                 "SERR": "UnknownError"
             });
@@ -128,6 +134,14 @@ exports.loadMemberSessionData = function (sID) {
  * @returns {Member}
  */
 exports.loadContactSessionData = function (sID) {
+    if (!config.session.contact.enabled) {
+        return new Promise(function (fFulfill, fReject) {
+            fReject({
+                "type": errorcode.ERR_ressourceLocked,
+                "SERR": "ServerContactSectionDisabled"
+            });
+        });
+    }
     var oContact = new classes.Contact();
     return __dbhandler.fetch("FetchContactID", [sID])
         .then(function (aData) {
